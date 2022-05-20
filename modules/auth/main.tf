@@ -1,3 +1,15 @@
+resource "aws_ssm_parameter" "protected_domain_scopes" {
+  name  = "${var.resource-name-prefix}_protected_domain_scopes"
+  type  = "StringList"
+  value = "[]"
+
+  lifecycle {
+    ignore_changes = [
+      value,
+    ]
+  }
+}
+
 resource "aws_cognito_user_pool" "rapid_user_pool" {
   name = "${var.resource-name-prefix}_user_pool"
   tags = var.tags
@@ -22,15 +34,27 @@ resource "aws_cognito_resource_server" "rapid_resource_server" {
   user_pool_id = aws_cognito_user_pool.rapid_user_pool.id
 
   dynamic "scope" {
-      for_each = [for key, value in var.scopes: {
-        scope_name     = value.scope_name
-        scope_description     = value.scope_description
-      }]
+    for_each = [for value in var.scopes: {
+      scope_name            = value.scope_name
+      scope_description     = value.scope_description
+    }]
 
-      content {
-        scope_name     = scope.value.scope_name
-        scope_description = scope.value.scope_description
-      }
+    content {
+      scope_name        = scope.value.scope_name
+      scope_description = scope.value.scope_description
+    }
+  }
+
+  dynamic "scope" {
+    for_each = [for value in nonsensitive(jsondecode(aws_ssm_parameter.protected_domain_scopes.value)): {
+      scope_name            = value.ScopeName
+      scope_description     = value.ScopeDescription
+    }]
+
+    content {
+      scope_name        = scope.value.scope_name
+      scope_description = scope.value.scope_description
+    }
   }
 }
 
@@ -41,11 +65,10 @@ resource "aws_cognito_user_pool_client" "test_client" {
   generate_secret = true
   explicit_auth_flows = var.rapid_client_explicit_auth_flows
   allowed_oauth_scopes = [
-    aws_cognito_resource_server.rapid_resource_server.scope_identifiers[10], # WRITE_ALL
-    aws_cognito_resource_server.rapid_resource_server.scope_identifiers[11], # READ_ALL
-    aws_cognito_resource_server.rapid_resource_server.scope_identifiers[2], # DELETE_ALL
-    aws_cognito_resource_server.rapid_resource_server.scope_identifiers[8], # ADD_CLIENT
-    aws_cognito_resource_server.rapid_resource_server.scope_identifiers[9], # ADD_SCHEMA
+    "${aws_cognito_resource_server.rapid_resource_server.identifier}/WRITE_ALL",
+    "${aws_cognito_resource_server.rapid_resource_server.identifier}/READ_ALL",
+    "${aws_cognito_resource_server.rapid_resource_server.identifier}/USER_ADMIN",
+    "${aws_cognito_resource_server.rapid_resource_server.identifier}/DATA_ADMIN",
   ]
   allowed_oauth_flows = ["client_credentials"]
   allowed_oauth_flows_user_pool_client = true

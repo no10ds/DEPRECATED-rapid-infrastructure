@@ -17,32 +17,22 @@ sudo apt-get install default-jre -y
 # Install jq
 sudo apt-get install jq -y
 
-# Install AWS CLI
-sudo apt-get install awscli -y
-
 # Install Docker
 sudo apt-get install docker.io -y
 
 # Install unzip
-sudo apt-get unzip -y
-
-# Uninstall V1 AWS CLI
-sudo rm -rf /usr/local/aws
-sudo rm /usr/local/bin/aws
-sudo rm /usr/bin/aws
+sudo apt-get install unzip -y
 
 # Install V2 AWS CLI
 curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
 unzip awscliv2.zip
 sudo ./aws/install
-sudo ln -s /usr/local/aws-cli/v2/current/bin/aws /usr/bin/aws
 
 # ---- Start docker service
 sudo service docker start
 
 # ---- Allow ubuntu user to manage Docker service
 sudo usermod -a -G docker ubuntu
-
 
 # Install GitHub Actions Runner
 # Need to run these commands as the ubuntu user for correct permissions
