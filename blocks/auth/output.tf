@@ -28,7 +28,7 @@ output "cognito_user_app_secret_manager_name" {
   description = "Secret manager name where user login app info is stored"
 }
 
-output protected_scopes_parameter_store_arn {
+output "protected_scopes_parameter_store_arn" {
   value       = module.auth.protected_scopes_parameter_store_arn
   description = "The arn of the protected scopes parameter store variable"
 }
