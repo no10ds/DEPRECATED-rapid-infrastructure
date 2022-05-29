@@ -29,63 +29,47 @@ variable "resource-name-prefix" {
 }
 
 variable "scopes" {
-  type = map(any)
-  default = {
-    scope1 = {
+  type = list(map(any))
+  default = [
+    {
       scope_name        = "READ_ALL"
       scope_description = "Read all data in the rapid service at all sensitivity levels"
     },
-    scope2 = {
+    {
       scope_name        = "WRITE_ALL"
       scope_description = "Write to rapid service at all sensitivity levels"
     },
-    scope3 = {
-      scope_name        = "DELETE_ALL"
-      scope_description = "Delete files from the rapid service at all sensitivity levels"
-    },
-    scope4 = {
+    {
       scope_name        = "READ_PUBLIC"
       scope_description = "Read all data in the rapid service at the public sensitivity level"
     },
-    scope5 = {
+    {
       scope_name        = "WRITE_PUBLIC"
       scope_description = "Write to rapid service at the public sensitivity level"
     },
-    scope6 = {
-      scope_name        = "DELETE_PUBLIC"
-      scope_description = "Delete files from the rapid service at the public sensitivity level"
-    },
-    scope7 = {
+    {
       scope_name        = "READ_PRIVATE"
       scope_description = "Read all data in the rapid service at the public and private sensitivity level"
     },
-    scope8 = {
+    {
       scope_name        = "WRITE_PRIVATE"
       scope_description = "Write to rapid service at the public and private sensitivity level"
     },
-    scope9 = {
-      scope_name        = "DELETE_PRIVATE"
-      scope_description = "Delete files from the rapid service at the public and private sensitivity level"
-    },
-    scope10 = {
+    {
       scope_name        = "READ_SENSITIVE"
       scope_description = "Read all data in the rapid service at all sensitivity levels"
     },
-    scope11 = {
+    {
       scope_name        = "WRITE_SENSITIVE"
       scope_description = "Write to rapid service at all sensitivity levels"
     },
-    scope12 = {
-      scope_name        = "DELETE_SENSITIVE"
-      scope_description = "Delete files from the rapid service at all sensitivity levels"
+    {
+      scope_name        = "USER_ADMIN"
+      scope_description = "Carry out admin actions with regards to users/clients"
     },
-    scope13 = {
-      scope_name        = "ADD_CLIENT"
-      scope_description = "Create a new client"
+    {
+      scope_name        = "DATA_ADMIN"
+      scope_description = "Carry out admin actions with regards to the data products"
     },
-    scope14 = {
-      scope_name        = "ADD_SCHEMA"
-      scope_description = "Generate or upload a new schema"
-    },
-  }
+  ]
 }
