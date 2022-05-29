@@ -27,3 +27,8 @@ output "cognito_user_app_secret_manager_name" {
   value       = aws_secretsmanager_secret.cognito_user_secrets.name
   description = "Secret manager name where user login app info is stored"
 }
+
+output protected_scopes_parameter_store_arn {
+  value       = aws_ssm_parameter.protected_domain_scopes.arn
+  description = "The arn of the protected scopes parameter store variable"
+}
