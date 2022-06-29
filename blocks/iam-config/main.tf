@@ -26,7 +26,7 @@ module "iam_resources" {
   # Mandatory parameter so we can't skip it
   iam_account_alias = var.iam_account_alias
   # This will make sure we're only setting the IAM account alias once, as we're operating in the same account
-  set_iam_account_alias = false
+  set_iam_account_alias       = false
   admin_multi_factor_auth_age = "14400"
 }
 

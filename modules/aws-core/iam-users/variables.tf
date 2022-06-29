@@ -81,7 +81,7 @@ locals {
     minimum_password_length        = "32"
     password_reuse_prevention      = "5"
     max_password_age               = "90"
-    allow_users_to_change_password = "true"
+    allow_users_to_change_password = "true" # pragma: allowlist secret
   }, var.password_policy)
   admin_groups = compact(concat([var.admin_group_name], var.additional_admin_groups))
   user_groups  = compact(concat([var.user_group_name], var.additional_user_groups))
