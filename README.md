@@ -34,7 +34,7 @@ Please reach out to us on [slack](https://ukgovernmentdigital.slack.com/archives
 
 ## Deploy the rAPId module
 
-For departments that already have an existing infrastructure, we have extracted the top level infrastructure into a single terraform module.
+For departments that already have an existing infrastructure, we have extracted the top level infrastructure into a single terraform [module](./modules/rapid/).
 
 Usage:
 ```
