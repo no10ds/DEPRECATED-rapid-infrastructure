@@ -1,7 +1,7 @@
 variable "tags" {
   type        = map(string)
   description = "A common map of tags for all VPC resources that are created (for e.g. billing purposes)"
-  default     = {
+  default = {
     Resource = "data-f1-rapid"
   }
 }
@@ -14,13 +14,13 @@ variable "domain_name" {
 variable "rapid_client_explicit_auth_flows" {
   type        = list(string)
   description = "The list of auth flows supported by the client app"
-  default = ["ALLOW_REFRESH_TOKEN_AUTH", "ALLOW_CUSTOM_AUTH", "ALLOW_USER_SRP_AUTH"]
+  default     = ["ALLOW_REFRESH_TOKEN_AUTH", "ALLOW_CUSTOM_AUTH", "ALLOW_USER_SRP_AUTH"]
 }
 
 variable "rapid_user_login_client_explicit_auth_flows" {
   type        = list(string)
   description = "The list of auth flows supported by the user login app"
-  default = ["ALLOW_REFRESH_TOKEN_AUTH", "ALLOW_USER_SRP_AUTH"]
+  default     = ["ALLOW_REFRESH_TOKEN_AUTH", "ALLOW_USER_SRP_AUTH"]
 }
 
 variable "resource-name-prefix" {

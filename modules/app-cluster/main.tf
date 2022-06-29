@@ -21,7 +21,7 @@ resource "aws_iam_role_policy_attachment" "ecsTaskExecutionRole_policy" {
 }
 
 resource "aws_iam_policy" "app_s3_access" {
-  name        = "app_s3_access"
+  name        = "${var.resource-name-prefix}-app_s3_access"
   description = "Allow application instance to access S3"
   tags        = var.tags
 
@@ -52,7 +52,7 @@ resource "aws_iam_policy" "app_s3_access" {
 }
 
 resource "aws_iam_policy" "app_athena_query_access" {
-  name        = "app_query_access"
+  name        = "${var.resource-name-prefix}-app_query_access"
   description = "Allow application instance to access catalog's db"
   tags        = var.tags
 
@@ -134,7 +134,7 @@ resource "aws_iam_policy" "app_athena_query_access" {
 }
 
 resource "aws_iam_policy" "app_cognito_access" {
-  name        = "app_cognito_access"
+  name        = "${var.resource-name-prefix}-app_cognito_access"
   description = "Allow application instance to access Cognito"
   tags        = var.tags
 
@@ -157,7 +157,7 @@ resource "aws_iam_policy" "app_cognito_access" {
 }
 
 resource "aws_iam_policy" "app_secrets_manager_access" {
-  name        = "app_secrets_manager_access"
+  name        = "${var.resource-name-prefix}-app_secrets_manager_access"
   description = "Allow application instance to access AWS Secrets Manager"
   tags        = var.tags
 
@@ -181,7 +181,7 @@ resource "aws_iam_policy" "app_secrets_manager_access" {
 }
 
 resource "aws_iam_policy" "app_tags_access" {
-  name        = "app_tags_access"
+  name        = "${var.resource-name-prefix}-app_tags_access"
   description = "Allow application instance to get resources by tags"
   tags        = var.tags
 
@@ -198,7 +198,7 @@ resource "aws_iam_policy" "app_tags_access" {
 }
 
 resource "aws_iam_policy" "app_parameter_store_access" {
-  name        = "app_parameter_store_access"
+  name        = "${var.resource-name-prefix}-app_parameter_store_access"
   description = "Allow application instance to update values in parameter store"
   tags        = var.tags
 
@@ -345,7 +345,7 @@ resource "aws_ecs_service" "aws-ecs-service" {
   network_configuration {
     subnets          = [var.private_subnet_ids_list[0]] # TODO: Run in multiple subnets?
     assign_public_ip = false
-    security_groups  = [
+    security_groups = [
       aws_security_group.service_security_group.id,
       aws_security_group.load_balancer_security_group.id
     ]

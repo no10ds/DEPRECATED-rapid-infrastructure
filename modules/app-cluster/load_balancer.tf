@@ -1,11 +1,11 @@
 resource "aws_alb" "application_load_balancer" {
   #checkov:skip=CKV_AWS_150:No need for deletion protection
-  name                        = "${var.resource-name-prefix}-alb"
-  internal                    = false
-  load_balancer_type          = "application"
-  subnets                     = var.public_subnet_ids_list
-  security_groups             = [aws_security_group.load_balancer_security_group.id]
-  drop_invalid_header_fields  = true
+  name                       = "${var.resource-name-prefix}-alb"
+  internal                   = false
+  load_balancer_type         = "application"
+  subnets                    = var.public_subnet_ids_list
+  security_groups            = [aws_security_group.load_balancer_security_group.id]
+  drop_invalid_header_fields = true
 
   access_logs {
     bucket  = var.log_bucket_name
@@ -45,7 +45,7 @@ POLICY
 }
 
 resource "aws_security_group" "load_balancer_security_group" {
-  vpc_id = var.vpc_id
+  vpc_id      = var.vpc_id
   description = "ALB Security Group"
   ingress {
     from_port   = 80

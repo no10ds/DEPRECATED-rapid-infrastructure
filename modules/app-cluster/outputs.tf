@@ -24,11 +24,11 @@ output "ecs_task_execution_role_arn" {
 }
 
 output "log_error_alarm_notification_arn" {
-  value = aws_sns_topic.log-error-alarm-notification.arn
+  value       = aws_sns_topic.log-error-alarm-notification.arn
   description = "The arn of the sns topic that receives notifications on log error alerts"
 }
 
 output "rapid_metric_log_error_alarm_arn" {
-  value = aws_cloudwatch_metric_alarm.log-error-alarm.arn
+  value       = aws_cloudwatch_metric_alarm.log-error-alarm.arn
   description = "The arn of the log error alarm metric"
 }

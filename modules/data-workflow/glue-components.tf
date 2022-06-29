@@ -3,7 +3,7 @@ resource "aws_glue_catalog_database" "catalogue_db" {
 }
 
 resource "aws_glue_connection" "glue_connection" {
-  name            = "s3-network-connection"
+  name            = "${var.resource-name-prefix}-s3-network-connection"
   connection_type = "NETWORK"
 
   physical_connection_requirements {
@@ -14,7 +14,7 @@ resource "aws_glue_connection" "glue_connection" {
 }
 
 resource "aws_glue_classifier" "custom_csv_classifier" {
-  name = "single_column_csv_classifier"
+  name = "${var.resource-name-prefix}-single_column_csv_classifier"
 
   csv_classifier {
     allow_single_column    = true
@@ -26,7 +26,7 @@ resource "aws_glue_classifier" "custom_csv_classifier" {
 }
 
 resource "aws_iam_role" "glue_service_role" {
-  name        = "glue_services_access"
+  name        = "${var.resource-name-prefix}-glue_services_access"
   description = "Allow AWS Glue service to access S3 via crawler"
   tags        = var.tags
 
@@ -47,7 +47,7 @@ EOF
 }
 
 resource "aws_iam_policy" "crawler_s3_policy" {
-  name        = "crawler_data_access_policy"
+  name        = "${var.resource-name-prefix}-crawler_data_access_policy"
   description = "Allow crawler to access data in s3 bucket"
   tags        = var.tags
 
@@ -81,18 +81,18 @@ resource "aws_iam_role_policy_attachment" "glue_service_role_managed_policy_atta
 
 resource "aws_cloudwatch_log_group" "aws_glue_crawlers_log_group" {
   #checkov:skip=CKV_AWS_158:No need for KMS
-  name              = "/aws-glue/crawlers"
+  name              = "/${var.resource-name-prefix}-aws-glue/crawlers"
   retention_in_days = 90
 }
 
 resource "aws_cloudwatch_log_group" "aws_glue_connection_error_log_group" {
   #checkov:skip=CKV_AWS_158:No need for KMS
-  name              = "/aws-glue/testconnection/error/s3-network-connection"
+  name              = "/${var.resource-name-prefix}-aws-glue/testconnection/error/s3-network-connection"
   retention_in_days = 90
 }
 
 resource "aws_cloudwatch_log_group" "aws_glue_connection_log_group" {
   #checkov:skip=CKV_AWS_158:No need for KMS
-  name              = "/aws-glue/testconnection/output/s3-network-connection"
+  name              = "/${var.resource-name-prefix}-aws-glue/testconnection/output/s3-network-connection"
   retention_in_days = 90
 }

@@ -5,7 +5,7 @@ terraform {
 }
 
 module "core_vpc" {
-  source = "git::https://github.com/no10ds/terraform-aws-core-modules.git//vpc"
+  source = "../../modules/aws-core/vpc"
 
   tags           = var.tags
   vpc_name       = "${var.resource-name-prefix}_vpc"

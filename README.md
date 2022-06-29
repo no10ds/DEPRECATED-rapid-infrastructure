@@ -17,8 +17,8 @@ mechanism to deploy the rAPId service either on top of your existing infrastruct
 If you are looking to develop in this repository also take a look at the [contributing readme](docs/guides/contributing.md)
 
 - Deploy rAPId service
-    - [Deploy service's modules (On top of your existing infrastructure)](#deploy-service-modules)
-    - [Deploy the full stack (If you don't have Terraform infrastructure)](#deploy-full-stack)
+    - [Deploy the rAPId module (On top of your existing infrastructure)](#deploy-service-modules)
+    - [Deploy the full stack (If you don't have existing Terraform infrastructure)](#deploy-full-stack)
 
 ## Infrastructure diagrams
 
@@ -32,60 +32,59 @@ diagrams [see files here](./docs/diagrams/)
 
 Please reach out to us on [slack](https://ukgovernmentdigital.slack.com/archives/C03E5GV2LQM).
 
-## Deploy service modules
+## Deploy the rAPId module
 
-For departments that already have an existing infrastructure, we have extracted the top level infrastructure into modules, this
-way it can be cherry-picked to fulfill the department needs. They are organised in separate folders for easy access:
+For departments that already have an existing infrastructure, we have extracted the top level infrastructure into a single terraform module.
 
+Usage:
 ```
-├── modules
-│   ├── auth
-│   ├── app-cluster
-│   └── data-workflow
+module "rapid" {
+  source  = "git@github.com:no10ds/rapid-infrastructure.git//modules/rapid"
+
+  # Account details
+  aws_account = ""
+  aws_region  = ""
+
+  # Application hosting
+  domain_name = ""
+  ip_whitelist = ""
+  public_subnet_ids_list = [""]
+  private_subnet_ids_list = [""]
+  vpc_id = ""
+
+  # Resource naming - must be unique
+  resource-name-prefix = "rapid-${your-team-name}"
+
+  # Support
+  support_emails_for_cloudwatch_alerts = [""]
+}
 ```
 
-In order to add a rAPId module into existing infra, you can see how we have implemented it ourselves in
-the [app-cluster](blocks/app-cluster/main.tf) and the [data-workflow](blocks/data-workflow/main.tf) blocks. To configure
-them you will need the following inputs:
+Provide the required inputs as described:
 
-- `rapid_ecr_url` - to be provided by the rAPId team
-- `application_version` - service's docker
-  image [version](https://github.com/no10ds/rapid-api/blob/master/changelog.md)
-- `domain_name` - application hostname ([can be a domain or a subdomain](#managing-domainssubdomains))
-- `cognito_domain` - Cognito subdomain url for authentication
-- `aws_account` - aws account where the application will be hosted
-- `data_s3_bucket_arn` - arn of the bucket which stores the data
-- `data_s3_bucket_name` - name of the bucket which stores the data
-- `log_bucket_name` - name of the bucket to send the logs to
-- `vpc_id` - vpc id
-- `private_subnet` - Subnet where the application cluster is
-- `private_subnet_ids_list` - List of private subnets where the application and LB live
-- `athena_query_output_bucket_arn` - The S3 bucket ARN where Athena stores its query results.
-    - This bucket is created dynamically with a unique name in the `data-workflow` module.
-    - Reference it by using a remote state data block, module output or ARN string directly, e.g.:
-        - `data.terraform_remote_state.data-workflow-state.outputs.athena_query_output_bucket_arn`
-        - `module.data-workflow.athena_query_output_bucket_arn`
-        - `arn:aws:s3:::aws-athena-query-results-99999999999`
-- `support_emails_for_cloudwatch_alerts` - list of engineer emails that should receive alert notifications
-- `ip_whitelist` - a list of IP addresses that are allowed to access the service.
+- `aws_account` - AWS account where the application will be hosted
+- `aws_region` - AWS region where the application will be hosted
+- `domain_name` - Application hostname ([can be a domain or a subdomain](#managing-domainssubdomains))
+- `ip_whitelist` - A list of IP addresses that are allowed to access the service.
+- `public_subnet_ids_list` - List of public subnets for the load balancer
+- `private_subnet_ids_list` - List of private subnets for the ECS service
+- `vpc_id` - VPC id
+- `resource-name-prefix` - The prefix that will be given to all of these rAPId resources, it needs to be unique so to not conflict with any other instance e.g `rapid-<your-team/project/dept>` 
+- `support_emails_for_cloudwatch_alerts` - List of engineer emails that should receive alert notifications
 
-There are also few optional inputs:
-
-- `hosted_zone_id` - if provided, will add an alias for the application load balancer to use the provided domain using
-  that HZ. Otherwise, it will create a HZ and the alias
-- `certificate_validation_arn` - if provided, will link the certificate to the load-balancer https-listener. Otherwise,
-  will create a new certificate and link it. ([managing certificates](#managing-certificates)
+There are also these optional inputs:
+- `application_version` - The service's image [version](https://github.com/no10ds/rapid-api/blob/master/changelog.md)
+- `hosted_zone_id` - If provided, will add an alias for the application load balancer to use the provided domain using that HZ. Otherwise, it will create a HZ and the alias
+- `certificate_validation_arn` - If provided, will link the certificate to the load-balancer https-listener. Otherwise, will create a new certificate and link it. ([managing certificates](#managing-certificates))
 - `app-replica-count-desired` - if provided, will set the number of desired running instances for a service. Otherwise,
   it will default the count to 1
 - `app-replica-count-max` - if provided, will set the number of maximum running instances for a service. Otherwise, it
   will default the count to 2
-- `resource-name-prefix` - if provided, it will set a prefix to the aws resources, Otherwise, it will default the prefix
-  to "rapid"
 - `tags` - if provided, it will tag the resources with the defined value. Otherwise, it will default to "Resource = '
   data-f1-rapid'"
 
 
-Once all these steps have been followed a new instance of the application should be created.
+Once you apply the Terraform, a new instance of the application should be created.
 
 ## Deploy full stack
 

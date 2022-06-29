@@ -5,7 +5,7 @@ terraform {
 }
 
 module "config" {
-  source = "git::https://github.com/no10ds/terraform-aws-core-modules.git//config"
+  source = "../../modules/aws-core/config"
 
   bucket_prefix                      = var.bucket_prefix
   bucket_key_prefix                  = var.bucket_prefix
@@ -13,7 +13,7 @@ module "config" {
 }
 
 module "iam_users" {
-  source = "git::https://github.com/no10ds/terraform-aws-core-modules.git//iam-users"
+  source = "../../modules/aws-core/iam-users"
 
   # This includes some random bits here purely for demonstrational purposes. Please use a distinct unique identifier otherwise!
   iam_account_alias = var.iam_account_alias
@@ -21,7 +21,7 @@ module "iam_users" {
 }
 
 module "iam_resources" {
-  source = "git::https://github.com/no10ds/terraform-aws-core-modules.git//iam-resources"
+  source = "../../modules/aws-core/iam-resources"
 
   # Mandatory parameter so we can't skip it
   iam_account_alias = var.iam_account_alias

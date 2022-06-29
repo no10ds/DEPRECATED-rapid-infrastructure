@@ -7,7 +7,7 @@ resource "aws_vpc_endpoint" "s3_vpc_endpoint" {
 
 resource "aws_security_group" "glue_connection_sg" {
   #checkov:skip=CKV2_AWS_5:SG is attached
-  name        = "glue_connection_sg"
+  name        = "${var.resource-name-prefix}-glue_connection_sg"
   description = "Allow crawler to read s3 bucket"
   vpc_id      = var.vpc_id
   ingress {
