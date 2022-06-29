@@ -32,6 +32,7 @@ precommit-modules: 	## .... for all the infra blocks
 	@printf "updating docs app-cluster: " && $(MAKE) precommit-module "module=app-cluster"
 	@printf "updating docs auth: " && $(MAKE) precommit-module "module=auth"
 	@printf "updating docs data-workflow: " && $(MAKE) precommit-module "module=data-workflow"
+	@printf "updating docs rapid: " && $(MAKE) precommit-module "module=rapid"
 
 plan: 		## plan - view infra changes: make plan block=<infra-block>
 	@./scripts/infra_make_helper.sh run_tf plan "${block}"
