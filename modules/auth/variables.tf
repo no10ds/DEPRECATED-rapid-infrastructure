@@ -1,7 +1,7 @@
 variable "tags" {
   type        = map(string)
   description = "A common map of tags for all VPC resources that are created (for e.g. billing purposes)"
-  default = {
+  default     = {
     Resource = "data-f1-rapid"
   }
 }
@@ -29,7 +29,7 @@ variable "resource-name-prefix" {
 }
 
 variable "scopes" {
-  type = list(map(any))
+  type    = list(map(any))
   default = [
     {
       scope_name        = "READ_ALL"
@@ -72,4 +72,46 @@ variable "scopes" {
       scope_description = "Carry out admin actions with regards to the data products"
     },
   ]
+}
+
+variable "admin_permissions" {
+  type    = map(map(any))
+  default = {
+    "0" = {
+      type = "USER_ADMIN"
+    },
+    "1" = {
+      type = "DATA_ADMIN"
+    },
+  }
+}
+
+variable "data_permissions" {
+  type    = map(map(any))
+  default = {
+    "2" = {
+      type  = "READ"
+      sensitivity = "ALL"
+    },
+    "3" = {
+      type        = "WRITE"
+      sensitivity = "ALL"
+    },
+    "4" = {
+      type        = "READ"
+      sensitivity = "PUBLIC"
+    },
+    "5" = {
+      type        = "WRITE"
+      sensitivity = "PUBLIC"
+    },
+    "6" = {
+      type        = "READ"
+      sensitivity = "PRIVATE"
+    },
+    "7" = {
+      type        = "WRITE"
+      sensitivity = "PRIVATE"
+    },
+  }
 }
