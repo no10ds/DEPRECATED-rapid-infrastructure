@@ -156,6 +156,31 @@ resource "aws_iam_policy" "app_cognito_access" {
   })
 }
 
+resource "aws_iam_policy" "app_dynamodb_access" {
+  name        = "${var.resource-name-prefix}-app_dynamodb_access"
+  description = "Allow application instance to access DynamoDB"
+  tags        = var.tags
+
+  policy = jsonencode({
+    "Version" : "2012-10-17",
+    "Statement" : [
+      {
+        Effect : "Allow",
+        Action : [
+          "dynamodb:DeleteItem",
+          "dynamodb:BatchGetItem",
+          "dynamodb:Scan",
+          "dynamodb:Query",
+          "dynamodb:PutItem",
+          "dynamodb:GetItem",
+          "dynamodb:UpdateItem"
+        ],
+        Resource : "arn:aws:dynamodb:${var.aws_region}:${var.aws_account}:table/users_permissions"
+      }
+    ]
+  })
+}
+
 resource "aws_iam_policy" "app_secrets_manager_access" {
   name        = "${var.resource-name-prefix}-app_secrets_manager_access"
   description = "Allow application instance to access AWS Secrets Manager"
@@ -240,6 +265,11 @@ resource "aws_iam_role_policy_attachment" "role_athena_access_policy_attachment"
 resource "aws_iam_role_policy_attachment" "role_tags_access_policy_attachment" {
   role       = aws_iam_role.ecsTaskExecutionRole.name
   policy_arn = aws_iam_policy.app_tags_access.arn
+}
+
+resource "aws_iam_role_policy_attachment" "role_dynamodb_access_policy_attachment" {
+  role       = aws_iam_role.ecsTaskExecutionRole.name
+  policy_arn = aws_iam_policy.app_dynamodb_access.arn
 }
 
 resource "aws_iam_role_policy_attachment" "role_parameter_store_access_policy_attachment" {
