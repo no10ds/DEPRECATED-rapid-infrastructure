@@ -1,5 +1,7 @@
+data "aws_caller_identity" "current" {}
+
 resource "aws_dynamodb_table" "permissions_table" {
-  name         = "${var.resource-name-prefix}_users_permissions"
+  name         = "${var.resource-name-prefix}_${var.permissions_table_name}"
   hash_key     = "PK"
   range_key    = "SK"
   billing_mode = "PAY_PER_REQUEST"
@@ -67,7 +69,7 @@ resource "aws_dynamodb_table_item" "test_client_permissions" {
   hash_key   = aws_dynamodb_table.permissions_table.hash_key
   range_key  = aws_dynamodb_table.permissions_table.range_key
 
-  item     = <<ITEM
+  item = <<ITEM
   {
     "PK": {"S": "USR#CLIENT"},
     "SK": {"S": "USR#${aws_cognito_user_pool_client.test_client.id}"},
@@ -76,4 +78,143 @@ resource "aws_dynamodb_table_item" "test_client_permissions" {
     "Permissions": {"SS": ["0","1","2","3"]}
   }
   ITEM
+}
+
+
+resource "aws_cloudwatch_log_group" "db_access_logs_log_group" {
+  name              = "${aws_dynamodb_table.permissions_table.name}_access_logs"
+  retention_in_days = 90
+}
+
+resource "aws_cloudtrail" "db_access_logs_trail" {
+  depends_on = [
+    aws_s3_bucket_policy.db_access_logs_bucket_policy
+  ]
+
+  name           = "${var.resource-name-prefix}-permissions-table-access-logs"
+  s3_bucket_name = aws_s3_bucket.db_access_logs.id
+  s3_key_prefix  = "permissions-db-access-logs"
+
+  is_multi_region_trail         = true
+  enable_log_file_validation    = true
+  include_global_service_events = true
+
+  event_selector {
+    include_management_events = false
+    data_resource {
+      type   = "AWS::DynamoDB::Table"
+      values = [
+        aws_dynamodb_table.permissions_table.arn
+      ]
+    }
+  }
+
+  # CloudTrail requires the Log Stream wildcard
+  cloud_watch_logs_group_arn = "${aws_cloudwatch_log_group.db_access_logs_log_group.arn}:*"
+  cloud_watch_logs_role_arn  = aws_iam_role.cloud_trail_role.arn
+}
+
+resource "aws_iam_role" "cloud_trail_role" {
+  name = "${var.resource-name-prefix}-cloudtrail-cloudwatch-role"
+
+  assume_role_policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "cloudtrail.amazonaws.com"
+      },
+      "Action": "sts:AssumeRole"
+    }
+  ]
+}
+EOF
+}
+
+resource "aws_iam_role_policy" "aws_iam_role_policy_cloudtrail_cloudwatch" {
+  name = "${var.resource-name-prefix}-cloudtrail-cloudwatch-policy"
+  role = aws_iam_role.cloud_trail_role.id
+
+  policy = <<EOF
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "AWSCloudTrailCreateLogStream2014110",
+            "Effect": "Allow",
+            "Action": [
+                "logs:CreateLogStream"
+            ],
+            "Resource": [
+                "${aws_cloudwatch_log_group.db_access_logs_log_group.arn}:*"
+            ]
+        },
+        {
+            "Sid": "AWSCloudTrailPutLogEvents20141101",
+            "Effect": "Allow",
+            "Action": [
+                "logs:PutLogEvents"
+            ],
+            "Resource": [
+                "${aws_cloudwatch_log_group.db_access_logs_log_group.arn}:*"
+            ]
+        }
+    ]
+}
+EOF
+}
+
+resource "aws_s3_bucket" "db_access_logs" {
+  bucket        = "${var.resource-name-prefix}-permissions-table-access-logs"
+  force_destroy = true
+}
+
+resource "aws_s3_bucket_policy" "db_access_logs_bucket_policy" {
+  bucket = aws_s3_bucket.db_access_logs.id
+  policy = <<POLICY
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "AWSCloudTrailAclCheck",
+            "Effect": "Allow",
+            "Principal": {
+              "Service": "cloudtrail.amazonaws.com"
+            },
+            "Action": "s3:GetBucketAcl",
+            "Resource": "${aws_s3_bucket.db_access_logs.arn}"
+        },
+        {
+            "Sid": "AWSCloudTrailWrite",
+            "Effect": "Allow",
+            "Principal": {
+              "Service": "cloudtrail.amazonaws.com"
+            },
+            "Action": "s3:PutObject",
+            "Resource": "${aws_s3_bucket.db_access_logs.arn}/*",
+            "Condition": {
+                "StringEquals": {
+                    "s3:x-amz-acl": "bucket-owner-full-control"
+                }
+            }
+        }
+    ]
+}
+POLICY
+}
+
+resource "aws_s3_bucket_lifecycle_configuration" "db_access_logs_lifecycle" {
+  bucket = aws_s3_bucket.db_access_logs.id
+
+  rule {
+    id     = "expire-old-logs"
+    status = "Enabled"
+
+    expiration {
+      days = 90
+    }
+
+  }
 }

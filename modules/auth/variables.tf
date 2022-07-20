@@ -28,6 +28,12 @@ variable "resource-name-prefix" {
   description = "The prefix to add to resources for easier identification"
 }
 
+variable "permissions_table_name" {
+  type        = string
+  description = "The name of the users permissions table in DynamoDb"
+  default     = "users_permissions"
+}
+
 variable "scopes" {
   type    = list(map(any))
   default = [
