@@ -15,4 +15,4 @@ See [v1.0.0] changes
   - Build rapid infrastructure
 
 [Unreleased changes]: https://github.com/no10ds/rapid-infrastructure/compare/v1.0.0...HEAD
-[v1.0.0]: https://github.com/no10ds/rapid-infrastructure/compare/ff60bf65...v1.0.0
+[v1.0.0]: https://github.com/no10ds/rapid-infrastructure/compare/49ed254a3b80c1a619161d24e97d91a893ad3cf9...v1.0.0
