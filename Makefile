@@ -54,3 +54,12 @@ ignore-secrets: 		## Mark detected non-secrets as ignored
 
 backend: 		## create terraform backend infrastructure
 	@./scripts/infra_make_helper.sh create_backend
+
+release:       ## Release
+	@git checkout ${commit}
+	@git tag -a "${version}" -m "Release tag for version ${version}"
+	@git checkout -
+	@git push origin ${version}
+	@./batect generate_latest_changelog
+	@gh release create ${version} -F latest_release_changelog.md
+	@rm -rf latest_release_changelog.md
