@@ -7,7 +7,6 @@ resource "aws_dynamodb_table" "permissions_table" {
   range_key    = "SK"
   billing_mode = "PAY_PER_REQUEST"
 
-
   attribute {
     name = "PK"
     type = "S"
@@ -80,8 +79,6 @@ resource "aws_dynamodb_table_item" "test_client_permissions" {
   }
   ITEM
 }
-
-
 
 data "aws_iam_policy_document" "db_access_logs_key_policy" {
   statement {
@@ -159,6 +156,7 @@ data "aws_iam_policy_document" "db_access_logs_key_policy" {
 resource "aws_kms_key" "db_access_logs_key" {
   description = "This key is used to encrypt log objects"
   policy = data.aws_iam_policy_document.db_access_logs_key_policy.json
+  tags = var.tags
 }
 
 resource "aws_cloudwatch_log_group" "db_access_logs_log_group" {
@@ -166,6 +164,7 @@ resource "aws_cloudwatch_log_group" "db_access_logs_log_group" {
   name              = "${aws_dynamodb_table.permissions_table.name}_access_logs"
   retention_in_days = 90
   kms_key_id        = aws_kms_key.db_access_logs_key.arn
+  tags = var.tags
 }
 
 resource "aws_cloudtrail" "db_access_logs_trail" {
@@ -196,6 +195,8 @@ resource "aws_cloudtrail" "db_access_logs_trail" {
   # CloudTrail requires the Log Stream wildcard
   cloud_watch_logs_group_arn = "${aws_cloudwatch_log_group.db_access_logs_log_group.arn}:*"
   cloud_watch_logs_role_arn  = aws_iam_role.cloud_trail_role.arn
+
+  tags = var.tags
 }
 
 resource "aws_iam_role" "cloud_trail_role" {
@@ -215,6 +216,8 @@ resource "aws_iam_role" "cloud_trail_role" {
   ]
 }
 EOF
+
+  tags = var.tags
 }
 
 resource "aws_iam_role_policy" "aws_iam_role_policy_cloudtrail_cloudwatch" {
@@ -253,6 +256,7 @@ EOF
 resource "aws_s3_bucket" "db_access_logs" {
   bucket        = "${var.resource-name-prefix}-permissions-table-access-logs"
   force_destroy = true
+  tags = var.tags
 }
 
 resource "aws_s3_bucket_policy" "db_access_logs_bucket_policy" {
@@ -303,7 +307,7 @@ resource "aws_s3_bucket_lifecycle_configuration" "db_access_logs_lifecycle" {
   }
 }
 
-resource "aws_s3_bucket_server_side_encryption_configuration" "example" {
+resource "aws_s3_bucket_server_side_encryption_configuration" "db_access_logs_s3_encryption_config" {
   depends_on = [aws_kms_key.db_access_logs_key]
   bucket = aws_s3_bucket.db_access_logs.bucket
 
