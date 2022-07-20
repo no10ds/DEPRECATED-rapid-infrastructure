@@ -32,3 +32,8 @@ output "protected_scopes_parameter_store_arn" {
   value       = module.auth.protected_scopes_parameter_store_arn
   description = "The arn of the protected scopes parameter store variable"
 }
+
+output "user_permission_table_name" {
+  value       = module.auth.user_permission_table_name
+  description = "Tha name of the dynamoDB table that stores permissions"
+}

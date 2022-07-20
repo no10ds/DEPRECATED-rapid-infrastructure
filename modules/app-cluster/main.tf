@@ -175,7 +175,7 @@ resource "aws_iam_policy" "app_dynamodb_access" {
           "dynamodb:GetItem",
           "dynamodb:UpdateItem"
         ],
-        Resource : "arn:aws:dynamodb:${var.aws_region}:${var.aws_account}:table/users_permissions"
+        Resource : "arn:aws:dynamodb:${var.aws_region}:${var.aws_account}:table/${var.permissions_table}"
       }
     ]
   })
