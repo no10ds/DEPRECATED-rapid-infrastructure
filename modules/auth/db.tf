@@ -1,3 +1,4 @@
+data "aws_region" "region" {}
 data "aws_caller_identity" "current" {}
 
 resource "aws_dynamodb_table" "permissions_table" {
@@ -81,19 +82,102 @@ resource "aws_dynamodb_table_item" "test_client_permissions" {
 }
 
 
+
+data "aws_iam_policy_document" "db_access_logs_key_policy" {
+  statement {
+    sid = "Enable IAM User Permissions"
+
+    effect = "Allow"
+
+    principals {
+      type = "AWS"
+      identifiers = ["arn:aws:iam::${data.aws_caller_identity.current.account_id}:root"]
+    }
+
+    actions = [
+      "kms:*",
+    ]
+
+    resources = [
+      "*",
+    ]
+  }
+
+  statement {
+    sid = "Enable Logs Encryption Permissions"
+
+    effect = "Allow"
+
+    principals {
+      type = "Service"
+      identifiers = ["logs.${data.aws_region.region.name}.amazonaws.com"]
+    }
+
+    actions = [
+      "kms:Encrypt*",
+      "kms:Decrypt*",
+      "kms:ReEncrypt*",
+      "kms:GenerateDataKey*",
+      "kms:Describe*",
+    ]
+
+    resources = [
+      "*",
+    ]
+
+    condition {
+      test     = "ArnEquals"
+      variable = "kms:EncryptionContext:aws:logs:arn"
+      values   = ["arn:aws:logs:${data.aws_region.region.name}:${data.aws_caller_identity.current.account_id}:log-group:${var.resource-name-prefix}_${var.permissions_table_name}_access_logs"]
+    }
+  }
+
+  statement {
+    sid = "Enable CloudTrail Encryption Permissions"
+
+    effect = "Allow"
+
+    principals {
+      type = "Service"
+      identifiers = ["cloudtrail.amazonaws.com"]
+    }
+
+    actions = [
+      "kms:Encrypt*",
+      "kms:Decrypt*",
+      "kms:ReEncrypt*",
+      "kms:GenerateDataKey*",
+      "kms:Describe*",
+    ]
+
+    resources = [
+      "*",
+    ]
+  }
+}
+
+resource "aws_kms_key" "db_access_logs_key" {
+  description = "This key is used to encrypt log objects"
+  policy = data.aws_iam_policy_document.db_access_logs_key_policy.json
+}
+
 resource "aws_cloudwatch_log_group" "db_access_logs_log_group" {
+  depends_on = [aws_kms_key.db_access_logs_key]
   name              = "${aws_dynamodb_table.permissions_table.name}_access_logs"
   retention_in_days = 90
+  kms_key_id        = aws_kms_key.db_access_logs_key.arn
 }
 
 resource "aws_cloudtrail" "db_access_logs_trail" {
   depends_on = [
-    aws_s3_bucket_policy.db_access_logs_bucket_policy
+    aws_s3_bucket_policy.db_access_logs_bucket_policy,
+    aws_kms_key.db_access_logs_key
   ]
 
   name           = "${var.resource-name-prefix}-permissions-table-access-logs"
   s3_bucket_name = aws_s3_bucket.db_access_logs.id
   s3_key_prefix  = "permissions-db-access-logs"
+  kms_key_id     = aws_kms_key.db_access_logs_key.arn
 
   is_multi_region_trail         = true
   enable_log_file_validation    = true
@@ -216,5 +300,17 @@ resource "aws_s3_bucket_lifecycle_configuration" "db_access_logs_lifecycle" {
       days = 90
     }
 
+  }
+}
+
+resource "aws_s3_bucket_server_side_encryption_configuration" "example" {
+  depends_on = [aws_kms_key.db_access_logs_key]
+  bucket = aws_s3_bucket.db_access_logs.bucket
+
+  rule {
+    apply_server_side_encryption_by_default {
+      kms_master_key_id = aws_kms_key.db_access_logs_key.arn
+      sse_algorithm     = "aws:kms"
+    }
   }
 }
