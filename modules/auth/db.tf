@@ -24,9 +24,6 @@ resource "aws_dynamodb_table" "permissions_table" {
     enabled = true
   }
 
-  stream_enabled = true
-  stream_view_type = "NEW_AND_OLD_IMAGES"
-
   tags = var.tags
 }
 
