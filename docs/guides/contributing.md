@@ -41,3 +41,32 @@ should be added and committed**.
 To clean up all the infra blocks just run `make destroy block={block-to-destroy}`
 
 To clean the dynamically created resources follow [this guide](clean_up_dynamically_created_resources.md)
+
+
+## Releasing
+
+The guide for how to perform a release of the rapid-infrastructure terraform.
+
+### Context
+
+The product of the rAPId team is the service image that departments can pull and run in their own infrastructure.
+
+Performing a release fundamentally involves tagging the image of a version of the service with a specific version number
+so that departments can reference the version that matches the version of [rapid-api](https://github.com/no10ds/rapid-api)
+
+### Prerequisites
+
+- Download the GitHub CLI with `brew install gh`
+- Then run `gh auth login` and follow steps
+
+### Steps
+
+1. Decide on the new version number following the [semantic versioning approach](https://semver.org/)
+
+2. Get the commit hash `git rev-parse --short HEAD`
+
+3. Update and commit the [Changelog](../../../changelog.md) (you can follow
+   the [template](../../../changelog_release_template.md))
+4. Run `make release commit=<commit_hash> version=vX.X.X`
+
+
