@@ -45,14 +45,14 @@ To clean the dynamically created resources follow [this guide](clean_up_dynamica
 
 ## Releasing
 
-The guide for how to perform a release of the service image.
+The guide for how to perform a release of the rapid-infrastructure terraform.
 
 ### Context
 
 The product of the rAPId team is the service image that departments can pull and run in their own infrastructure.
 
 Performing a release fundamentally involves tagging the image of a version of the service with a specific version number
-so that departments can reference the version that 
+so that departments can reference the version that matches the version of [rapid-api](https://github.com/no10ds/rapid-api)
 
 ### Prerequisites
 
@@ -67,4 +67,3 @@ so that departments can reference the version that
 3. Run `make release commit=<commit_hash> version=vX.X.X`
 
 
-Now the release pipeline will run automatically, build the image off that version of the code, tag it and push it to ECR
