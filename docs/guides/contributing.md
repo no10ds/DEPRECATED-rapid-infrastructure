@@ -62,8 +62,11 @@ so that departments can reference the version that matches the version of [rapid
 ### Steps
 
 1. Decide on the new version number following the [semantic versioning approach](https://semver.org/)
-2. Update and commit the [Changelog](../../../changelog.md) (you can follow
+
+2. Get the commit hash `git rev-parse --short HEAD`
+
+3. Update and commit the [Changelog](../../../changelog.md) (you can follow
    the [template](../../../changelog_release_template.md))
-3. Run `make release commit=<commit_hash> version=vX.X.X`
+4. Run `make release commit=<commit_hash> version=vX.X.X`
 
 
