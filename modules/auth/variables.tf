@@ -83,10 +83,10 @@ variable "scopes" {
 variable "admin_permissions" {
   type    = map(map(any))
   default = {
-    "0" = {
+    "USER_ADMIN" = {
       type = "USER_ADMIN"
     },
-    "1" = {
+    "DATA_ADMIN" = {
       type = "DATA_ADMIN"
     },
   }
@@ -95,29 +95,37 @@ variable "admin_permissions" {
 variable "data_permissions" {
   type    = map(map(any))
   default = {
-    "2" = {
+    "READ_ALL" = {
       type  = "READ"
       sensitivity = "ALL"
     },
-    "3" = {
+    "WRITE_ALL" = {
       type        = "WRITE"
       sensitivity = "ALL"
     },
-    "4" = {
+    "READ_PUBLIC" = {
       type        = "READ"
       sensitivity = "PUBLIC"
     },
-    "5" = {
+    "WRITE_PUBLIC" = {
       type        = "WRITE"
       sensitivity = "PUBLIC"
     },
-    "6" = {
+    "READ_PRIVATE" = {
       type        = "READ"
       sensitivity = "PRIVATE"
     },
-    "7" = {
+    "WRITE_PRIVATE" = {
       type        = "WRITE"
       sensitivity = "PRIVATE"
+    },
+    "READ_SENSITIVE" = {
+      type        = "READ"
+      sensitivity = "SENSITIVE"
+    },
+    "WRITE_SENSITIVE" = {
+      type        = "WRITE"
+      sensitivity = "SENSITIVE"
     },
   }
 }

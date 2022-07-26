@@ -38,9 +38,8 @@ resource "aws_dynamodb_table_item" "data_permissions" {
 
   item = <<ITEM
       {
-        "PK": {"S": "PER#${each.value.type}"},
-        "SK": {"S": "PER#${each.key}"},
-        "Id": {"S": "${each.key}"},
+        "PK": {"S": "PERMISSION"},
+        "SK": {"S": "${each.key}"},
         "Type": {"S": "${each.value.type}"},
         "Sensitivity": {"S": "${each.value.sensitivity}"}
       }
@@ -56,9 +55,8 @@ resource "aws_dynamodb_table_item" "admin_permissions" {
 
   item = <<ITEM
       {
-        "PK": {"S": "PER#${each.value.type}"},
-        "SK": {"S": "PER#${each.key}"},
-        "Id": {"S": "${each.key}"},
+        "PK": {"S": "PERMISSION"},
+        "SK": {"S": "${each.key}"},
         "Type": {"S": "${each.value.type}"}
       }
     ITEM
@@ -71,11 +69,10 @@ resource "aws_dynamodb_table_item" "test_client_permissions" {
 
   item = <<ITEM
   {
-    "PK": {"S": "USR#CLIENT"},
-    "SK": {"S": "USR#${aws_cognito_user_pool_client.test_client.id}"},
-    "Id": {"S": "${aws_cognito_user_pool_client.test_client.id}"},
-    "Type": {"S": "Client"},
-    "Permissions": {"SS": ["0","1","2","3"]}
+    "PK": {"S": "SUBJECT"},
+    "SK": {"S": "${aws_cognito_user_pool_client.test_client.id}"},
+    "Type": {"S": "CLIENT"},
+    "Permissions": {"SS": ["USER_ADMIN","DATA_ADMIN","READ_ALL","WRITE_ALL"]}
   }
   ITEM
 }
