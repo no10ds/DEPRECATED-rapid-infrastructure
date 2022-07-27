@@ -40,6 +40,7 @@ resource "aws_dynamodb_table_item" "data_permissions" {
       {
         "PK": {"S": "PERMISSION"},
         "SK": {"S": "${each.key}"},
+        "Id": {"S": "${each.key}"},
         "Type": {"S": "${each.value.type}"},
         "Sensitivity": {"S": "${each.value.sensitivity}"}
       }
@@ -57,6 +58,7 @@ resource "aws_dynamodb_table_item" "admin_permissions" {
       {
         "PK": {"S": "PERMISSION"},
         "SK": {"S": "${each.key}"},
+        "Id": {"S": "${each.key}"},
         "Type": {"S": "${each.value.type}"}
       }
     ITEM
@@ -71,8 +73,9 @@ resource "aws_dynamodb_table_item" "test_client_permissions" {
   {
     "PK": {"S": "SUBJECT"},
     "SK": {"S": "${aws_cognito_user_pool_client.test_client.id}"},
+    "Id": {"S": "${aws_cognito_user_pool_client.test_client.id}"},
     "Type": {"S": "CLIENT"},
-    "Permissions": {"SS": ["USER_ADMIN","DATA_ADMIN","READ_ALL","WRITE_ALL"]}
+    "Permissions": {"SS": ["DATA_ADMIN","READ_ALL","USER_ADMIN","WRITE_ALL"]}
   }
   ITEM
 }
