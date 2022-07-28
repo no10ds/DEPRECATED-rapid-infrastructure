@@ -16,6 +16,10 @@ variable "resource-name-prefix" {
 variable "scopes" {
   type = list(map(any))
   default = [
+     {
+      scope_name        = "CLIENT_APP"
+      scope_description = "Client app default access"
+    },
     {
       scope_name        = "READ_ALL"
       scope_description = "Read all data in the rapid service at all sensitivity levels"

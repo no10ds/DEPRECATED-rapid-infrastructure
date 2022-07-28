@@ -65,10 +65,7 @@ resource "aws_cognito_user_pool_client" "test_client" {
   generate_secret     = true
   explicit_auth_flows = var.rapid_client_explicit_auth_flows
   allowed_oauth_scopes = [
-    "${aws_cognito_resource_server.rapid_resource_server.identifier}/WRITE_ALL",
-    "${aws_cognito_resource_server.rapid_resource_server.identifier}/READ_ALL",
-    "${aws_cognito_resource_server.rapid_resource_server.identifier}/USER_ADMIN",
-    "${aws_cognito_resource_server.rapid_resource_server.identifier}/DATA_ADMIN",
+    "${aws_cognito_resource_server.rapid_resource_server.identifier}/CLIENT_APP",
   ]
   allowed_oauth_flows                  = ["client_credentials"]
   allowed_oauth_flows_user_pool_client = true
