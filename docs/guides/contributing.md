@@ -6,7 +6,8 @@ Guides for developing in this repository
 
 Configure the custom git hooks location with `make init-hooks`
 
-You will also need to install [terraform-docs](https://terraform-docs.io/). This can be done with: `brew install terraform-docs`.
+You will also need to install [terraform-docs](https://terraform-docs.io/). This can be done
+with: `brew install terraform-docs`.
 
 ## Service Images
 
@@ -42,7 +43,6 @@ To clean up all the infra blocks just run `make destroy block={block-to-destroy}
 
 To clean the dynamically created resources follow [this guide](clean_up_dynamically_created_resources.md)
 
-
 ## Releasing
 
 The guide for how to perform a release of the rapid-infrastructure terraform.
@@ -52,7 +52,14 @@ The guide for how to perform a release of the rapid-infrastructure terraform.
 The product of the rAPId team is the service image that departments can pull and run in their own infrastructure.
 
 Performing a release fundamentally involves tagging the image of a version of the service with a specific version number
-so that departments can reference the version that matches the version of [rapid-api](https://github.com/no10ds/rapid-api)
+so that departments can reference the version that matches the version
+of [rapid-api](https://github.com/no10ds/rapid-api)
+
+⚠️ When releasing a new version of the infrastructure, you must also release a version of
+the [service](https://github.com/no10ds/rapid-api) and vice versa. Both versions should be the same (
+i.e.: both vX.Y.Z). If there are no changes in one or the other repo, it should still be released along with the other
+and a tag added to the same commit as the previous release. This ensures that the version numbers signal the
+compatibility between the two elements.
 
 ### Prerequisites
 

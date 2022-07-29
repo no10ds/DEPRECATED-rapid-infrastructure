@@ -49,7 +49,6 @@ resource "aws_iam_policy" "pipeline_ecr_access" {
   })
 }
 
-
 resource "aws_iam_policy" "pipeline_ecr_public_access" {
   name        = "pipeline_ecr_public_access"
   description = "Allow pipeline to access the public ECR"
@@ -119,7 +118,6 @@ resource "aws_iam_policy" "pipeline_s3_access" {
   })
 }
 
-
 resource "aws_iam_policy" "pipeline_secrets_manager_access" {
   name        = "pipeline_secrets_manager_access"
   description = "Allow pipeline to access AWS Secrets Manager"
@@ -143,7 +141,6 @@ resource "aws_iam_policy" "pipeline_secrets_manager_access" {
     "Version" : "2012-10-17"
   })
 }
-
 
 resource "aws_iam_policy" "pipeline_ssm_access" {
   name        = "pipeline_ssm_access"
