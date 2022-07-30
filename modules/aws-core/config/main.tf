@@ -25,7 +25,7 @@ data "aws_iam_policy_document" "allow_s3_access_for_aws_config_policy_document" 
   statement {
     effect    = "Allow"
     actions   = ["s3:GetBucketAcl"]
-    resources = ["${var.enable_lifecycle_management_for_s3 ? aws_s3_bucket.config_with_lifecycle[0].arn : aws_s3_bucket.config_without_lifecycle[0].arn}"]
+    resources = [var.enable_lifecycle_management_for_s3 ? aws_s3_bucket.config_with_lifecycle[0].arn : aws_s3_bucket.config_without_lifecycle[0].arn]
 
     condition {
       test     = "Bool"
@@ -273,7 +273,7 @@ resource "aws_config_config_rule" "iam_user_group_membership_check" {
     source_identifier = "IAM_USER_GROUP_MEMBERSHIP_CHECK"
   }
 
- input_parameters = jsonencode(var.iam_user_groups)
+  input_parameters = jsonencode(var.iam_user_groups)
 
   depends_on = [aws_config_configuration_recorder.config]
 }

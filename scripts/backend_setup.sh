@@ -10,7 +10,7 @@ function create_bucket(){
 
     echo "- Adding versioning"
     aws s3api put-bucket-versioning --bucket $BUCKET --versioning-configuration Status=Enabled $ARGS
-    
+
     echo "- Adding encryption"
     aws s3api put-bucket-encryption --bucket $BUCKET \
         --server-side-encryption-configuration '{"Rules": [{"ApplyServerSideEncryptionByDefault": {"SSEAlgorithm": "AES256"}}]}' $ARGS

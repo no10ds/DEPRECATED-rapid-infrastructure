@@ -1,7 +1,7 @@
 variable "tags" {
   type        = map(string)
   description = "A common map of tags for all VPC resources that are created (for e.g. billing purposes)"
-  default     = {
+  default = {
     Resource = "data-f1-rapid"
   }
 }
@@ -35,7 +35,7 @@ variable "permissions_table_name" {
 }
 
 variable "scopes" {
-  type    = list(map(any))
+  type = list(map(any))
   default = [
     {
       scope_name        = "READ_ALL"
@@ -81,7 +81,7 @@ variable "scopes" {
 }
 
 variable "admin_permissions" {
-  type    = map(map(any))
+  type = map(map(any))
   default = {
     "USER_ADMIN" = {
       type = "USER_ADMIN"
@@ -93,10 +93,10 @@ variable "admin_permissions" {
 }
 
 variable "data_permissions" {
-  type    = map(map(any))
+  type = map(map(any))
   default = {
     "READ_ALL" = {
-      type  = "READ"
+      type        = "READ"
       sensitivity = "ALL"
     },
     "WRITE_ALL" = {

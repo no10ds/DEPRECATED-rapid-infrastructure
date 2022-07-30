@@ -16,7 +16,7 @@ variable "resource-name-prefix" {
 variable "scopes" {
   type = list(map(any))
   default = [
-     {
+    {
       scope_name        = "CLIENT_APP"
       scope_description = "Client app default access"
     },

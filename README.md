@@ -69,7 +69,7 @@ Provide the required inputs as described:
 - `public_subnet_ids_list` - List of public subnets for the load balancer
 - `private_subnet_ids_list` - List of private subnets for the ECS service
 - `vpc_id` - VPC id
-- `resource-name-prefix` - The prefix that will be given to all of these rAPId resources, it needs to be unique so to not conflict with any other instance e.g `rapid-<your-team/project/dept>` 
+- `resource-name-prefix` - The prefix that will be given to all of these rAPId resources, it needs to be unique so to not conflict with any other instance e.g `rapid-<your-team/project/dept>`
 - `support_emails_for_cloudwatch_alerts` - List of engineer emails that should receive alert notifications
 
 There are also these optional inputs:
@@ -432,7 +432,7 @@ module "app_cluster" {
   ...
 
   support_emails_for_cloudwatch_alerts = ["someone@email.com", "support@email.com"]
-  
+
   ...
 }
 ```

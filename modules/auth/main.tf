@@ -34,9 +34,9 @@ resource "aws_cognito_resource_server" "rapid_resource_server" {
   user_pool_id = aws_cognito_user_pool.rapid_user_pool.id
 
   dynamic "scope" {
-    for_each = [for value in var.scopes: {
-      scope_name            = value.scope_name
-      scope_description     = value.scope_description
+    for_each = [for value in var.scopes : {
+      scope_name        = value.scope_name
+      scope_description = value.scope_description
     }]
 
     content {
@@ -46,9 +46,9 @@ resource "aws_cognito_resource_server" "rapid_resource_server" {
   }
 
   dynamic "scope" {
-    for_each = [for value in nonsensitive(jsondecode(aws_ssm_parameter.protected_domain_scopes.value)): {
-      scope_name            = value.ScopeName
-      scope_description     = value.ScopeDescription
+    for_each = [for value in nonsensitive(jsondecode(aws_ssm_parameter.protected_domain_scopes.value)) : {
+      scope_name        = value.ScopeName
+      scope_description = value.ScopeDescription
     }]
 
     content {

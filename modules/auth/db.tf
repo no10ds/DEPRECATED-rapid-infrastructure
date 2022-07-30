@@ -87,7 +87,7 @@ data "aws_iam_policy_document" "db_access_logs_key_policy" {
     effect = "Allow"
 
     principals {
-      type = "AWS"
+      type        = "AWS"
       identifiers = ["arn:aws:iam::${data.aws_caller_identity.current.account_id}:root"]
     }
 
@@ -106,7 +106,7 @@ data "aws_iam_policy_document" "db_access_logs_key_policy" {
     effect = "Allow"
 
     principals {
-      type = "Service"
+      type        = "Service"
       identifiers = ["logs.${data.aws_region.region.name}.amazonaws.com"]
     }
 
@@ -135,7 +135,7 @@ data "aws_iam_policy_document" "db_access_logs_key_policy" {
     effect = "Allow"
 
     principals {
-      type = "Service"
+      type        = "Service"
       identifiers = ["cloudtrail.amazonaws.com"]
     }
 
@@ -155,16 +155,16 @@ data "aws_iam_policy_document" "db_access_logs_key_policy" {
 
 resource "aws_kms_key" "db_access_logs_key" {
   description = "This key is used to encrypt log objects"
-  policy = data.aws_iam_policy_document.db_access_logs_key_policy.json
-  tags = var.tags
+  policy      = data.aws_iam_policy_document.db_access_logs_key_policy.json
+  tags        = var.tags
 }
 
 resource "aws_cloudwatch_log_group" "db_access_logs_log_group" {
-  depends_on = [aws_kms_key.db_access_logs_key]
+  depends_on        = [aws_kms_key.db_access_logs_key]
   name              = "${aws_dynamodb_table.permissions_table.name}_access_logs"
   retention_in_days = 90
   kms_key_id        = aws_kms_key.db_access_logs_key.arn
-  tags = var.tags
+  tags              = var.tags
 }
 
 resource "aws_cloudtrail" "db_access_logs_trail" {
@@ -185,7 +185,7 @@ resource "aws_cloudtrail" "db_access_logs_trail" {
   event_selector {
     include_management_events = false
     data_resource {
-      type   = "AWS::DynamoDB::Table"
+      type = "AWS::DynamoDB::Table"
       values = [
         aws_dynamodb_table.permissions_table.arn
       ]
@@ -256,7 +256,7 @@ EOF
 resource "aws_s3_bucket" "db_access_logs" {
   bucket        = "${var.resource-name-prefix}-permissions-table-access-logs"
   force_destroy = true
-  tags = var.tags
+  tags          = var.tags
 }
 
 resource "aws_s3_bucket_policy" "db_access_logs_bucket_policy" {
@@ -309,7 +309,7 @@ resource "aws_s3_bucket_lifecycle_configuration" "db_access_logs_lifecycle" {
 
 resource "aws_s3_bucket_server_side_encryption_configuration" "db_access_logs_s3_encryption_config" {
   depends_on = [aws_kms_key.db_access_logs_key]
-  bucket = aws_s3_bucket.db_access_logs.bucket
+  bucket     = aws_s3_bucket.db_access_logs.bucket
 
   rule {
     apply_server_side_encryption_by_default {

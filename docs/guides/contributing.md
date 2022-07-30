@@ -75,5 +75,3 @@ compatibility between the two elements.
 3. Update and commit the [Changelog](../../../changelog.md) (you can follow
    the [template](../../../changelog_release_template.md))
 4. Run `make release commit=<commit_hash> version=vX.X.X`
-
-

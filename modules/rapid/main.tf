@@ -7,6 +7,7 @@ module "app_cluster" {
   support_emails_for_cloudwatch_alerts            = var.support_emails_for_cloudwatch_alerts
   cognito_user_login_app_credentials_secrets_name = module.auth.cognito_user_app_secret_manager_name
   cognito_user_pool_id                            = module.auth.cognito_user_pool_id
+  permissions_table                               = module.auth.user_permission_table_name
   domain_name                                     = var.domain_name
   rapid_ecr_url                                   = var.rapid_ecr_url
   certificate_validation_arn                      = var.certificate_validation_arn
@@ -45,7 +46,7 @@ module "data_workflow" {
 resource "aws_s3_bucket" "this" {
   #checkov:skip=CKV_AWS_144:No need for cross region replication
   #checkov:skip=CKV_AWS_145:No need for non default key
-  bucket = var.resource-name-prefix
+  bucket        = var.resource-name-prefix
   acl           = "private"
   force_destroy = false
 
@@ -83,7 +84,7 @@ resource "aws_s3_bucket" "logs" {
   #checkov:skip=CKV_AWS_145:No need for non default key
   #checkov:skip=CKV_AWS_18:Log bucket shouldn't be logging
   #checkov:skip=CKV_AWS_21:No need to version log bucket
-  bucket = "${var.resource-name-prefix}-logs"
+  bucket        = "${var.resource-name-prefix}-logs"
   acl           = "private"
   force_destroy = false
 
