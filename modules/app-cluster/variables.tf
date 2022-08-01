@@ -75,6 +75,11 @@ variable "domain_name" {
   description = "Domain name for the rAPId instance"
 }
 
+variable "allowed_email_domains" {
+  type        = string
+  description = "List of allowed emails domains that can be associated with users"
+}
+
 variable "aws_account" {
   type        = string
   description = "AWS Account number to host the rAPId service"

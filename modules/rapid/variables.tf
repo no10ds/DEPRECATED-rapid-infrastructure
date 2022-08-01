@@ -37,6 +37,11 @@ variable "domain_name" {
   description = "Domain name for the rAPId instance"
 }
 
+variable "allowed_email_domains" {
+  type        = string
+  description = "List of allowed emails domains that can be associated with users"
+}
+
 variable "hosted_zone_id" {
   type        = string
   description = "Hosted Zone ID with the domain Name Servers, pass quotes to create a new one from scratch"

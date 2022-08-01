@@ -317,6 +317,10 @@ resource "aws_ecs_task_definition" "aws-ecs-task" {
         "value": "${var.domain_name}"
       },
       {
+        "name": "ALLOWED_EMAIL_DOMAINS",
+        "value": "${var.allowed_email_domains}"
+      },
+      {
         "name": "COGNITO_USER_POOL_ID",
         "value": "${var.cognito_user_pool_id}"
       },

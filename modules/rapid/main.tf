@@ -9,6 +9,7 @@ module "app_cluster" {
   cognito_user_pool_id                            = module.auth.cognito_user_pool_id
   permissions_table                               = module.auth.user_permission_table_name
   domain_name                                     = var.domain_name
+  allowed_email_domains                           = var.allowed_email_domains
   rapid_ecr_url                                   = var.rapid_ecr_url
   certificate_validation_arn                      = var.certificate_validation_arn
   hosted_zone_id                                  = var.hosted_zone_id

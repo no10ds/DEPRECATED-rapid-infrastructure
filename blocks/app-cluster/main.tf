@@ -17,6 +17,7 @@ module "app_cluster" {
 
   application_version                  = var.application_version
   domain_name                          = var.domain_name
+  allowed_email_domains                = var.allowed_email_domains
   aws_account                          = var.aws_account
   aws_region                           = var.aws_region
   rapid_ecr_url                        = var.rapid_ecr_url
