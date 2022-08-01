@@ -43,6 +43,21 @@ To clean up all the infra blocks just run `make destroy block={block-to-destroy}
 
 To clean the dynamically created resources follow [this guide](clean_up_dynamically_created_resources.md)
 
+### Checking your code
+
+To enable automatic pre-commit hook checks:
+
+- Install `pre-commit`, you can follow [pre-commit](https://pre-commit.com/)
+- Install `tflint` with e.g.: `brew install tflint`
+- At root level, run `pre-commit install`
+- To test that it worked, run `pre-commit run --all-files`
+
+This will enable automatic checks before committing any files, giving an extra layer of protection to the code before
+being pushed
+
+
+
+
 ## Releasing
 
 The guide for how to perform a release of the rapid-infrastructure terraform.
