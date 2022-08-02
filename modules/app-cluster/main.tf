@@ -148,6 +148,13 @@ resource "aws_iam_policy" "app_cognito_access" {
           "cognito-idp:CreateGroup",
           "cognito-idp:DeleteGroup",
           "cognito-idp:DescribeResourceServer",
+          "cognito-idp:AdminCreateUser",
+          "cognito-idp:AdminDeleteUser",
+          "cognito-idp:AdminGetUser",
+          "cognito-idp:ListUsers",
+          "cognito-idp:DeleteUserPoolClient",
+          "cognito-idp:DescribeUserPoolClient",
+          "cognito-idp:ListUserPoolClients",
           "cognito-idp:UpdateResourceServer"
         ],
         Resource : "arn:aws:cognito-idp:${var.aws_region}:${var.aws_account}:userpool/${var.cognito_user_pool_id}"
