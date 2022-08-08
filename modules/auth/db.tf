@@ -29,29 +29,6 @@ resource "aws_dynamodb_table" "permissions_table" {
   tags = var.tags
 }
 
-resource "aws_dynamodb_table_item" "protected_permissions" {
-  table_name = aws_dynamodb_table.permissions_table.name
-  hash_key   = aws_dynamodb_table.permissions_table.hash_key
-  range_key  = aws_dynamodb_table.permissions_table.range_key
-
-  for_each = local.protected_permission
-  item     = each.value
-}
-
-locals {
-  protected_permission = toset([
-  for value in nonsensitive(jsondecode(aws_ssm_parameter.protected_domain_permissions.value)) :
-  jsonencode({
-    "PK" : { "S" : "PERMISSION" },
-    "SK" : { "S" : value.PermissionName },
-    "Id" : { "S" : value.PermissionName },
-    "Type" : { "S" : value.Type },
-    "Sensitivity" : { "S" : value.Sensitivity }
-    "Domain" : { "S" : value.Domain }
-  })
-  ])
-}
-
 resource "aws_dynamodb_table_item" "data_permissions" {
   table_name = aws_dynamodb_table.permissions_table.name
   hash_key   = aws_dynamodb_table.permissions_table.hash_key

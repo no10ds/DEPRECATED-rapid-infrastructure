@@ -10,18 +10,6 @@ resource "aws_ssm_parameter" "protected_domain_scopes" {
   }
 }
 
-resource "aws_ssm_parameter" "protected_domain_permissions" {
-  name  = "${var.resource-name-prefix}_protected_domain_permissions"
-  type  = "StringList"
-  value = "[]"
-
-  lifecycle {
-    ignore_changes = [
-      value,
-    ]
-  }
-}
-
 resource "aws_cognito_user_pool" "rapid_user_pool" {
   name = "${var.resource-name-prefix}_user_pool"
   tags = var.tags
