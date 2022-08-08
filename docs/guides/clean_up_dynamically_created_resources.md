@@ -95,3 +95,20 @@ Until the ```delete``` endpoint is created for cleanup, we recommend following t
 
 ## Notes 📝
 - `{prefix}` is a value assigned in terraform as part of the IaC, in our case is `rapid` and it is maintained across resources
+
+### Protected domains 🥽
+#### Steps 🚶‍
+- Access the script within the api `test/scripts/delete_protected_domain_permission`
+- Specify the domain you would like to delete
+```commandline
+python test/scripts/delete_protected_domain_permission domain-to-be-deleted
+```
+
+#### Items deleted
+- Protected domain permission from database `READ` and `WRITE`
+- Removes permission assigned to users
+- Removes protected datasets within domain, this includes:
+  - Crawler
+  - Table
+  - Data (raw data and data)
+  - Schema
