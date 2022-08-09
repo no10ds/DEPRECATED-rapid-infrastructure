@@ -176,6 +176,7 @@ resource "aws_iam_policy" "app_dynamodb_access" {
         Action : [
           "dynamodb:DeleteItem",
           "dynamodb:BatchGetItem",
+          "dynamodb:BatchWriteItem",
           "dynamodb:Scan",
           "dynamodb:Query",
           "dynamodb:PutItem",
