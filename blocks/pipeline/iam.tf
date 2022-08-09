@@ -105,7 +105,9 @@ resource "aws_iam_policy" "pipeline_s3_access" {
         "Action" : [
           "s3:PutObject",
           "s3:GetObject",
-          "s3:DeleteObject"
+          "s3:DeleteObject",
+          "s3:DeleteObjects",
+          "s3:ListObjects"
         ],
         "Effect" : "Allow",
         "Resource" : [
@@ -165,6 +167,46 @@ resource "aws_iam_policy" "pipeline_ssm_access" {
   })
 }
 
+resource "aws_iam_policy" "pipeline_dynamodb_access" {
+  name        = "pipeline_dynamodb_access"
+  description = "Allow pipeline to access DynamoDB"
+  tags        = var.tags
+
+  policy = jsonencode({
+    "Statement" : [
+      {
+        "Effect" : "Allow",
+        "Action" : [
+          "dynamodb:Query",
+          "dynamodb:BatchWriteItem",
+        ],
+        "Resource" : "*"
+      }
+    ],
+    "Version" : "2012-10-17"
+  })
+}
+
+resource "aws_iam_policy" "pipeline_glue_access" {
+  name        = "pipeline_glue_access"
+  description = "Allow pipeline to access DynamoDB"
+  tags        = var.tags
+
+  policy = jsonencode({
+    "Statement" : [
+      {
+        "Effect" : "Allow",
+        "Action" : [
+          "glue:DeleteCrawler",
+          "glue:DeleteTable",
+        ],
+        "Resource" : "*"
+      }
+    ],
+    "Version" : "2012-10-17"
+  })
+}
+
 resource "aws_iam_role" "pipeline_ecr_role" {
   name = "pipeline-ecr-role"
   tags = var.tags
@@ -209,4 +251,14 @@ resource "aws_iam_role_policy_attachment" "s3_role_policy_attach" {
 resource "aws_iam_role_policy_attachment" "secrets_manager_role_policy_attach" {
   role       = aws_iam_role.pipeline_ecr_role.name
   policy_arn = aws_iam_policy.pipeline_secrets_manager_access.arn
+}
+
+resource "aws_iam_role_policy_attachment" "dynamodb_role_policy_attach" {
+  role       = aws_iam_role.pipeline_ecr_role.name
+  policy_arn = aws_iam_policy.pipeline_dynamodb_access.arn
+}
+
+resource "aws_iam_role_policy_attachment" "glue_role_policy_attach" {
+  role       = aws_iam_role.pipeline_ecr_role.name
+  policy_arn = aws_iam_policy.pipeline_glue_access.arn
 }
