@@ -125,7 +125,7 @@ data "aws_iam_policy_document" "db_access_logs_key_policy" {
     condition {
       test     = "ArnEquals"
       variable = "kms:EncryptionContext:aws:logs:arn"
-      values   = [
+      values = [
         "arn:aws:logs:${data.aws_region.region.name}:${data.aws_caller_identity.current.account_id}:log-group:${var.resource-name-prefix}_${var.permissions_table_name}_access_logs"
       ]
     }
@@ -187,7 +187,7 @@ resource "aws_cloudtrail" "db_access_logs_trail" {
   event_selector {
     include_management_events = false
     data_resource {
-      type   = "AWS::DynamoDB::Table"
+      type = "AWS::DynamoDB::Table"
       values = [
         aws_dynamodb_table.permissions_table.arn
       ]

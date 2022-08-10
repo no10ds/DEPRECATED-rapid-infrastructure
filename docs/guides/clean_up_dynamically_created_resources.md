@@ -79,23 +79,6 @@ Until the ```delete``` endpoint is created for cleanup, we recommend following t
 #### Consequence if not deleted 😿
 - The data will be accessible by Athena and the `query` endpoint
 
-### User group 🤼
-#### Steps 🚶‍
-- Access the AWS console and log in
-- Go to Cognito
-- Go to the user pool `{prefix}_user_pool`
-- Go to Groups
-- Select the group for your dataset `WRITE/{domain}/{dataset}`
-- Click on delete
-- Follow the instructions provided by the console
-
-#### Consequence if not deleted 😿
-- The dataset will appear in the `upload` page dropdown for the users that are part of this group
-- If a new schema with the same domain and dataset is uploaded, the users in this group would be granted access automatically
-
-## Notes 📝
-- `{prefix}` is a value assigned in terraform as part of the IaC, in our case is `rapid` and it is maintained across resources
-
 ### Protected domains 🥽
 #### Steps 🚶‍
 - Access the script within the api `test/scripts/delete_protected_domain_permission`
@@ -112,3 +95,6 @@ python test/scripts/delete_protected_domain_permission domain-to-be-deleted
   - Table
   - Data (raw data and data)
   - Schema
+
+## Notes 📝
+- `{prefix}` is a value assigned in terraform as part of the IaC, in our case is `rapid` and it is maintained across resources
