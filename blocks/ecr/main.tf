@@ -28,6 +28,43 @@ resource "aws_ecr_repository" "private" {
   }
 }
 
+resource "aws_ecr_lifecycle_policy" "image_expiry_policies" {
+  repository = aws_ecr_repository.private.name
+
+  policy = <<EOF
+{
+    "rules": [
+        {
+            "rulePriority": 1,
+            "description": "Retain PROD image",
+            "selection": {
+                "tagStatus": "tagged",
+                "tagPrefixList": ["PROD"],
+                "countType": "imageCountMoreThan",
+                "countNumber": 9999
+            },
+            "action": {
+                "type": "expire"
+            }
+        },
+        {
+            "rulePriority": 2,
+            "description": "Expire old images",
+            "selection": {
+                "tagStatus": "any",
+                "countType": "imageCountMoreThan",
+                "countNumber": 5
+            },
+            "action": {
+                "type": "expire"
+            }
+        }
+    ]
+}
+EOF
+}
+
+
 provider "aws" {
   alias  = "us_east_1"
   region = "us-east-1"
@@ -39,12 +76,14 @@ resource "aws_ecrpublic_repository" "public" {
   repository_name = "api"
 
   catalog_data {
-    about_text    = "Please see https://github.com/no10ds/rapid-infrastructure/ for more information"
-    architectures = ["x86-64"]
-    description   = "Project rAPId API Image"
+    about_text = "Please see https://github.com/no10ds/rapid-infrastructure/ for more information"
+    architectures = [
+    "x86-64"]
+    description = "Project rAPId API Image"
     # TODO: Add image
     # logo_image_blob   = filebase64(image.png)
-    operating_systems = ["Linux"]
-    usage_text        = "Please see https://github.com/no10ds/rapid-infrastructure/ for details on the use"
+    operating_systems = [
+    "Linux"]
+    usage_text = "Please see https://github.com/no10ds/rapid-infrastructure/ for details on the use"
   }
 }
