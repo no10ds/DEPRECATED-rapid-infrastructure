@@ -36,7 +36,10 @@ resource "aws_iam_policy" "app_s3_access" {
       {
         Effect : "Allow",
         Action : ["s3:DeleteObject"],
-        Resource : "${var.data_s3_bucket_arn}/*.csv"
+        Resource : [
+          "${var.data_s3_bucket_arn}/*.csv",
+          "${var.data_s3_bucket_arn}/*.parquet"
+        ]
       },
       {
         "Effect" : "Allow",
