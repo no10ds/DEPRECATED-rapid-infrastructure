@@ -137,7 +137,7 @@ resource "aws_wafv2_web_acl" "rapid_acl" {
 
   rule {
     name     = "validate-request"
-    priority = 1
+    priority = 0
 
     action {
       allow {}
@@ -165,6 +165,57 @@ resource "aws_wafv2_web_acl" "rapid_acl" {
           not_statement {
             statement {
               sqli_match_statement {
+                field_to_match {
+                  body {}
+                }
+                text_transformation {
+                  priority = 0
+                  type     = "NONE"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    visibility_config {
+      cloudwatch_metrics_enabled = true
+      metric_name                = "validate-request"
+      sampled_requests_enabled   = true
+    }
+  }
+
+  rule {
+    name     = "validate-query"
+    priority = 1
+
+    action {
+      block {}
+    }
+
+    statement {
+      and_statement {
+        statement {
+          byte_match_statement {
+            positional_constraint = "ENDS_WITH"
+
+            search_string = "/query"
+            field_to_match {
+              uri_path {}
+            }
+            text_transformation {
+              priority = 0
+              type     = "NONE"
+            }
+          }
+        }
+        statement {
+          not_statement {
+            statement {
+              size_constraint_statement {
+                comparison_operator = "GT"
+                size                = "8192"
                 field_to_match {
                   body {}
                 }
