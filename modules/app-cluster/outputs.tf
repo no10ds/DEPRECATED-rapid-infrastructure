@@ -32,7 +32,3 @@ output "rapid_metric_log_error_alarm_arn" {
   value       = aws_cloudwatch_metric_alarm.log-error-alarm.arn
   description = "The arn of the log error alarm metric"
 }
-
-output "warnings" {
-  value = "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n✸ Please add Oversize Request Handling configuration to the SQL Injection WAF Statement after applying changes (every time!). See docs/guides/waf_oversize_request_handling_config.md for how to do so. This is to satisfy requirements from 1st October 2022 and until the required functionality is added to Terraform to do it automatically (https://github.com/hashicorp/terraform-provider-aws/issues/25832)\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
-}
