@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file. This project adheres
 to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v3.0.0 - _2022-08-26_
+
+See [v3.0.0] changes
+
+### Fixed
+- Oversized requests handling
+
+### Added
+- Lifecycle policy to ECR
+
+### Changed
+- Allow service task to delete parquet files
+
+### Removed
+- Custom csv classifier
+
 ## v2.0.0 - _2022-08-19_
 
 See [v2.0.0] changes
