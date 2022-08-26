@@ -13,18 +13,6 @@ resource "aws_glue_connection" "glue_connection" {
   }
 }
 
-resource "aws_glue_classifier" "custom_csv_classifier" {
-  name = "${var.resource-name-prefix}-single_column_csv_classifier"
-
-  csv_classifier {
-    allow_single_column    = true
-    contains_header        = "PRESENT"
-    delimiter              = ","
-    disable_value_trimming = false
-    quote_symbol           = "\""
-  }
-}
-
 resource "aws_iam_role" "glue_service_role" {
   name        = "${var.resource-name-prefix}-glue_services_access"
   description = "Allow AWS Glue service to access S3 via crawler"
