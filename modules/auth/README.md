@@ -46,7 +46,6 @@ No modules.
 | <a name="output_cognito_client_app_secret_manager_name"></a> [cognito\_client\_app\_secret\_manager\_name](#output\_cognito\_client\_app\_secret\_manager\_name) | Secret manager name where client app info is stored |
 | <a name="output_cognito_user_app_secret_manager_name"></a> [cognito\_user\_app\_secret\_manager\_name](#output\_cognito\_user\_app\_secret\_manager\_name) | Secret manager name where user login app info is stored |
 | <a name="output_cognito_user_pool_id"></a> [cognito\_user\_pool\_id](#output\_cognito\_user\_pool\_id) | The Cognito rapid user pool id |
-| <a name="output_protected_scopes_parameter_store_arn"></a> [protected\_scopes\_parameter\_store\_arn](#output\_protected\_scopes\_parameter\_store\_arn) | The arn of the protected scopes parameter store variable |
 | <a name="output_rapid_test_client_id"></a> [rapid\_test\_client\_id](#output\_rapid\_test\_client\_id) | The rapid test client id registered in the user pool |
 | <a name="output_resource_server_scopes"></a> [resource\_server\_scopes](#output\_resource\_server\_scopes) | The scopes defined in the resource server |
 | <a name="output_user_pool_endpoint"></a> [user\_pool\_endpoint](#output\_user\_pool\_endpoint) | The Cognito rapid user pool endpoint |

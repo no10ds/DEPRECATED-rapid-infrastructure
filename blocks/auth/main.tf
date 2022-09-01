@@ -10,5 +10,4 @@ module "auth" {
   tags                 = var.tags
   domain_name          = var.domain_name
   resource-name-prefix = var.resource-name-prefix
-  scopes               = var.scopes
 }

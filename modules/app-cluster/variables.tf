@@ -134,8 +134,3 @@ variable "log_bucket_name" {
   type        = string
   description = "A bucket to send the Load Balancer logs"
 }
-
-variable "parameter_store_variable_arns" {
-  type        = list(string)
-  description = "A list of parameter store variables that the ECS task needs access to"
-}

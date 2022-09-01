@@ -30,7 +30,6 @@ module "app_cluster" {
   vpc_id                               = data.terraform_remote_state.vpc-state.outputs.vpc_id
   private_subnet_ids_list              = data.terraform_remote_state.vpc-state.outputs.private_subnets_ids
   public_subnet_ids_list               = data.terraform_remote_state.vpc-state.outputs.public_subnets_ids
-  parameter_store_variable_arns        = [data.terraform_remote_state.auth-state.outputs.protected_scopes_parameter_store_arn]
   ip_whitelist                         = var.ip_whitelist
   support_emails_for_cloudwatch_alerts = var.support_emails_for_cloudwatch_alerts
   tags                                 = var.tags

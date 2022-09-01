@@ -1,15 +1,3 @@
-resource "aws_ssm_parameter" "protected_domain_scopes" {
-  name  = "${var.resource-name-prefix}_protected_domain_scopes"
-  type  = "StringList"
-  value = "[]"
-
-  lifecycle {
-    ignore_changes = [
-      value,
-    ]
-  }
-}
-
 resource "aws_cognito_user_pool" "rapid_user_pool" {
   name = "${var.resource-name-prefix}_user_pool"
   tags = var.tags
@@ -37,18 +25,6 @@ resource "aws_cognito_resource_server" "rapid_resource_server" {
     for_each = [for value in var.scopes : {
       scope_name        = value.scope_name
       scope_description = value.scope_description
-    }]
-
-    content {
-      scope_name        = scope.value.scope_name
-      scope_description = scope.value.scope_description
-    }
-  }
-
-  dynamic "scope" {
-    for_each = [for value in nonsensitive(jsondecode(aws_ssm_parameter.protected_domain_scopes.value)) : {
-      scope_name        = value.ScopeName
-      scope_description = value.ScopeDescription
     }]
 
     content {

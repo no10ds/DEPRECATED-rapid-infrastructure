@@ -233,26 +233,6 @@ resource "aws_iam_policy" "app_tags_access" {
   })
 }
 
-resource "aws_iam_policy" "app_parameter_store_access" {
-  name        = "${var.resource-name-prefix}-app_parameter_store_access"
-  description = "Allow application instance to update values in parameter store"
-  tags        = var.tags
-
-  policy = jsonencode({
-    "Version" : "2012-10-17",
-    "Statement" : [
-      {
-        Effect : "Allow",
-        Action : [
-          "ssm:GetParameter",
-          "ssm:PutParameter",
-        ],
-        Resource : var.parameter_store_variable_arns
-      }
-    ]
-  })
-}
-
 resource "aws_iam_role_policy_attachment" "role_s3_access_policy_attachment" {
   role       = aws_iam_role.ecsTaskExecutionRole.name
   policy_arn = aws_iam_policy.app_s3_access.arn
@@ -281,11 +261,6 @@ resource "aws_iam_role_policy_attachment" "role_tags_access_policy_attachment" {
 resource "aws_iam_role_policy_attachment" "role_dynamodb_access_policy_attachment" {
   role       = aws_iam_role.ecsTaskExecutionRole.name
   policy_arn = aws_iam_policy.app_dynamodb_access.arn
-}
-
-resource "aws_iam_role_policy_attachment" "role_parameter_store_access_policy_attachment" {
-  role       = aws_iam_role.ecsTaskExecutionRole.name
-  policy_arn = aws_iam_policy.app_parameter_store_access.arn
 }
 
 resource "aws_ecs_cluster" "aws-ecs-cluster" {

@@ -28,11 +28,6 @@ output "cognito_user_app_secret_manager_name" {
   description = "Secret manager name where user login app info is stored"
 }
 
-output "protected_scopes_parameter_store_arn" {
-  value       = aws_ssm_parameter.protected_domain_scopes.arn
-  description = "The arn of the protected scopes parameter store variable"
-}
-
 output "user_permission_table_name" {
   value       = aws_dynamodb_table.permissions_table.name
   description = "Tha name of the dynamoDB table that stores permissions"
