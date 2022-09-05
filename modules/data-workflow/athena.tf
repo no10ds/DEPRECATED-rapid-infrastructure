@@ -20,7 +20,7 @@ resource "aws_s3_bucket" "rapid_athena_query_results_bucket" {
     id      = "expiry_config"
     enabled = true
     expiration {
-      days = 30
+      days = 7
     }
   }
 }
