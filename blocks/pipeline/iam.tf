@@ -199,6 +199,8 @@ resource "aws_iam_policy" "pipeline_glue_access" {
         "Action" : [
           "glue:DeleteCrawler",
           "glue:DeleteTable",
+          "glue:GetTags",
+          "glue:TagResource",
         ],
         "Resource" : "*"
       }

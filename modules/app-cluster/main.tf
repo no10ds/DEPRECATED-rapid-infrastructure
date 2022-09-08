@@ -101,6 +101,7 @@ resource "aws_iam_policy" "app_athena_query_access" {
           "glue:GetCrawler",
           "glue:GetCrawlers",
           "glue:StartCrawler",
+          "glue:TagResource",
           "iam:GetRole",
           "iam:PassRole"
         ],
