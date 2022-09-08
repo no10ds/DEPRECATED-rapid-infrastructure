@@ -112,6 +112,7 @@ resource "aws_iam_policy" "pipeline_s3_access" {
         "Effect" : "Allow",
         "Resource" : [
           "${data.terraform_remote_state.s3-state.outputs.s3_bucket_arn}/data/test_e2e/*",
+          "${data.terraform_remote_state.s3-state.outputs.s3_bucket_arn}/data/schemas/PUBLIC/test_e2e/*",
           "${data.terraform_remote_state.s3-state.outputs.s3_bucket_arn}/raw_data/test_e2e/*"
         ]
       }
@@ -189,7 +190,7 @@ resource "aws_iam_policy" "pipeline_dynamodb_access" {
 
 resource "aws_iam_policy" "pipeline_glue_access" {
   name        = "pipeline_glue_access"
-  description = "Allow pipeline to access DynamoDB"
+  description = "Allow pipeline to access Glue"
   tags        = var.tags
 
   policy = jsonencode({
@@ -199,10 +200,16 @@ resource "aws_iam_policy" "pipeline_glue_access" {
         "Action" : [
           "glue:DeleteCrawler",
           "glue:DeleteTable",
-          "glue:GetTags",
           "glue:TagResource",
         ],
         "Resource" : "*"
+      },
+      {
+        "Effect" : "Allow",
+        "Action" : [
+          "glue:GetTags",
+        ],
+        "Resource" : "arn:aws:glue:${var.aws_region}:${var.aws_account}:crawler/*"
       }
     ],
     "Version" : "2012-10-17"
