@@ -23,7 +23,7 @@ module "app_cluster" {
 #  parameter_store_variable_arns                   = [module.auth.protected_scopes_parameter_store_arn]
   athena_query_output_bucket_arn = module.data_workflow.athena_query_result_output_bucket_arn
   ip_whitelist                   = var.ip_whitelist
-  allowed_email_domains                           = "example.com"
+  allowed_email_domains                           = "example.com" #TODO: update to variable
   permissions_table                               = var.user_permission_table_name
 }
 
