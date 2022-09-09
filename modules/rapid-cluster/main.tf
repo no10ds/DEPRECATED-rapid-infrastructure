@@ -20,11 +20,10 @@ module "app_cluster" {
   vpc_id                                          = var.vpc_id
   public_subnet_ids_list                          = var.public_subnet_ids_list
   private_subnet_ids_list                         = var.private_subnet_ids_list
-#  parameter_store_variable_arns                   = [module.auth.protected_scopes_parameter_store_arn]
-  athena_query_output_bucket_arn = module.data_workflow.athena_query_result_output_bucket_arn
-  ip_whitelist                   = var.ip_whitelist
-  allowed_email_domains                           = "no10.gov.uk,cabinetoffice.gov.uk" #TODO: update to variable
-  permissions_table                               = var.user_permission_table_name
+  athena_query_output_bucket_arn                  = module.data_workflow.athena_query_result_output_bucket_arn
+  ip_whitelist                                    = var.ip_whitelist
+  allowed_email_domains                           = var.allowed_email_domains
+  permissions_table                               = module.auth.user_permission_table_name
 }
 
 

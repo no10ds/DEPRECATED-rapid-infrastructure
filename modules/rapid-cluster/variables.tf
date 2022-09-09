@@ -90,7 +90,10 @@ variable "vpc_id" {
   description = "The ID of the multihost VPC"
 }
 
-variable "user_permission_table_name" {}
+variable "allowed_email_domains" {
+  type        = string
+  description = "Email domains that can create a rAPId account"
+}
 
 
 
