@@ -238,8 +238,59 @@ resource "aws_wafv2_web_acl" "rapid_acl" {
   }
 
   rule {
-    name     = "AWS-AWSManagedRulesKnownBadInputsRuleSet"
+    name     = "validate-large-query"
     priority = 2
+
+    action {
+      block {}
+    }
+
+    statement {
+      and_statement {
+        statement {
+          byte_match_statement {
+            positional_constraint = "ENDS_WITH"
+
+            search_string = "/query/large"
+            field_to_match {
+              uri_path {}
+            }
+            text_transformation {
+              priority = 0
+              type     = "NONE"
+            }
+          }
+        }
+        statement {
+          not_statement {
+            statement {
+              size_constraint_statement {
+                comparison_operator = "GT"
+                size                = "8192"
+                field_to_match {
+                  body {}
+                }
+                text_transformation {
+                  priority = 0
+                  type     = "NONE"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    visibility_config {
+      cloudwatch_metrics_enabled = true
+      metric_name                = "validate-request"
+      sampled_requests_enabled   = true
+    }
+  }
+
+  rule {
+    name     = "AWS-AWSManagedRulesKnownBadInputsRuleSet"
+    priority = 3
 
     override_action {
       none {}
