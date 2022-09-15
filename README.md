@@ -17,7 +17,7 @@ mechanism to deploy the rAPId service either on top of your existing infrastruct
 If you are looking to develop in this repository also take a look at the [contributing readme](docs/guides/contributing.md)
 
 - Deploy rAPId service
-    - [Deploy the rAPId module (On top of your existing infrastructure)](#deploy-service-modules)
+    - [Deploy the rAPId module (On top of your existing Terraform infrastructure)](#deploy-service-modules)
     - [Deploy the full stack (If you don't have existing Terraform infrastructure)](#deploy-full-stack)
 
 ## Infrastructure diagrams
@@ -34,7 +34,7 @@ Please reach out to us on [slack](https://ukgovernmentdigital.slack.com/archives
 
 ## Deploy the rAPId module
 
-For departments that already have an existing infrastructure, we have extracted the top level infrastructure into a single terraform [module](./modules/rapid/).
+For departments that already have an existing infrastructure, we have extracted the top level infrastructure into a single Terraform [module](./modules/rapid/).
 
 Usage:
 ```
@@ -92,7 +92,7 @@ For teams with no existing infrastructure and just a blank AWS Account, we have 
 
 ### Pre requisites
 
-Most of the infrastructure is managed by Terraform, to be able to run this blocks,
+Most of the infrastructure is managed by Terraform, to be able to run these blocks,
 please [install Terraform](https://learn.hashicorp.com/tutorials/terraform/install-cli).
 
 Our infrastructure is built using AWS, so you'll need an AWS account, and access to the cli to run the project. You will
@@ -108,12 +108,12 @@ After setting up the named profile, the current session can be checked by runnin
 have a [file](scripts/env_setup.sh)
 with the required exports to use the 'gov' profile. These exports have to be run when starting a new session.
 
-We use `jq` in our scripts to help the make targets work correctly,
-please [Install jq](https://stedolan.github.io/jq/download/) before running any make command
+We use `jq` in our scripts to help the `make` targets work correctly,
+please [Install jq](https://stedolan.github.io/jq/download/) before running any make command.
 
 ### Infrastructure Configuration
 
-There are two config files needed to instantiate the rAPId service, they are `input-params.tfvars` and `backend.hcl`. Please create these with the templates provided, we will add the content shorly.
+There are two config files needed to instantiate the rAPId service, they are `input-params.tfvars` and `backend.hcl`. Please create these with the templates provided, we will add the content shortly.
 
 `input-params.tfvars` template:
 ```
@@ -166,14 +166,14 @@ export RAPID_INFRA_CONFIG_ENV=../my/relative/location/to/rapid/infrastructure
 
 If you want to share your infrastructure values across your team then you can turn `rapid-infrastructure-config` into a private repo.
 
-### First time one-off setup (backend)
+### First time, one-off setup (backend)
 
-The first step is to set up an S3 backend so that we can store the infra-blocks' state in S3 and rely on DynamoDB lock
+The first step is to set up an S3 backend so that we can store the infra-blocks' state in S3 and rely on the DynamoDB lock
 mechanism to ensure infrastructure changes are applied atomically.
 
-To set up the S3 backend follow this steps:
+To set up the S3 backend follow these steps:
 
-- Replace the values in `backend.hcl` with your alternatives. They will be referenced to create the Terraform state components and used going forwards as the backend config.
+- Replace the values in `backend.hcl` with your custom values (these can be any value you would like). They will be referenced to create the Terraform state components and used going forwards as the backend config.
 - In the root folder run ```make backend```, this will initialise Terraform by creating both the state bucket and dynamodb table in AWS.
 
 ### IAM User Setup (Optional)
@@ -206,10 +206,10 @@ manual_users = {
 #### Assume role
 
 In order to gain the admin privileges necessary for infrastructure changes one needs to assume admin role. This will be
-enabled only for user's defined in `input-params.tfvars` only after logging in the AWS console for the first time as a
-IAM user and enabling the MFA.
+enabled only for user's defined in `input-params.tfvars`, only after logging into the AWS console for the first time as an
+IAM user and enabling MFA.
 
-Then to assume the role, set up the [profile](scripts/env_setup.sh), run ```make assume-role``` and follow the prompts.
+Then, to assume the role, set up the [profile](scripts/env_setup.sh), run ```make assume-role``` and follow the prompts.
 
 ### Deploying remaining infra-blocks
 
@@ -249,14 +249,152 @@ Then, run the following command on each block:
 - ```make plan block=<block-name>``` to plan (to check the changes ensuring nothing will be run)
 - ```make apply block=<block-name>``` to apply changes, when prompted type ```yes```
 
-The order to run these commands will be:
-- [iam-config](#iam-user-setup-optional) (optional) ⚠️ All the users' roles/policies will be handled here and will
+Run the blocks in this order:
+1. [iam-config](#iam-user-setup-optional) (optional) ⚠️ All the users' roles/policies will be handled here and will
 delete any previous config ⚠️
-- vpc
-- s3
-- auth
-- data-workflow
-- app-cluster
+2. vpc
+3. s3
+4. auth
+5. data-workflow
+6. app-cluster
+
+### Applying changes
+
+For this we use make - some commands require the infrastructure block to be specified (see above):
+
+```
+>>> `make`
+help:                    List targets and description
+(...)
+
+assume-role:       assume role to perform infrastructure tasks
+init:              terraform init: make init block=<block>
+precommit:         tf format and validate: make precommit block=<infra-block>
+precommit-all:     .... for all the infrastructure blocks
+plan:              plan - view infrastructure changes: make plan block=<infra-block>
+apply:             apply infrastructure changes: make apply block=<infra-block>
+output: 	       prints infrastructure output: make output block=<infra-block>
+
+(...)
+```
+
+If you need to run manual Terraform commands for debugging or destroying you can set the necessarily variables like so:
+
+```
+>>> . ./scripts/env_setup.sh
+
+```
+
+### Building blocks
+
+After the backend has been created the building blocks are:
+
+- [app-cluster](blocks/app-cluster):
+    - LB resources setup
+    - domain/routing setup
+    - ecs setup
+    - firewall rules setup
+    - access setup/management for the app to aws resources
+    - DynamoDB setup
+- [auth](blocks/auth):
+    - cognito user pool setup
+    - resource server setup
+    - client app setup
+    - DynamoDB setup
+- [data-workflow](blocks/data-workflow):
+    - athena setup
+    - crawlers setup
+    - glue resources setup
+- [iam-config](blocks/iam-config):
+    - iam users setup
+    - iam roles/resources setup
+    - config and infrastructure checks (avoid common pitfalls)
+- [s3](blocks/s3):
+    - data storage setup
+- [vpc](blocks/vpc):
+    - vpc setup
+    - public/private subnets setup
+
+More formally the infrastructure blocks have been organised bearing in mind the cadence of change. They are organised in
+separate folders so that they each have their own remote Terraform state file:
+
+```
+├── blocks
+│   ├── auth
+│   ├── app-cluster
+│   ├── data-workflow
+│   ├── ecr
+|   ├── iam-config
+│   ├── pipeline
+│   ├── s3
+│   └── vpc
+```
+
+## Managing domains/subdomains
+
+When creating a rAPId instance you will need a hostname to be able to access the app in a secure way, there are few ways
+to achieve this:
+
+1. Using an existing domain from route53: AWS creates a hosted zone linked to your domain, just use this HZ id in the
+inputs along the domain, and you are ready to go. (If the domain is currently being used, a subdomain can be created
+automatically by providing the HZ id and the subdomain name in the `input-params.tfvars`).
+
+2. Creating a new domain in route53: you will need to manually register a domain in the AWS console, once this is done
+the steps are the same as scenario 1.
+
+3. Using an existing domain outside AWS: you will need to leave the HZ id field empty and provide a
+domain/subdomain, [copy the NS values from the output](#providing-outputs) and use them in your DNS provider.
+
+4. Using an existing domain from a different AWS account to create a subdomain: you will need to leave the HZ id field
+empty and provide the subdomain name, then [copy the NS values from the output](#providing-outputs), go to the AWS
+account that owns the domain, go to route 53, in the domain hosted zone, create a new record of the type NS with the
+subdomain name and add the NS values copied from the outputs.
+
+## Managing certificates
+
+When creating a rAPId instance a certificate will be needed in order to serve the application in HTTPS, there are 2
+scenarios:
+
+1. The AWS account already has a certificate for the domain you are using (this might be true for the first and second
+scenario when [managing domains/subdomains](#managing-domainssubdomains)), in which case you can provide the certificate
+arn for it to be used in the load balancer in the `input-params.tfvars`).
+
+2. The AWS account does not have a certificate for the domain you plan to use, (this might be true for the third and
+fourth scenario when [managing domains/subdomains](#managing-domainssubdomains)), in which case you need to leave the
+certificate information empty in the `input-params.tfvars`)
+. [AWS can not use the certificate from a different account](https://aws.amazon.com/premiumsupport/knowledge-center/acm-export-certificate/#:~:text=You%20can't%20export%20an,AWS%20Region%20and%20AWS%20account.)
+, and therefore you will be required to create a new one (this will be handled automatically).
+
+
+## Providing outputs
+
+If you are planning to use a subdomain, and the domain is being handled in a different place you will need the name
+server information. If the Hosted Zone was created by Terraform, you can get the NS information
+running ```make output block=app-cluster``` under the name 'hosted_zone_name_servers'
+
+## Pipeline and ECR Provisioning
+
+⚠️ The `pipeline` and `ecr` Terraform blocks are only here for the rAPId application development team ⚠️
+
+## Alerting and Monitoring
+
+The rAPId service comes with pre-configured alerts that are triggered when a log with level `ERROR` is produced by the
+application. In order to notify engineers of this type of alert, the parameter `support_emails_for_cloudwatch_alerts`
+must be defined with a list of emails that should receive alert notifications.
+
+```
+module "app_cluster" {
+  source = "git::https://github.com/no10ds/rapid-infrastructure//modules//app-cluster"
+
+  ...
+
+  support_emails_for_cloudwatch_alerts = ["someone@email.com", "support@email.com"]
+
+  ...
+}
+```
+
+> ⚠️ Make sure to **confirm** the notification subscription email in order to start receiving alert emails.
 
 ### ️ M1 Chip Issues
 
@@ -299,142 +437,3 @@ If for some reason your go path is not set it is most likely in `~/go`
 
 After running all the modules with the required information, you will need
 to [provide some Terraform outputs](#providing-outputs) to the rAPId team.
-
-### Applying changes
-
-For this we use make - some commands require the infrastructure block to be specified (see above):
-
-```
->>> make
-help:                    List targets and description
-(...)
-
-assume-role:       assume role to perform infrastructure tasks
-init:              terraform init: make init block=<block>
-precommit:         tf format and validate: make precommit block=<infra-block>
-precommit-all:     .... for all the infrastructure blocks
-plan:              plan - view infrastructure changes: make plan block=<infra-block>
-apply:             apply infrastructure changes: make apply block=<infra-block>
-output: 	       prints infrastructure output: make output block=<infra-block>
-
-(...)
-```
-
-If you need to run manual Terraform commands for debugging or destroying you can set the necessarily variables like so:
-
-```
->>> . ./scripts/env_setup.sh
-
-```
-
-### Building blocks
-
-After the backend has been created the building blocks are:
-
-- [app-cluster](blocks/app-cluster):
-    - LB resources setup
-    - domain/routing setup
-    - ecs setup
-    - firewall rules setup
-    - access setup/management for the app to aws resources
-- [auth](blocks/auth):
-    - cognito user pool setup
-    - resource server setup
-    - client app setup
-- [data-workflow](blocks/data-workflow):
-    - athena setup
-    - crawlers setup
-    - glue resources setup
-- [iam-config](blocks/iam-config):
-    - iam users setup
-    - iam roles/resources setup
-    - config and infrastructure checks (avoid common pitfalls)
-- [s3](blocks/s3):
-    - data storage setup
-- [vpc](blocks/vpc):
-    - vpc setup
-    - public/private subnets setup
-
-More formally the infrastructure blocks have been organised bearing in mind the cadence of change. They are organised in
-separate folders so that they each have their own remote Terraform state file:
-
-```
-├── blocks
-│   ├── auth
-│   ├── app-cluster
-│   ├── data-workflow
-│   ├── ecr
-|   ├── iam-config
-│   ├── pipeline
-│   ├── s3
-│   └── vpc
-```
-
-## Managing domains/subdomains
-
-When creating a rAPId instance you will need a hostname to be able to access the app in a secure way, there are few ways
-to achieve this:
-
-1- Using an existing domain from route53: AWS creates a hosted zone linked to your domain, just use this HZ id in the
-inputs along the domain, and you are ready to go. (If the domain is currently being used, a subdomain can be created
-automatically by providing the HZ id and the subdomain name in the `input-params.tfvars`).
-
-2- Creating a new domain in route53: you will need to manually register a domain in the AWS console, once this is done
-the steps are the same as scenario 1.
-
-3- Using an existing domain outside AWS: you will need to leave the HZ id field empty and provide a
-domain/subdomain, [copy the NS values from the output](#providing-outputs) and use them in your DNS provider.
-
-4- Using an existing domain from a different AWS account to create a subdomain: you will need to leave the HZ id field
-empty and provide the subdomain name, then [copy the NS values from the output](#providing-outputs), go to the AWS
-account that owns the domain, go to route 53, in the domain hosted zone, create a new record of the type NS with the
-subdomain name and add the NS values copied from the outputs.
-
-## Managing certificates
-
-When creating a rAPId instance a certificate will be needed in order to serve the application in HTTPS, there are 2
-scenarios:
-
-1- The AWS account already has a certificate for the domain you are using (This might be true for the first and second
-scenario when [managing domains/subdomains](#managing-domainssubdomains)), in which case you can provide the certificate
-arn for it to be used in the load balancer in the `input-params.tfvars`).
-
-2- The AWS account does not have a certificate for the domain you plan to use, (This might be true for the third and
-fourth scenario when [managing domains/subdomains](#managing-domainssubdomains)), in which case you need to leave the
-certificate information empty in the `input-params.tfvars`)
-. [AWS can not use the certificate from a different account](https://aws.amazon.com/premiumsupport/knowledge-center/acm-export-certificate/#:~:text=You%20can't%20export%20an,AWS%20Region%20and%20AWS%20account.)
-, and therefore you will be required to create a new one (this will be handled automatically).
-
-
-## Providing outputs
-
-If you are planning to use a subdomain, and the domain is being handled in a different place you will need the name
-server information. If the Hosted Zone was created by Terraform, you can get the NS information
-running ```make output block=app-cluster``` under the name 'hosted_zone_name_servers'
-
-## Pipeline and ECR Provisioning
-
-⚠️ The `pipeline` and `ecr` Terraform blocks are only here for the rAPId application development team ⚠️
-
-When provisioning the pipeline and ECR you will need to set the `runner-registration-token` variable during apply.
-Details on where to find this will appear when running the Terraform.
-
-## Alerting and Monitoring
-
-Rapid service comes with pre-configured alerts that are triggered when a log with level `ERROR` is produced by the
-application. In order to notify engineers of this type of alert, the parameter `support_emails_for_cloudwatch_alerts`
-must be defined with a list of emails that should receive alert notifications.
-
-```
-module "app_cluster" {
-  source = "git::https://github.com/no10ds/rapid-infrastructure//modules//app-cluster"
-
-  ...
-
-  support_emails_for_cloudwatch_alerts = ["someone@email.com", "support@email.com"]
-
-  ...
-}
-```
-
-> ⚠️ Make sure to **confirm** the notification subscription email in order to start receiving alert emails.
