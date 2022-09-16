@@ -15,8 +15,8 @@ Until the ```delete``` endpoint is created for cleanup, we recommend following t
 - Access the AWS console and log in
 - Go to S3
 - Go to the bucket `{prefix}-data-ingest-raw-data`
-- Go to `/data/{domain}/schemas/{sensitivity}`
-- Select the file `{domain}-{dataset}.json`
+- Go to `/data/schemas/{sensitivity}/{domain}/{dataset}/{version}`
+- Select the file `schema.json`
 - Click on delete
 - Follow the instructions provided by the console
 
@@ -30,7 +30,7 @@ Until the ```delete``` endpoint is created for cleanup, we recommend following t
 - Go to S3
 - Go to the bucket `{prefix}-data-ingest-raw-data`
 - Go to `/data/{domain}/`
-- Select the `dataset` folder
+- Select the `dataset` folder or the `{version}` subdirectory within the dataset
 - Click on delete
 - Follow the instructions provided by the console
 
@@ -49,9 +49,10 @@ Until the ```delete``` endpoint is created for cleanup, we recommend following t
 - Follow the instructions provided by the console
 
 #### Consequence if not deleted 😿
-- The data will be maintained but never used, we recommend enabling some sort of retention policy to delete the raw files after some time to avoid this issue
+- The data will be retained but never used, we recommend enabling some sort of retention policy to delete the raw files after some time to avoid this issue
 
 ### Crawler 🕷️
+⚠️ Only delete the crawler if all versions of a dataset are also deleted. We use one crawler for all versions of the dataset.
 #### Steps 🚶‍
 - Access the AWS console and log in
 - Go to AWS Glue
@@ -71,7 +72,7 @@ Until the ```delete``` endpoint is created for cleanup, we recommend following t
 - Access the AWS console and log in
 - Go to AWS Glue
 - Go to Tables
-- Select the table `{domain}_{dataset}`
+- Select the table `{domain}_{dataset}_{version}`
 - Click on Action
 - Click on Delete table
 - Follow the instructions provided by the console
