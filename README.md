@@ -57,6 +57,8 @@ module "rapid" {
 
   # Support
   support_emails_for_cloudwatch_alerts = [""]
+
+  # ..... etc.
 }
 ```
 
