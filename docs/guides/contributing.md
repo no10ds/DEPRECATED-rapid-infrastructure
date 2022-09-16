@@ -13,8 +13,8 @@ with: `brew install terraform-docs`.
 
 We have enabled lifecycle management for the rAPId service images in ECR, [ecr](../../blocks/ecr/main.tf). Our rules:
 
-- Maintain up to 10 images that contain a version.
-- Maintain up to 3 images that do not contain versions.
+- Retain up to 10 images that contain a version.
+- Retain up to 3 images that do not contain versions.
 
 To change the lifecycle please follow
 the [AWS Docs](https://docs.aws.amazon.com/AmazonECR/latest/userguide/LifecyclePolicies.html) on lifecycle policies.
@@ -55,12 +55,9 @@ To enable automatic pre-commit hook checks:
 This will enable automatic checks before committing any files, giving an extra layer of protection to the code before
 being pushed
 
-
-
-
 ## Releasing
 
-The guide for how to perform a release of the rapid-infrastructure terraform.
+The guide for how to perform a release of the rapid-infrastructure Terraform.
 
 ### Context
 
