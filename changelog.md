@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file. This project adheres
 to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v4.0.0 - _2022-09-21_
+See [v4.0.0] changes
+
+### Fixed
+- Query results expiry time
+
+### Added
+- DynamoDB resource for job status management
+
 ## v3.0.0 - _2022-08-26_
 
 See [v3.0.0] changes
@@ -53,7 +62,9 @@ See [v1.0.0] changes
 - Features:
   - Build rapid infrastructure
 
-[Unreleased changes]: https://github.com/no10ds/rapid-infrastructure/compare/v2.0.0...HEAD
+[Unreleased changes]: https://github.com/no10ds/rapid-infrastructure/compare/v4.0.0...HEAD
+[v4.0.0]: https://github.com/no10ds/rapid-infrastructure/compare/v3.0.0...v4.0.0
+[v3.0.0]: https://github.com/no10ds/rapid-infrastructure/compare/v2.0.0...v3.0.0
 [v2.0.0]: https://github.com/no10ds/rapid-infrastructure/compare/v1.3.0...v2.0.0
 [v1.3.0]: https://github.com/no10ds/rapid-infrastructure/compare/v1.0.0...v1.3.0
 [v1.0.0]: https://github.com/no10ds/rapid-infrastructure/compare/5298389...v1.0.0
