@@ -189,7 +189,8 @@ resource "aws_iam_policy" "app_dynamodb_access" {
         ],
         Resource : [
           "arn:aws:dynamodb:${var.aws_region}:${var.aws_account}:table/${var.permissions_table}",
-          aws_dynamodb_table.service_table.arn
+          aws_dynamodb_table.service_table.arn,
+          "${aws_dynamodb_table.service_table.arn}/index/*"
         ]
       }
     ]
