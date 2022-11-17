@@ -17,6 +17,18 @@ resource "aws_dynamodb_table" "service_table" {
     type = "S"
   }
 
+  attribute {
+    name = "SK2"
+    type = "S"
+  }
+
+  global_secondary_index {
+    name            = "JOB_SUBJECT_ID"
+    hash_key        = "PK"
+    range_key       = "SK2"
+    projection_type = "ALL"
+  }
+
   ttl {
     attribute_name = "TTL"
     enabled        = true
