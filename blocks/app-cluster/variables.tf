@@ -75,3 +75,14 @@ variable "support_emails_for_cloudwatch_alerts" {
   type        = list(string)
   description = "List of emails that will receive alerts from CloudWatch"
 }
+
+variable "project_information" {
+  type = object({
+    project_name         = optional(string),
+    project_description  = optional(string),
+    project_contact      = optional(string),
+    project_orginisation = optional(string)
+  })
+
+  default = {}
+}

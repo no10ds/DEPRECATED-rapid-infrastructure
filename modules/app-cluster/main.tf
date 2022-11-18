@@ -1,3 +1,15 @@
+locals {
+  environment_variables = merge({
+    "AWS_ACCOUNT" : var.aws_account,
+    "DATA_BUCKET" : var.data_s3_bucket_name,
+    "DOMAIN_NAME" : var.domain_name,
+    "ALLOWED_EMAIL_DOMAINS" : var.allowed_email_domains,
+    "COGNITO_USER_POOL_ID" : var.cognito_user_pool_id,
+    "RESOURCE_PREFIX" : var.resource-name-prefix,
+    "COGNITO_USER_LOGIN_APP_CREDENTIALS_SECRETS_NAME" : var.cognito_user_login_app_credentials_secrets_name,
+  }, var.project_information)
+}
+
 resource "aws_iam_role" "ecsTaskExecutionRole" {
   name               = "${var.resource-name-prefix}-ecs-execution-task-role"
   assume_role_policy = data.aws_iam_policy_document.assume_role_policy.json
@@ -294,34 +306,13 @@ resource "aws_ecs_task_definition" "aws-ecs-task" {
       "image": "${var.rapid_ecr_url}:${var.application_version}",
       "entryPoint": [],
       "essential": true,
-      "environment": [{
-        "name": "AWS_ACCOUNT",
-        "value": "${var.aws_account}"
-      },
-      {
-        "name": "DATA_BUCKET",
-        "value": "${var.data_s3_bucket_name}"
-      },
-      {
-        "name": "DOMAIN_NAME",
-        "value": "${var.domain_name}"
-      },
-      {
-        "name": "ALLOWED_EMAIL_DOMAINS",
-        "value": "${var.allowed_email_domains}"
-      },
-      {
-        "name": "COGNITO_USER_POOL_ID",
-        "value": "${var.cognito_user_pool_id}"
-      },
-      {
-        "name": "RESOURCE_PREFIX",
-        "value": "${var.resource-name-prefix}"
-      },
-      {
-        "name": "COGNITO_USER_LOGIN_APP_CREDENTIALS_SECRETS_NAME",
-        "value": "${var.cognito_user_login_app_credentials_secrets_name}"
-      }],
+      "environment": ${jsonencode([
+  for key, value in local.environment_variables :
+  {
+    "name" : "${upper(key)}",
+    "value" : "${value}"
+  }
+])},
       "logConfiguration": {
         "logDriver": "awslogs",
         "options": {
@@ -343,14 +334,14 @@ resource "aws_ecs_task_definition" "aws-ecs-task" {
   ]
   DEFINITION
 
-  requires_compatibilities = ["FARGATE"]
-  network_mode             = "awsvpc"
-  memory                   = "512"
-  cpu                      = "256"
-  execution_role_arn       = aws_iam_role.ecsTaskExecutionRole.arn
-  task_role_arn            = aws_iam_role.ecsTaskExecutionRole.arn
+requires_compatibilities = ["FARGATE"]
+network_mode             = "awsvpc"
+memory                   = "512"
+cpu                      = "256"
+execution_role_arn       = aws_iam_role.ecsTaskExecutionRole.arn
+task_role_arn            = aws_iam_role.ecsTaskExecutionRole.arn
 
-  tags = var.tags
+tags = var.tags
 }
 
 data "aws_ecs_task_definition" "main" {
