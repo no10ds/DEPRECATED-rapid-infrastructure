@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file. This project adheres
 to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v4.1.0 - _2022-11-20_
+See [v4.1.0] changes
+
+### Added
+- Read in optional project details for CDDo federated API model
+- New global secondary index column for jobs DynamoDB table
+
 ## v4.0.0 - _2022-09-21_
 See [v4.0.0] changes
 
@@ -62,7 +69,8 @@ See [v1.0.0] changes
 - Features:
   - Build rapid infrastructure
 
-[Unreleased changes]: https://github.com/no10ds/rapid-infrastructure/compare/v4.0.0...HEAD
+[Unreleased changes]: https://github.com/no10ds/rapid-infrastructure/compare/v4.1.0...HEAD
+[v4.1.0]: https://github.com/no10ds/rapid-infrastructure/compare/v4.0.0...v4.1.0
 [v4.0.0]: https://github.com/no10ds/rapid-infrastructure/compare/v3.0.0...v4.0.0
 [v3.0.0]: https://github.com/no10ds/rapid-infrastructure/compare/v2.0.0...v3.0.0
 [v2.0.0]: https://github.com/no10ds/rapid-infrastructure/compare/v1.3.0...v2.0.0
