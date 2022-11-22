@@ -34,9 +34,10 @@ No requirements.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
+| <a name="input_allowed_email_domains"></a> [allowed\_email\_domains](#input\_allowed\_email\_domains) | List of allowed emails domains that can be associated with users | `string` | n/a | yes |
 | <a name="input_app-replica-count-desired"></a> [app-replica-count-desired](#input\_app-replica-count-desired) | The desired number of replicas of the app | `number` | `1` | no |
 | <a name="input_app-replica-count-max"></a> [app-replica-count-max](#input\_app-replica-count-max) | The maximum desired number of replicas of the app | `number` | `2` | no |
-| <a name="input_application_version"></a> [application\_version](#input\_application\_version) | The version number for the application image (e.g.: v1.0.4, v1.0.x-latest, etc.) | `string` | `"v1.3.0"` | no |
+| <a name="input_application_version"></a> [application\_version](#input\_application\_version) | The version number for the application image (e.g.: v1.0.4, v1.0.x-latest, etc.) | `string` | `"v4.0.0"` | no |
 | <a name="input_aws_account"></a> [aws\_account](#input\_aws\_account) | AWS Account number to host the rAPId service | `string` | n/a | yes |
 | <a name="input_aws_region"></a> [aws\_region](#input\_aws\_region) | The region of the AWS Account for the rAPId service | `string` | n/a | yes |
 | <a name="input_certificate_validation_arn"></a> [certificate\_validation\_arn](#input\_certificate\_validation\_arn) | Arn of the certificate used by the domain | `string` | `""` | no |
