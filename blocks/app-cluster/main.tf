@@ -23,6 +23,7 @@ module "app_cluster" {
   rapid_ecr_url                        = var.rapid_ecr_url
   hosted_zone_id                       = var.hosted_zone_id
   certificate_validation_arn           = var.certificate_validation_arn
+  project_information                  = var.project_information
   data_s3_bucket_arn                   = data.terraform_remote_state.s3-state.outputs.s3_bucket_arn
   data_s3_bucket_name                  = data.terraform_remote_state.s3-state.outputs.s3_bucket_name
   log_bucket_name                      = data.terraform_remote_state.s3-state.outputs.log_bucket_name

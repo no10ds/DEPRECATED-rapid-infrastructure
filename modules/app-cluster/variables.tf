@@ -134,3 +134,44 @@ variable "log_bucket_name" {
   type        = string
   description = "A bucket to send the Load Balancer logs"
 }
+
+variable "project_name" {
+  type        = string
+  description = "The name of the rAPId project"
+  default     = null
+}
+
+variable "project_description" {
+  type        = string
+  description = "The description of the rAPId project"
+  default     = null
+}
+
+variable "project_url" {
+  type        = string
+  description = "The deployed url of the rAPId project"
+  default     = null
+}
+
+variable "project_contact" {
+  type        = string
+  description = "The contact email of the rAPId project owner"
+  default     = null
+}
+
+variable "project_organisation" {
+  type        = string
+  description = "The organisation owners of the rAPId project"
+  default     = null
+}
+
+variable "project_information" {
+  type = object({
+    project_name         = optional(string),
+    project_description  = optional(string),
+    project_contact      = optional(string),
+    project_orginisation = optional(string)
+  })
+
+  default = {}
+}
