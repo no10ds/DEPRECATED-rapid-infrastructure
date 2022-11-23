@@ -3,8 +3,8 @@
 All notable changes to this project will be documented in this file. This project adheres
 to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## v4.2.0 - _2022-11-23_
-See [v4.2.0] changes
+## v4.1.1 - _2022-11-23_
+See [v4.1.1] changes
 
 ### Fixes
 - Typo in organisation
@@ -76,7 +76,7 @@ See [v1.0.0] changes
   - Build rapid infrastructure
 
 [Unreleased changes]: https://github.com/no10ds/rapid-infrastructure/compare/v4.1.0...HEAD
-[v4.2.0]: https://github.com/no10ds/rapid-infrastructure/compare/v4.1.0...v4.2.0
+[v4.1.1]: https://github.com/no10ds/rapid-infrastructure/compare/v4.1.0...v4.1.1
 [v4.1.0]: https://github.com/no10ds/rapid-infrastructure/compare/v4.0.0...v4.1.0
 [v4.0.0]: https://github.com/no10ds/rapid-infrastructure/compare/v3.0.0...v4.0.0
 [v3.0.0]: https://github.com/no10ds/rapid-infrastructure/compare/v2.0.0...v3.0.0
