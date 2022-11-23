@@ -81,7 +81,7 @@ variable "project_information" {
     project_name         = optional(string),
     project_description  = optional(string),
     project_contact      = optional(string),
-    project_orginisation = optional(string)
+    project_organisation = optional(string)
   })
 
   default = {}

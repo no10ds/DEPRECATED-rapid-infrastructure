@@ -99,7 +99,7 @@ No modules.
 | <a name="input_private_subnet_ids_list"></a> [private\_subnet\_ids\_list](#input\_private\_subnet\_ids\_list) | Application Private subnet list | `list(string)` | n/a | yes |
 | <a name="input_project_contact"></a> [project\_contact](#input\_project\_contact) | The contact email of the rAPId project owner | `string` | `null` | no |
 | <a name="input_project_description"></a> [project\_description](#input\_project\_description) | The description of the rAPId project | `string` | `null` | no |
-| <a name="input_project_information"></a> [project\_information](#input\_project\_information) | n/a | <pre>object({<br>    project_name         = optional(string),<br>    project_description  = optional(string),<br>    project_contact      = optional(string),<br>    project_orginisation = optional(string)<br>  })</pre> | `{}` | no |
+| <a name="input_project_information"></a> [project\_information](#input\_project\_information) | n/a | <pre>object({<br>    project_name         = optional(string),<br>    project_description  = optional(string),<br>    project_contact      = optional(string),<br>    project_organisation = optional(string)<br>  })</pre> | `{}` | no |
 | <a name="input_project_name"></a> [project\_name](#input\_project\_name) | The name of the rAPId project | `string` | `null` | no |
 | <a name="input_project_organisation"></a> [project\_organisation](#input\_project\_organisation) | The organisation owners of the rAPId project | `string` | `null` | no |
 | <a name="input_project_url"></a> [project\_url](#input\_project\_url) | The deployed url of the rAPId project | `string` | `null` | no |
