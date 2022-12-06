@@ -110,6 +110,11 @@ variable "permissions_table" {
   description = "Users permissions table in dynamoDB"
 }
 
+variable "permissions_table_arn" {
+  type = string
+  description = "Users permissions table arn in dynamoDB"
+}
+
 variable "cognito_user_pool_id" {
   type        = string
   description = "User pool id for cognito"

@@ -124,7 +124,7 @@ resource "aws_kms_key" "db_access_logs_key" {
 
 resource "aws_cloudwatch_log_group" "db_access_logs_log_group" {
   depends_on        = [aws_kms_key.db_access_logs_key]
-  name              = "${aws_dynamodb_table.service_table.name}_access_logs"
+  name              = "db_access_logs"
   retention_in_days = 90
   kms_key_id        = aws_kms_key.db_access_logs_key.arn
   tags              = var.tags
@@ -136,9 +136,9 @@ resource "aws_cloudtrail" "db_access_logs_trail" {
     aws_kms_key.db_access_logs_key
   ]
 
-  name           = "${var.resource-name-prefix}-service-table-access-logs"
+  name           = "${var.resource-name-prefix}-table-access-logs"
   s3_bucket_name = aws_s3_bucket.db_access_logs.id
-  s3_key_prefix  = "service-db-access-logs"
+  s3_key_prefix  = "db-access-logs"
   kms_key_id     = aws_kms_key.db_access_logs_key.arn
 
   is_multi_region_trail         = true
@@ -150,7 +150,8 @@ resource "aws_cloudtrail" "db_access_logs_trail" {
     data_resource {
       type = "AWS::DynamoDB::Table"
       values = [
-        aws_dynamodb_table.service_table.arn
+        aws_dynamodb_table.service_table.arn,
+        var.permissions_table_arn
       ]
     }
   }
@@ -163,7 +164,7 @@ resource "aws_cloudtrail" "db_access_logs_trail" {
 }
 
 resource "aws_iam_role" "cloud_trail_role" {
-  name = "${var.resource-name-prefix}-service-table-cloudtrail-cloudwatch-role"
+  name = "${var.resource-name-prefix}-table-cloudtrail-cloudwatch-role"
 
   assume_role_policy = <<EOF
 {
@@ -217,7 +218,7 @@ EOF
 }
 
 resource "aws_s3_bucket" "db_access_logs" {
-  bucket        = "${var.resource-name-prefix}-service-table-access-logs"
+  bucket        = "${var.resource-name-prefix}-table-access-logs"
   force_destroy = true
   tags          = var.tags
 }
