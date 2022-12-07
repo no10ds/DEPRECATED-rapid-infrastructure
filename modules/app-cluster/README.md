@@ -91,6 +91,7 @@ No modules.
 | <a name="input_data_s3_bucket_arn"></a> [data\_s3\_bucket\_arn](#input\_data\_s3\_bucket\_arn) | S3 Bucket arn to store application data | `string` | n/a | yes |
 | <a name="input_data_s3_bucket_name"></a> [data\_s3\_bucket\_name](#input\_data\_s3\_bucket\_name) | S3 Bucket name to store application data | `string` | n/a | yes |
 | <a name="input_domain_name"></a> [domain\_name](#input\_domain\_name) | Domain name for the rAPId instance | `string` | n/a | yes |
+| <a name="input_enable_cloudtrail"></a> [enable\_cloudtrail](#input\_enable\_cloudtrail) | Whether to enable the logging of db events to CloudTrail | `bool` | `true` | no |
 | <a name="input_host_port"></a> [host\_port](#input\_host\_port) | The host port for the running ECS containers | `number` | `8000` | no |
 | <a name="input_hosted_zone_id"></a> [hosted\_zone\_id](#input\_hosted\_zone\_id) | Hosted Zone ID with the domain Name Servers, pass quotes to create a new one from scratch | `string` | n/a | yes |
 | <a name="input_ip_whitelist"></a> [ip\_whitelist](#input\_ip\_whitelist) | A list of IPs to whitelist for access to the service | `list(string)` | n/a | yes |
