@@ -87,7 +87,8 @@ data "aws_iam_policy_document" "db_access_logs_key_policy" {
       test     = "ArnEquals"
       variable = "kms:EncryptionContext:aws:logs:arn"
       values = [
-        "arn:aws:logs:${data.aws_region.region.name}:${data.aws_caller_identity.current.account_id}:log-group:${var.resource-name-prefix}_service_table_access_logs"
+        "arn:aws:logs:${data.aws_region.region.name}:${data.aws_caller_identity.current.account_id}:log-group:db_access_logs",
+        "arn:aws:logs:${data.aws_region.region.name}:${data.aws_caller_identity.current.account_id}:log-group:${var.resource-name-prefix}_${var.permissions_table}_access_logs"
       ]
     }
   }
