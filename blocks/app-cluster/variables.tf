@@ -71,6 +71,12 @@ variable "ip_whitelist" {
   description = "A list of IPs to whitelist for access to the service"
 }
 
+variable "enable_cloudtrail" {
+  type        = bool
+  description = "Whether to enable the logging of db events to CloudTrail"
+  default     = true
+}
+
 variable "support_emails_for_cloudwatch_alerts" {
   type        = list(string)
   description = "List of emails that will receive alerts from CloudWatch"

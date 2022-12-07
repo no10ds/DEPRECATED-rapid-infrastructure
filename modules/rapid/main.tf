@@ -24,6 +24,7 @@ module "app_cluster" {
   private_subnet_ids_list                         = var.private_subnet_ids_list
   athena_query_output_bucket_arn                  = module.data_workflow.athena_query_result_output_bucket_arn
   ip_whitelist                                    = var.ip_whitelist
+  enable_cloudtrail                               = var.enable_cloudtrail
 }
 
 module "auth" {

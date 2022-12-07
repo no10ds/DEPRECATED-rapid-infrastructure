@@ -123,6 +123,7 @@ resource "aws_kms_key" "db_access_logs_key" {
 }
 
 resource "aws_cloudwatch_log_group" "db_access_logs_log_group" {
+  count             = var.enable_cloudtrail ? 1 : 0
   depends_on        = [aws_kms_key.db_access_logs_key]
   name              = "db_access_logs"
   retention_in_days = 90
@@ -131,13 +132,14 @@ resource "aws_cloudwatch_log_group" "db_access_logs_log_group" {
 }
 
 resource "aws_cloudtrail" "db_access_logs_trail" {
+  count = var.enable_cloudtrail ? 1 : 0
   depends_on = [
     aws_s3_bucket_policy.db_access_logs_bucket_policy,
     aws_kms_key.db_access_logs_key
   ]
 
   name           = "${var.resource-name-prefix}-table-access-logs"
-  s3_bucket_name = aws_s3_bucket.db_access_logs.id
+  s3_bucket_name = aws_s3_bucket.db_access_logs[0].id
   s3_key_prefix  = "db-access-logs"
   kms_key_id     = aws_kms_key.db_access_logs_key.arn
 
@@ -157,14 +159,15 @@ resource "aws_cloudtrail" "db_access_logs_trail" {
   }
 
   # CloudTrail requires the Log Stream wildcard
-  cloud_watch_logs_group_arn = "${aws_cloudwatch_log_group.db_access_logs_log_group.arn}:*"
-  cloud_watch_logs_role_arn  = aws_iam_role.cloud_trail_role.arn
+  cloud_watch_logs_group_arn = "${aws_cloudwatch_log_group.db_access_logs_log_group[0].arn}:*"
+  cloud_watch_logs_role_arn  = aws_iam_role.cloud_trail_role[0].arn
 
   tags = var.tags
 }
 
 resource "aws_iam_role" "cloud_trail_role" {
-  name = "${var.resource-name-prefix}-table-cloudtrail-cloudwatch-role"
+  count = var.enable_cloudtrail ? 1 : 0
+  name  = "${var.resource-name-prefix}-table-cloudtrail-cloudwatch-role"
 
   assume_role_policy = <<EOF
 {
@@ -185,8 +188,9 @@ EOF
 }
 
 resource "aws_iam_role_policy" "aws_iam_role_policy_cloudtrail_cloudwatch" {
-  name = "${var.resource-name-prefix}-cloudtrail-cloudwatch-policy"
-  role = aws_iam_role.cloud_trail_role.id
+  count = var.enable_cloudtrail ? 1 : 0
+  name  = "${var.resource-name-prefix}-cloudtrail-cloudwatch-policy"
+  role  = aws_iam_role.cloud_trail_role[0].id
 
   policy = <<EOF
 {
@@ -199,7 +203,7 @@ resource "aws_iam_role_policy" "aws_iam_role_policy_cloudtrail_cloudwatch" {
                 "logs:CreateLogStream"
             ],
             "Resource": [
-                "${aws_cloudwatch_log_group.db_access_logs_log_group.arn}:*"
+                "${aws_cloudwatch_log_group.db_access_logs_log_group[0].arn}:*"
             ]
         },
         {
@@ -209,7 +213,7 @@ resource "aws_iam_role_policy" "aws_iam_role_policy_cloudtrail_cloudwatch" {
                 "logs:PutLogEvents"
             ],
             "Resource": [
-                "${aws_cloudwatch_log_group.db_access_logs_log_group.arn}:*"
+                "${aws_cloudwatch_log_group.db_access_logs_log_group[0].arn}:*"
             ]
         }
     ]
@@ -218,13 +222,15 @@ EOF
 }
 
 resource "aws_s3_bucket" "db_access_logs" {
+  count         = var.enable_cloudtrail ? 1 : 0
   bucket        = "${var.resource-name-prefix}-table-access-logs"
   force_destroy = true
   tags          = var.tags
 }
 
 resource "aws_s3_bucket_policy" "db_access_logs_bucket_policy" {
-  bucket = aws_s3_bucket.db_access_logs.id
+  count  = var.enable_cloudtrail ? 1 : 0
+  bucket = aws_s3_bucket.db_access_logs[0].id
   policy = <<POLICY
 {
     "Version": "2012-10-17",
@@ -236,7 +242,7 @@ resource "aws_s3_bucket_policy" "db_access_logs_bucket_policy" {
               "Service": "cloudtrail.amazonaws.com"
             },
             "Action": "s3:GetBucketAcl",
-            "Resource": "${aws_s3_bucket.db_access_logs.arn}"
+            "Resource": "${aws_s3_bucket.db_access_logs[0].arn}"
         },
         {
             "Sid": "AWSCloudTrailWrite",
@@ -245,7 +251,7 @@ resource "aws_s3_bucket_policy" "db_access_logs_bucket_policy" {
               "Service": "cloudtrail.amazonaws.com"
             },
             "Action": "s3:PutObject",
-            "Resource": "${aws_s3_bucket.db_access_logs.arn}/*",
+            "Resource": "${aws_s3_bucket.db_access_logs[0].arn}/*",
             "Condition": {
                 "StringEquals": {
                     "s3:x-amz-acl": "bucket-owner-full-control"
@@ -258,7 +264,8 @@ POLICY
 }
 
 resource "aws_s3_bucket_lifecycle_configuration" "db_access_logs_lifecycle" {
-  bucket = aws_s3_bucket.db_access_logs.id
+  count  = var.enable_cloudtrail ? 1 : 0
+  bucket = aws_s3_bucket.db_access_logs[0].id
 
   rule {
     id     = "expire-old-logs"
@@ -272,8 +279,9 @@ resource "aws_s3_bucket_lifecycle_configuration" "db_access_logs_lifecycle" {
 }
 
 resource "aws_s3_bucket_server_side_encryption_configuration" "db_access_logs_s3_encryption_config" {
+  count      = var.enable_cloudtrail ? 1 : 0
   depends_on = [aws_kms_key.db_access_logs_key]
-  bucket     = aws_s3_bucket.db_access_logs.bucket
+  bucket     = aws_s3_bucket.db_access_logs[0].bucket
 
   rule {
     apply_server_side_encryption_by_default {

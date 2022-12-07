@@ -100,6 +100,12 @@ variable "ip_whitelist" {
   description = "A list of IPs to whitelist for access to the service"
 }
 
+variable "enable_cloudtrail" {
+  type        = bool
+  description = "Whether to enable the logging of db events to CloudTrail"
+  default      = true
+}
+
 variable "athena_query_output_bucket_arn" {
   type        = string
   description = "The S3 bucket ARN where Athena stores its query results. This bucket is created dynamically with a unique name in the data-workflow module. Reference it by remote state, module output or ARN string directly"

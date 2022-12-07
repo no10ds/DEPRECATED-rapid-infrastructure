@@ -33,6 +33,7 @@ module "app_cluster" {
   private_subnet_ids_list              = data.terraform_remote_state.vpc-state.outputs.private_subnets_ids
   public_subnet_ids_list               = data.terraform_remote_state.vpc-state.outputs.public_subnets_ids
   ip_whitelist                         = var.ip_whitelist
+  enable_cloudtrail                    = var.enable_cloudtrail
   support_emails_for_cloudwatch_alerts = var.support_emails_for_cloudwatch_alerts
   tags                                 = var.tags
 }

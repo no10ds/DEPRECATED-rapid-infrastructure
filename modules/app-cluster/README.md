@@ -96,6 +96,7 @@ No modules.
 | <a name="input_ip_whitelist"></a> [ip\_whitelist](#input\_ip\_whitelist) | A list of IPs to whitelist for access to the service | `list(string)` | n/a | yes |
 | <a name="input_log_bucket_name"></a> [log\_bucket\_name](#input\_log\_bucket\_name) | A bucket to send the Load Balancer logs | `string` | n/a | yes |
 | <a name="input_permissions_table"></a> [permissions\_table](#input\_permissions\_table) | Users permissions table in dynamoDB | `string` | n/a | yes |
+| <a name="input_permissions_table_arn"></a> [permissions\_table\_arn](#input\_permissions\_table\_arn) | Users permissions table arn in dynamoDB | `string` | n/a | yes |
 | <a name="input_private_subnet_ids_list"></a> [private\_subnet\_ids\_list](#input\_private\_subnet\_ids\_list) | Application Private subnet list | `list(string)` | n/a | yes |
 | <a name="input_project_contact"></a> [project\_contact](#input\_project\_contact) | The contact email of the rAPId project owner | `string` | `null` | no |
 | <a name="input_project_description"></a> [project\_description](#input\_project\_description) | The description of the rAPId project | `string` | `null` | no |
