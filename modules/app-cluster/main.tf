@@ -117,7 +117,7 @@ resource "aws_iam_policy" "app_athena_query_access" {
           "iam:GetRole",
           "iam:PassRole"
         ],
-        "Resource" : "${var.resource-name-prefix}_crawler/*"
+        "Resource" : "arn:aws:glue:${var.aws_region}:${var.aws_account}:crawler/${var.resource-name-prefix}_crawler/*"
       },
       {
         "Sid" : "DataBucket",
