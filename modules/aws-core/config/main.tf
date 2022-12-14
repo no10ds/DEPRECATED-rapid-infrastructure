@@ -52,6 +52,7 @@ data "aws_iam_policy_document" "allow_s3_access_for_aws_config_policy_document" 
     }
   }
   statement {
+    sid       = "AllowSSLRequestsOnly"
     effect    = "Deny"
     actions   = ["s3:*"]
     resources = ["${var.enable_lifecycle_management_for_s3 ? aws_s3_bucket.config_with_lifecycle[0].arn : aws_s3_bucket.config_without_lifecycle[0].arn}/${var.bucket_key_prefix}/AWSLogs/${local.bucket_account_id}/Config/*"]
