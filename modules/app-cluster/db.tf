@@ -87,7 +87,7 @@ data "aws_iam_policy_document" "db_access_logs_key_policy" {
       test     = "ArnEquals"
       variable = "kms:EncryptionContext:aws:logs:arn"
       values = [
-        "arn:aws:logs:${data.aws_region.region.name}:${data.aws_caller_identity.current.account_id}:log-group:db_access_logs",
+        "arn:aws:logs:${data.aws_region.region.name}:${data.aws_caller_identity.current.account_id}:log-group:${var.resource-name-prefix}_db_access_logs",
         "arn:aws:logs:${data.aws_region.region.name}:${data.aws_caller_identity.current.account_id}:log-group:${var.resource-name-prefix}_${var.permissions_table}_access_logs"
       ]
     }
@@ -126,7 +126,7 @@ resource "aws_kms_key" "db_access_logs_key" {
 resource "aws_cloudwatch_log_group" "db_access_logs_log_group" {
   count             = var.enable_cloudtrail ? 1 : 0
   depends_on        = [aws_kms_key.db_access_logs_key]
-  name              = "db_access_logs"
+  name              = "${var.resource-name-prefix}_db_access_logs"
   retention_in_days = 90
   kms_key_id        = aws_kms_key.db_access_logs_key.arn
   tags              = var.tags
