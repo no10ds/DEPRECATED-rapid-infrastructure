@@ -53,6 +53,12 @@ variable "ip_whitelist" {
   description = "A list of IPs to whitelist for access to the service"
 }
 
+variable "enable_cloudtrail" {
+  type        = bool
+  description = "Whether to enable the logging of db events to CloudTrail"
+  default     = true
+}
+
 variable "public_subnet_ids_list" {
   type        = list(string)
   description = "A list of public subnets from the VPC config"

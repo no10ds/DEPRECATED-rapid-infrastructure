@@ -37,3 +37,8 @@ output "rapid_metric_log_error_alarm_arn" {
   value       = module.app_cluster.rapid_metric_log_error_alarm_arn
   description = "The arn of the log error alarm metric"
 }
+
+output "service_table_arn" {
+  value       = module.app_cluster.service_table_arn
+  description = "The arn of the dynamoDB table that stores the user service"
+}
