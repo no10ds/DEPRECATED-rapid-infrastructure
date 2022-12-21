@@ -123,4 +123,5 @@ No modules.
 | <a name="output_load_balancer_dns"></a> [load\_balancer\_dns](#output\_load\_balancer\_dns) | The DNS name of the load balancer |
 | <a name="output_log_error_alarm_notification_arn"></a> [log\_error\_alarm\_notification\_arn](#output\_log\_error\_alarm\_notification\_arn) | The arn of the sns topic that receives notifications on log error alerts |
 | <a name="output_rapid_metric_log_error_alarm_arn"></a> [rapid\_metric\_log\_error\_alarm\_arn](#output\_rapid\_metric\_log\_error\_alarm\_arn) | The arn of the log error alarm metric |
+| <a name="output_service_table_arn"></a> [service\_table\_arn](#output\_service\_table\_arn) | The arn of the dynamoDB table that stores the user service |
 <!-- END_TF_DOCS -->
