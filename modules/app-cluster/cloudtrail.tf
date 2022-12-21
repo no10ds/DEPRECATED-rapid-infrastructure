@@ -76,7 +76,7 @@ data "aws_iam_policy_document" "access_logs_key_policy" {
 resource "aws_kms_key" "access_logs_key" {
   count       = var.enable_cloudtrail ? 1 : 0
   description = "This key is used to encrypt the access log objects"
-  policy      = data.aws_iam_policy_document.access_logs_key_policy
+  policy      = data.aws_iam_policy_document.access_logs_key_policy.json
   tags        = var.tags
 }
 
@@ -236,7 +236,7 @@ resource "aws_cloudtrail" "access_logs_trail" {
     include_management_events = false
 
     data_resource {
-      type = "AWS:DynamoDB::Table"
+      type = "AWS::DynamoDB::Table"
 
       values = [
         aws_dynamodb_table.service_table.arn,
