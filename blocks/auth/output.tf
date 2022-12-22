@@ -32,3 +32,8 @@ output "user_permission_table_name" {
   value       = module.auth.user_permission_table_name
   description = "Tha name of the dynamoDB table that stores permissions"
 }
+
+output "user_permission_table_arn" {
+  value       = module.auth.user_permission_table_arn
+  description = "The arn of the dynamoDB table that stores permissions"
+}

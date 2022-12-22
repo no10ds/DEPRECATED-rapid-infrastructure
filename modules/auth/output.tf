@@ -30,5 +30,10 @@ output "cognito_user_app_secret_manager_name" {
 
 output "user_permission_table_name" {
   value       = aws_dynamodb_table.permissions_table.name
-  description = "Tha name of the dynamoDB table that stores permissions"
+  description = "The name of the dynamoDB table that stores permissions"
+}
+
+output "user_permission_table_arn" {
+  value       = aws_dynamodb_table.permissions_table.arn
+  description = "The arn of the dynamoDB table that stores permissions"
 }

@@ -32,3 +32,8 @@ output "rapid_metric_log_error_alarm_arn" {
   value       = aws_cloudwatch_metric_alarm.log-error-alarm.arn
   description = "The arn of the log error alarm metric"
 }
+
+output "service_table_arn" {
+  value       = aws_dynamodb_table.service_table.arn
+  description = "The arn of the dynamoDB table that stores the user service"
+}

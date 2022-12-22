@@ -53,6 +53,32 @@ variable "ip_whitelist" {
   description = "A list of IPs to whitelist for access to the service"
 }
 
+variable "enable_cloudtrail" {
+  type        = bool
+  description = "Whether to enable the logging of db events to CloudTrail"
+  default     = true
+}
+
+variable "password_policy" {
+  type = object({
+    minimum_length                   = number
+    require_lowercase                = bool
+    require_numbers                  = bool
+    require_symbols                  = bool
+    require_uppercase                = bool
+    temporary_password_validity_days = number
+  })
+  description = "The Cognito pool password policy"
+  default = {
+    minimum_length                   = 8
+    require_lowercase                = true
+    require_numbers                  = true
+    require_symbols                  = true
+    require_uppercase                = true
+    temporary_password_validity_days = 7
+  }
+}
+
 variable "public_subnet_ids_list" {
   type        = list(string)
   description = "A list of public subnets from the VPC config"

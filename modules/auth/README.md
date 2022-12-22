@@ -7,7 +7,7 @@ No requirements.
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | 4.39.0 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | 4.48.0 |
 
 ## Modules
 
@@ -17,8 +17,6 @@ No modules.
 
 | Name | Type |
 |------|------|
-| [aws_cloudtrail.db_access_logs_trail](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudtrail) | resource |
-| [aws_cloudwatch_log_group.db_access_logs_log_group](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_log_group) | resource |
 | [aws_cognito_resource_server.rapid_resource_server](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cognito_resource_server) | resource |
 | [aws_cognito_user_pool.rapid_user_pool](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cognito_user_pool) | resource |
 | [aws_cognito_user_pool_client.test_client](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cognito_user_pool_client) | resource |
@@ -28,19 +26,11 @@ No modules.
 | [aws_dynamodb_table_item.admin_permissions](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/dynamodb_table_item) | resource |
 | [aws_dynamodb_table_item.data_permissions](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/dynamodb_table_item) | resource |
 | [aws_dynamodb_table_item.test_client_permissions](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/dynamodb_table_item) | resource |
-| [aws_iam_role.cloud_trail_role](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role) | resource |
-| [aws_iam_role_policy.aws_iam_role_policy_cloudtrail_cloudwatch](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy) | resource |
-| [aws_kms_key.db_access_logs_key](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/kms_key) | resource |
-| [aws_s3_bucket.db_access_logs](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket) | resource |
-| [aws_s3_bucket_lifecycle_configuration.db_access_logs_lifecycle](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_lifecycle_configuration) | resource |
-| [aws_s3_bucket_policy.db_access_logs_bucket_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_policy) | resource |
-| [aws_s3_bucket_server_side_encryption_configuration.db_access_logs_s3_encryption_config](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_server_side_encryption_configuration) | resource |
 | [aws_secretsmanager_secret.client_secrets_cognito](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/secretsmanager_secret) | resource |
 | [aws_secretsmanager_secret.user_secrets_cognito](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/secretsmanager_secret) | resource |
 | [aws_secretsmanager_secret_version.client_secrets_version](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/secretsmanager_secret_version) | resource |
 | [aws_secretsmanager_secret_version.user_login_client_secrets_version](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/secretsmanager_secret_version) | resource |
 | [aws_caller_identity.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity) | data source |
-| [aws_iam_policy_document.db_access_logs_key_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
 | [aws_region.region](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/region) | data source |
 
 ## Inputs
@@ -50,6 +40,7 @@ No modules.
 | <a name="input_admin_permissions"></a> [admin\_permissions](#input\_admin\_permissions) | n/a | `map(map(any))` | <pre>{<br>  "DATA_ADMIN": {<br>    "type": "DATA_ADMIN"<br>  },<br>  "USER_ADMIN": {<br>    "type": "USER_ADMIN"<br>  }<br>}</pre> | no |
 | <a name="input_data_permissions"></a> [data\_permissions](#input\_data\_permissions) | n/a | `map(map(any))` | <pre>{<br>  "READ_ALL": {<br>    "sensitivity": "ALL",<br>    "type": "READ"<br>  },<br>  "READ_PRIVATE": {<br>    "sensitivity": "PRIVATE",<br>    "type": "READ"<br>  },<br>  "READ_PUBLIC": {<br>    "sensitivity": "PUBLIC",<br>    "type": "READ"<br>  },<br>  "READ_SENSITIVE": {<br>    "sensitivity": "SENSITIVE",<br>    "type": "READ"<br>  },<br>  "WRITE_ALL": {<br>    "sensitivity": "ALL",<br>    "type": "WRITE"<br>  },<br>  "WRITE_PRIVATE": {<br>    "sensitivity": "PRIVATE",<br>    "type": "WRITE"<br>  },<br>  "WRITE_PUBLIC": {<br>    "sensitivity": "PUBLIC",<br>    "type": "WRITE"<br>  },<br>  "WRITE_SENSITIVE": {<br>    "sensitivity": "SENSITIVE",<br>    "type": "WRITE"<br>  }<br>}</pre> | no |
 | <a name="input_domain_name"></a> [domain\_name](#input\_domain\_name) | Domain name for the rAPId instance | `string` | n/a | yes |
+| <a name="input_password_policy"></a> [password\_policy](#input\_password\_policy) | The Cognito pool password policy | <pre>object({<br>    minimum_length                   = number<br>    require_lowercase                = bool<br>    require_numbers                  = bool<br>    require_symbols                  = bool<br>    require_uppercase                = bool<br>    temporary_password_validity_days = number<br>  })</pre> | <pre>{<br>  "minimum_length": 8,<br>  "require_lowercase": true,<br>  "require_numbers": true,<br>  "require_symbols": true,<br>  "require_uppercase": true,<br>  "temporary_password_validity_days": 7<br>}</pre> | no |
 | <a name="input_permissions_table_name"></a> [permissions\_table\_name](#input\_permissions\_table\_name) | The name of the users permissions table in DynamoDb | `string` | `"users_permissions"` | no |
 | <a name="input_rapid_client_explicit_auth_flows"></a> [rapid\_client\_explicit\_auth\_flows](#input\_rapid\_client\_explicit\_auth\_flows) | The list of auth flows supported by the client app | `list(string)` | <pre>[<br>  "ALLOW_REFRESH_TOKEN_AUTH",<br>  "ALLOW_CUSTOM_AUTH",<br>  "ALLOW_USER_SRP_AUTH"<br>]</pre> | no |
 | <a name="input_rapid_user_login_client_explicit_auth_flows"></a> [rapid\_user\_login\_client\_explicit\_auth\_flows](#input\_rapid\_user\_login\_client\_explicit\_auth\_flows) | The list of auth flows supported by the user login app | `list(string)` | <pre>[<br>  "ALLOW_REFRESH_TOKEN_AUTH",<br>  "ALLOW_USER_SRP_AUTH"<br>]</pre> | no |
@@ -66,6 +57,7 @@ No modules.
 | <a name="output_cognito_user_pool_id"></a> [cognito\_user\_pool\_id](#output\_cognito\_user\_pool\_id) | The Cognito rapid user pool id |
 | <a name="output_rapid_test_client_id"></a> [rapid\_test\_client\_id](#output\_rapid\_test\_client\_id) | The rapid test client id registered in the user pool |
 | <a name="output_resource_server_scopes"></a> [resource\_server\_scopes](#output\_resource\_server\_scopes) | The scopes defined in the resource server |
-| <a name="output_user_permission_table_name"></a> [user\_permission\_table\_name](#output\_user\_permission\_table\_name) | Tha name of the dynamoDB table that stores permissions |
+| <a name="output_user_permission_table_arn"></a> [user\_permission\_table\_arn](#output\_user\_permission\_table\_arn) | The arn of the dynamoDB table that stores permissions |
+| <a name="output_user_permission_table_name"></a> [user\_permission\_table\_name](#output\_user\_permission\_table\_name) | The name of the dynamoDB table that stores permissions |
 | <a name="output_user_pool_endpoint"></a> [user\_pool\_endpoint](#output\_user\_pool\_endpoint) | The Cognito rapid user pool endpoint |
 <!-- END_TF_DOCS -->

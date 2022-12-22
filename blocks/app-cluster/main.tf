@@ -14,6 +14,7 @@ module "app_cluster" {
   cognito_user_pool_id                            = data.terraform_remote_state.auth-state.outputs.cognito_user_pool_id
   cognito_user_login_app_credentials_secrets_name = data.terraform_remote_state.auth-state.outputs.cognito_user_app_secret_manager_name
   permissions_table                               = data.terraform_remote_state.auth-state.outputs.user_permission_table_name
+  permissions_table_arn                           = data.terraform_remote_state.auth-state.outputs.user_permission_table_arn
 
   application_version                  = var.application_version
   domain_name                          = var.domain_name
@@ -32,6 +33,7 @@ module "app_cluster" {
   private_subnet_ids_list              = data.terraform_remote_state.vpc-state.outputs.private_subnets_ids
   public_subnet_ids_list               = data.terraform_remote_state.vpc-state.outputs.public_subnets_ids
   ip_whitelist                         = var.ip_whitelist
+  enable_cloudtrail                    = var.enable_cloudtrail
   support_emails_for_cloudwatch_alerts = var.support_emails_for_cloudwatch_alerts
   tags                                 = var.tags
 }
