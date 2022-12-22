@@ -38,6 +38,21 @@ resource "aws_s3_bucket_policy" "allow_alb_logging" {
           "s3:x-amz-acl": "bucket-owner-full-control"
         }
       }
+    },
+    {
+      "Sid": "AllowSSLRequestsOnly",
+      "Action": "s3:*",
+      "Effect": "Deny",
+      "Resource": [
+        "arn:aws:s3:::${var.log_bucket_name}/*",
+        "arn:aws:s3:::${var.log_bucket_name}"
+      ],
+      "Condition": {
+        "Bool": {
+          "aws:SecureTransport": "false"
+        }
+     },
+      "Principal": "*"
     }
   ]
 }

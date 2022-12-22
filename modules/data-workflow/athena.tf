@@ -66,3 +66,29 @@ resource "aws_athena_workgroup" "rapid_athena_workgroup" {
 
   tags = var.tags
 }
+
+resource "aws_s3_bucket_policy" "athena_query_bucket_policy" {
+  bucket = aws_s3_bucket.rapid_athena_query_results_bucket.id
+  policy = <<POLICY
+    {
+        "Version": "2012-10-17",
+        "Statement": [
+            {
+              "Sid": "AllowSSLRequestsOnly",
+              "Action": "s3:*",
+              "Effect": "Deny",
+              "Resource": [
+                "${aws_s3_bucket.rapid_athena_query_results_bucket.arn}/*",
+                "${aws_s3_bucket.rapid_athena_query_results_bucket.arn}"
+              ],
+              "Condition": {
+                "Bool": {
+                  "aws:SecureTransport": "false"
+                }
+             },
+              "Principal": "*"
+           }
+        ]
+    }
+POLICY
+}
