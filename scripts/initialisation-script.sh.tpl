@@ -20,6 +20,9 @@ sudo apt-get install jq -y
 # Install Docker
 sudo apt-get install docker.io -y
 
+# Install zip
+sudo apt-get install zip -y
+
 # Install unzip
 sudo apt-get install unzip -y
 
