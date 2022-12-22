@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file. This project adheres
 to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v4.2.0 - _2022-12-22_
+See [v4.2.0] changes
+
+### Added
+- Configurable cognito password policy
+- Cloudtrail creation is now optional and cloudtrail events are now consolidated into one trail
+
 ## v4.1.1 - _2022-11-23_
 See [v4.1.1] changes
 

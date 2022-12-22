@@ -32,6 +32,7 @@ module "auth" {
   tags                 = var.tags
   domain_name          = var.domain_name
   resource-name-prefix = var.resource-name-prefix
+  password_policy      = var.password_policy
 }
 
 module "data_workflow" {
