@@ -13,6 +13,15 @@ data "terraform_remote_state" "s3-state" {
   }
 }
 
+data "terraform_remote_state" "app-cluster-state" {
+  backend = "s3"
+
+  config = {
+    key    = "app-cluster/terraform.tfstate"
+    bucket = var.state_bucket
+  }
+}
+
 resource "aws_cloudfront_origin_access_identity" "rapid_ui" {}
 
 resource "aws_s3_bucket" "rapid_ui" {
@@ -123,6 +132,23 @@ resource "aws_cloudfront_distribution" "rapid_ui" {
     }
   }
 
+  origin {
+    domain_name = data.terraform_remote_state.app-cluster-state.outputs.load_balancer_dns
+    origin_id   = "${var.resource-name-prefix}-api-origin"
+
+    custom_origin_config {
+      http_port              = 80
+      https_port             = 443
+      origin_protocol_policy = "match-viewer"
+      origin_ssl_protocols   = ["TLSv1.2"]
+    }
+
+    custom_header {
+      name  = "X-Custom-Header"
+      value = "xxx-yyy-zzz"
+    }
+  }
+
   restrictions {
     geo_restriction {
       restriction_type = "whitelist"
@@ -144,6 +170,23 @@ resource "aws_cloudfront_distribution" "rapid_ui" {
       query_string = false
       cookies {
         forward = "none"
+      }
+    }
+  }
+
+  ordered_cache_behavior {
+    path_pattern           = "/api/*"
+    allowed_methods        = ["HEAD", "DELETE", "POST", "GET", "OPTIONS", "PUT", "PATCH"]
+    cached_methods         = ["GET", "HEAD", "OPTIONS"]
+    target_origin_id       = "${var.resource-name-prefix}-api-origin"
+    viewer_protocol_policy = "redirect-to-https"
+
+    forwarded_values {
+      query_string = true
+      headers      = ["Origin"]
+
+      cookies {
+        forward = "all"
       }
     }
   }

@@ -44,6 +44,16 @@ resource "aws_s3_bucket_policy" "allow_alb_logging" {
 POLICY
 }
 
+# Get the current list of AWS CloudFront IP ranges
+data "aws_ip_ranges" "cloudfront" {
+  services = ["cloudfront"]
+}
+
+# Chunk the CloudFront IP ranges into blocks of 30 to get around security group limits
+locals {
+  cloudfront_ip_ranges_chunks = chunklist(data.aws_ip_ranges.cloudfront.cidr_blocks, 30)
+}
+
 resource "aws_security_group" "load_balancer_security_group" {
   vpc_id      = var.vpc_id
   description = "ALB Security Group"
@@ -74,6 +84,32 @@ resource "aws_security_group" "load_balancer_security_group" {
   tags = var.tags
 }
 
+resource "aws_security_group_rule" "lb_ingress_cloudfront" {
+  count = length(local.cloudfront_ip_ranges_chunks)
+
+  description       = "HTTPS from CloudFront"
+  security_group_id = aws_security_group.load_balancer_security_group.id
+
+  type        = "ingress"
+  from_port   = 443
+  to_port     = 443
+  protocol    = "tcp"
+  cidr_blocks = local.cloudfront_ip_ranges_chunks[count.index]
+}
+
+resource "aws_security_group_rule" "lb_ingress_cloudfront_http" {
+  count = length(local.cloudfront_ip_ranges_chunks)
+
+  description       = "HTTP from CloudFront"
+  security_group_id = aws_security_group.load_balancer_security_group.id
+
+  type        = "ingress"
+  from_port   = 80
+  to_port     = 80
+  protocol    = "tcp"
+  cidr_blocks = local.cloudfront_ip_ranges_chunks[count.index]
+}
+
 resource "aws_lb_target_group" "target_group" {
   name        = "${var.resource-name-prefix}-target-group"
   port        = 80
@@ -98,9 +134,9 @@ resource "aws_lb_listener" "listener" {
   load_balancer_arn = aws_alb.application_load_balancer.id
   port              = "443"
   protocol          = "HTTPS"
-  certificate_arn   = var.certificate_validation_arn != "" ? var.certificate_validation_arn : aws_acm_certificate_validation.rapid-certificate-validation[0].certificate_arn
-  tags              = var.tags
-  ssl_policy        = "ELBSecurityPolicy-TLS-1-2-2017-01"
+  // certificate_arn   = var.certificate_validation_arn != "" ? var.certificate_validation_arn : aws_acm_certificate_validation.rapid-certificate-validation[0].certificate_arn
+  tags       = var.tags
+  ssl_policy = "ELBSecurityPolicy-TLS-1-2-2017-01"
 
   default_action {
     type             = "forward"
@@ -121,6 +157,22 @@ resource "aws_lb_listener" "http-listener" {
       port        = "443"
       protocol    = "HTTPS"
       status_code = "HTTP_301"
+    }
+  }
+}
+
+resource "aws_lb_listener_rule" "cloudfront-listener" {
+  listener_arn = aws_lb_listener.http-listener.arn
+
+  action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.target_group.id
+  }
+
+  condition {
+    http_header {
+      http_header_name = "X-Custom-Header"
+      values           = ["xxx-yyy-zzz"]
     }
   }
 }
