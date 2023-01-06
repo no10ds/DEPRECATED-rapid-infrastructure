@@ -44,47 +44,26 @@ resource "aws_s3_bucket_policy" "allow_alb_logging" {
 POLICY
 }
 
-# Get the current list of AWS CloudFront IP ranges
-data "aws_ip_ranges" "cloudfront" {
-  services = ["cloudfront"]
+data "aws_ec2_managed_prefix_list" "cloudwatch" {
+  name = "com.amazonaws.global.cloudfront.origin-facing"
 }
-
-# Chunk the CloudFront IP ranges into blocks of 30 to get around security group limits
-locals {
-  cloudfront_ip_ranges_chunks = chunklist(data.aws_ip_ranges.cloudfront.cidr_blocks, 30)
-}
-
 resource "aws_security_group" "load_balancer_security_group" {
   vpc_id      = var.vpc_id
   description = "ALB Security Group"
   ingress {
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = var.ip_whitelist
-    description = "Allow HTTP ingress"
+    from_port       = 80
+    to_port         = 80
+    protocol        = "tcp"
+    prefix_list_ids = [data.aws_ec2_managed_prefix_list.cloudwatch.id]
+    description     = "Allow HTTP ingress"
   }
 
   ingress {
-    from_port   = 443
-    to_port     = 443
-    protocol    = "tcp"
-    cidr_blocks = var.ip_whitelist
-    description = "Allow HTTPS ingress"
-  }
-
-  ingress {
-    from_port   = 443
-    to_port     = 443
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  ingress {
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    from_port       = 443
+    to_port         = 443
+    protocol        = "tcp"
+    prefix_list_ids = [data.aws_ec2_managed_prefix_list.cloudwatch.id]
+    description     = "Allow HTTPS ingress"
   }
 
   egress {
