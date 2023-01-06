@@ -4,18 +4,6 @@ resource "aws_route53_zone" "primary-hosted-zone" {
   tags  = var.tags
 }
 
-resource "aws_route53_record" "route-to-lb" {
-  #checkov:skip=CKV2_AWS_23:Record is within AWS Account
-  zone_id = var.hosted_zone_id != "" ? var.hosted_zone_id : aws_route53_zone.primary-hosted-zone[0].zone_id
-  name    = var.domain_name
-  type    = "A"
-  alias {
-    name                   = aws_alb.application_load_balancer.dns_name
-    zone_id                = aws_alb.application_load_balancer.zone_id
-    evaluate_target_health = true
-  }
-}
-
 # Create the certificate
 resource "aws_acm_certificate" "rapid-certificate" {
   count             = var.certificate_validation_arn == "" ? 1 : 0

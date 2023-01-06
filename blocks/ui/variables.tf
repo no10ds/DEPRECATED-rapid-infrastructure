@@ -8,6 +8,31 @@ variable "state_bucket" {
   description = "Bucket name for backend state"
 }
 
+variable "log_bucket_name" {
+  type        = string
+  description = "A bucket to send the Cloudfront logs"
+}
+
+variable "certificate_validation_arn" {
+  type        = string
+  description = "Arn of the certificate used by the domain"
+}
+
+variable "domain_name" {
+  type        = string
+  description = "Domain name for the rAPId instance"
+}
+
+variable "hosted_zone_id" {
+  type        = string
+  description = "Hosted Zone ID with the domain Name Servers, pass quotes to create a new one from scratch"
+}
+
+variable "ip_whitelist" {
+  type        = list(string)
+  description = "A list of IPs to whitelist for access to the service"
+}
+
 variable "resource-name-prefix" {
   type        = string
   description = "The prefix to add to resources for easier identification"

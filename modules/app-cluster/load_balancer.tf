@@ -73,6 +73,20 @@ resource "aws_security_group" "load_balancer_security_group" {
     description = "Allow HTTPS ingress"
   }
 
+  ingress {
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
   egress {
     from_port        = 0
     to_port          = 0
@@ -82,32 +96,6 @@ resource "aws_security_group" "load_balancer_security_group" {
     description      = "Allow all egress"
   }
   tags = var.tags
-}
-
-resource "aws_security_group_rule" "lb_ingress_cloudfront" {
-  count = length(local.cloudfront_ip_ranges_chunks)
-
-  description       = "HTTPS from CloudFront"
-  security_group_id = aws_security_group.load_balancer_security_group.id
-
-  type        = "ingress"
-  from_port   = 443
-  to_port     = 443
-  protocol    = "tcp"
-  cidr_blocks = local.cloudfront_ip_ranges_chunks[count.index]
-}
-
-resource "aws_security_group_rule" "lb_ingress_cloudfront_http" {
-  count = length(local.cloudfront_ip_ranges_chunks)
-
-  description       = "HTTP from CloudFront"
-  security_group_id = aws_security_group.load_balancer_security_group.id
-
-  type        = "ingress"
-  from_port   = 80
-  to_port     = 80
-  protocol    = "tcp"
-  cidr_blocks = local.cloudfront_ip_ranges_chunks[count.index]
 }
 
 resource "aws_lb_target_group" "target_group" {
@@ -134,9 +122,9 @@ resource "aws_lb_listener" "listener" {
   load_balancer_arn = aws_alb.application_load_balancer.id
   port              = "443"
   protocol          = "HTTPS"
-  // certificate_arn   = var.certificate_validation_arn != "" ? var.certificate_validation_arn : aws_acm_certificate_validation.rapid-certificate-validation[0].certificate_arn
-  tags       = var.tags
-  ssl_policy = "ELBSecurityPolicy-TLS-1-2-2017-01"
+  certificate_arn   = var.certificate_validation_arn != "" ? var.certificate_validation_arn : aws_acm_certificate_validation.rapid-certificate-validation[0].certificate_arn
+  tags              = var.tags
+  ssl_policy        = "ELBSecurityPolicy-TLS-1-2-2017-01"
 
   default_action {
     type             = "forward"
@@ -159,218 +147,4 @@ resource "aws_lb_listener" "http-listener" {
       status_code = "HTTP_301"
     }
   }
-}
-
-resource "aws_lb_listener_rule" "cloudfront-listener" {
-  listener_arn = aws_lb_listener.http-listener.arn
-
-  action {
-    type             = "forward"
-    target_group_arn = aws_lb_target_group.target_group.id
-  }
-
-  condition {
-    http_header {
-      http_header_name = "X-Custom-Header"
-      values           = ["xxx-yyy-zzz"]
-    }
-  }
-}
-
-resource "aws_wafv2_web_acl" "rapid_acl" {
-  #checkov:skip=CKV2_AWS_31:Already have a logging configuration
-  name  = "${var.resource-name-prefix}-acl"
-  scope = "REGIONAL"
-  tags  = var.tags
-
-  default_action {
-    block {}
-  }
-
-  rule {
-    name     = "validate-request"
-    priority = 0
-
-    action {
-      allow {}
-    }
-
-    statement {
-      and_statement {
-        statement {
-          byte_match_statement {
-            positional_constraint = "EXACTLY"
-
-            search_string = var.domain_name
-            field_to_match {
-              single_header {
-                name = "host"
-              }
-            }
-            text_transformation {
-              priority = 0
-              type     = "NONE"
-            }
-          }
-        }
-        statement {
-          not_statement {
-            statement {
-              sqli_match_statement {
-                field_to_match {
-                  body {}
-                }
-                text_transformation {
-                  priority = 0
-                  type     = "NONE"
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-
-    visibility_config {
-      cloudwatch_metrics_enabled = true
-      metric_name                = "validate-request"
-      sampled_requests_enabled   = true
-    }
-  }
-
-  rule {
-    name     = "validate-query"
-    priority = 1
-
-    action {
-      block {}
-    }
-
-    statement {
-      and_statement {
-        statement {
-          byte_match_statement {
-            positional_constraint = "ENDS_WITH"
-
-            search_string = "/query"
-            field_to_match {
-              uri_path {}
-            }
-            text_transformation {
-              priority = 0
-              type     = "NONE"
-            }
-          }
-        }
-        statement {
-          not_statement {
-            statement {
-              size_constraint_statement {
-                comparison_operator = "GT"
-                size                = "8192"
-                field_to_match {
-                  body {}
-                }
-                text_transformation {
-                  priority = 0
-                  type     = "NONE"
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-
-    visibility_config {
-      cloudwatch_metrics_enabled = true
-      metric_name                = "validate-request"
-      sampled_requests_enabled   = true
-    }
-  }
-
-  rule {
-    name     = "validate-large-query"
-    priority = 2
-
-    action {
-      block {}
-    }
-
-    statement {
-      and_statement {
-        statement {
-          byte_match_statement {
-            positional_constraint = "ENDS_WITH"
-
-            search_string = "/query/large"
-            field_to_match {
-              uri_path {}
-            }
-            text_transformation {
-              priority = 0
-              type     = "NONE"
-            }
-          }
-        }
-        statement {
-          not_statement {
-            statement {
-              size_constraint_statement {
-                comparison_operator = "GT"
-                size                = "8192"
-                field_to_match {
-                  body {}
-                }
-                text_transformation {
-                  priority = 0
-                  type     = "NONE"
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-
-    visibility_config {
-      cloudwatch_metrics_enabled = true
-      metric_name                = "validate-request"
-      sampled_requests_enabled   = true
-    }
-  }
-
-  rule {
-    name     = "AWS-AWSManagedRulesKnownBadInputsRuleSet"
-    priority = 3
-
-    override_action {
-      none {}
-    }
-
-    statement {
-      managed_rule_group_statement {
-        name        = "AWSManagedRulesKnownBadInputsRuleSet"
-        vendor_name = "AWS"
-      }
-    }
-
-    visibility_config {
-      cloudwatch_metrics_enabled = true
-      metric_name                = "aws-known-bad-input"
-      sampled_requests_enabled   = true
-    }
-  }
-
-
-  visibility_config {
-    cloudwatch_metrics_enabled = true
-    metric_name                = "${var.resource-name-prefix}-acl"
-    sampled_requests_enabled   = true
-  }
-}
-
-resource "aws_wafv2_web_acl_association" "alb-acl-association" {
-  resource_arn = aws_alb.application_load_balancer.arn
-  web_acl_arn  = aws_wafv2_web_acl.rapid_acl.arn
 }
