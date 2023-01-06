@@ -24,7 +24,7 @@ output "hosted_zone_name_servers" {
 }
 
 output "hosted_zone_id" {
-  value = module.app_cluster.hosted_zone_id
+  value       = module.app_cluster.hosted_zone_id
   description = "id of the primary hosted zone linked to the domain"
 }
 
