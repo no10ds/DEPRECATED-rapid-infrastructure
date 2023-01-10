@@ -143,3 +143,19 @@ resource "aws_dynamodb_table_item" "test_client_user_admin_permissions" {
   }
   ITEM
 }
+
+resource "aws_dynamodb_table_item" "ui_test_user_permissions" {
+  table_name = aws_dynamodb_table.permissions_table.name
+  hash_key   = aws_dynamodb_table.permissions_table.hash_key
+  range_key  = aws_dynamodb_table.permissions_table.range_key
+
+  item = <<ITEM
+  {
+    "PK": {"S": "SUBJECT"},
+    "SK": {"S": "${aws_cognito_user.ui_test_user.sub}"},
+    "Id": {"S": "${aws_cognito_user.ui_test_user.sub}"},
+    "Type": {"S": "USER"},
+    "Permissions": {"SS": ["USER_ADMIN","READ_ALL","WRITE_ALL","DATA_ADMIN"]}
+  }
+  ITEM
+}
