@@ -58,3 +58,8 @@ variable "ui_information" {
     }
   EOT
 }
+
+variable "load_balancer_dns" {
+  type        = string
+  description = "The DNS name of the load balancer"
+}

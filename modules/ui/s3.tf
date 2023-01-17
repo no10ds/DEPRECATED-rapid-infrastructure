@@ -11,7 +11,7 @@ resource "aws_s3_bucket" "rapid_ui" {
   }
 
   logging {
-    target_bucket = data.terraform_remote_state.s3-state.outputs.log_bucket_name
+    target_bucket = var.log_bucket_name
     target_prefix = "log/ui-f1-registry"
   }
 }
@@ -38,13 +38,17 @@ resource "null_resource" "upload_static_ui" {
     aws_s3_bucket.rapid_ui
   ]
 
+  triggers = {
+    ui_version = var.ui_information.ui_version
+  }
+
   provisioner "local-exec" {
     command = <<EOF
       url="${var.ui_information.ui_registry_url}/${var.ui_information.ui_version}.zip"
       # curl -LO $url
-      unzip ${var.ui_information.ui_version}.zip
+      unzip -o ${var.ui_information.ui_version}.zip
       cd out/
-      sed -i '' 's/"REACT_APP_API_URL":"https:\/\/getrapid.link"/"REACT_APP_API_URL":"${var.ui_information.rapid_api_url}"/g' __ENV.js
+      sed -i '' 's/"REACT_APP_API_URL":"http:\/\/changeme.link\/api"/"REACT_APP_API_URL":"https:\/\/${var.domain_name}\/api"/g' __ENV.js
       aws s3 cp . s3://${aws_s3_bucket.rapid_ui.id} --recursive
     EOF
   }
@@ -52,6 +56,8 @@ resource "null_resource" "upload_static_ui" {
 
 data "aws_iam_policy_document" "cloudfront" {
   statement {
+    effect = "Allow"
+
     actions = [
       "s3:GetObject",
     ]
@@ -61,29 +67,36 @@ data "aws_iam_policy_document" "cloudfront" {
     ]
 
     principals {
-      type = "AWS"
-
-      identifiers = [
-        aws_cloudfront_origin_access_identity.rapid_ui.iam_arn,
-      ]
+      type        = "*"
+      identifiers = ["*"]
     }
   }
 
   statement {
+    effect = "Allow"
+
     actions = [
-      "s3:ListBucket",
+      "s3:GetObject",
+      "s3:GetObjectVersion"
     ]
 
     resources = [
-      aws_s3_bucket.rapid_ui.arn,
+      "${aws_s3_bucket.rapid_ui.arn}",
+      "${aws_s3_bucket.rapid_ui.arn}/*",
     ]
 
-    principals {
-      type = "AWS"
-
-      identifiers = [
-        aws_cloudfront_origin_access_identity.rapid_ui.iam_arn,
+    condition {
+      test     = "StringLike"
+      variable = "aws:Referer"
+      values = [
+        "http://${var.domain_name}/*",
+        "https://${var.domain_name}/*"
       ]
+    }
+
+    principals {
+      type        = "*"
+      identifiers = ["*"]
     }
   }
 }

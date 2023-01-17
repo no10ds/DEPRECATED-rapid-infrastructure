@@ -60,7 +60,7 @@ resource "aws_cognito_user_pool_client" "user_login" {
   allowed_oauth_flows                  = ["code"]
   allowed_oauth_flows_user_pool_client = true
   callback_urls                        = ["https://${var.domain_name}/api/oauth2/success"]
-  logout_urls                          = ["https://${var.domain_name}/api/login"]
+  logout_urls                          = ["https://${var.domain_name}/login"]
   default_redirect_uri                 = "https://${var.domain_name}/api/oauth2/success"
 }
 

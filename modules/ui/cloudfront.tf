@@ -1,19 +1,21 @@
+resource "aws_cloudfront_origin_access_identity" "rapid_ui" {}
+
 resource "aws_cloudfront_origin_request_policy" "rapid_ui_lb" {
   name = "${var.resource-name-prefix}-api-lb-request-policy"
 
   cookies_config {
-    cookie_behavior = "none"
+    cookie_behavior = "all"
   }
 
   headers_config {
     header_behavior = "whitelist"
     headers {
-      items = ["Host"]
+      items = ["Host", "Accept", "Origin", "Referer"]
     }
   }
 
   query_strings_config {
-    query_string_behavior = "none"
+    query_string_behavior = "all"
   }
 }
 
@@ -33,16 +35,19 @@ resource "aws_cloudfront_distribution" "rapid_ui" {
   }
 
   origin {
-    domain_name = aws_s3_bucket.rapid_ui.bucket_regional_domain_name
+    domain_name = aws_s3_bucket.rapid_ui.website_endpoint
     origin_id   = "${var.resource-name-prefix}-ui-origin"
 
-    s3_origin_config {
-      origin_access_identity = aws_cloudfront_origin_access_identity.rapid_ui.cloudfront_access_identity_path
+    custom_origin_config {
+      http_port              = "80"
+      https_port             = "443"
+      origin_protocol_policy = "http-only"
+      origin_ssl_protocols   = ["TLSv1", "TLSv1.1", "TLSv1.2"]
     }
   }
 
   origin {
-    domain_name = data.terraform_remote_state.app-cluster-state.outputs.load_balancer_dns
+    domain_name = var.load_balancer_dns
     origin_id   = "${var.resource-name-prefix}-api-origin"
 
     custom_origin_config {
@@ -64,7 +69,7 @@ resource "aws_cloudfront_distribution" "rapid_ui" {
     allowed_methods        = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
     cached_methods         = ["GET", "HEAD"]
     target_origin_id       = "${var.resource-name-prefix}-ui-origin"
-    viewer_protocol_policy = "allow-all"
+    viewer_protocol_policy = "redirect-to-https"
 
     forwarded_values {
       query_string = false
@@ -75,7 +80,7 @@ resource "aws_cloudfront_distribution" "rapid_ui" {
   }
 
   ordered_cache_behavior {
-    allowed_methods        = ["HEAD", "GET"]
+    allowed_methods        = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
     cached_methods         = ["HEAD", "GET"]
     target_origin_id       = "${var.resource-name-prefix}-api-origin"
     viewer_protocol_policy = "redirect-to-https"
@@ -94,7 +99,7 @@ resource "aws_cloudfront_distribution" "rapid_ui" {
 }
 
 resource "aws_route53_record" "route-to-cloudfront" {
-  zone_id = var.hosted_zone_id != "" ? var.hosted_zone_id : data.terraform_remote_state.app-cluster-state.outputs.hosted_zone_id
+  zone_id = var.hosted_zone_id
   name    = var.domain_name
   type    = "A"
 
