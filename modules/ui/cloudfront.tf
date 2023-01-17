@@ -28,8 +28,7 @@ resource "aws_cloudfront_distribution" "rapid_ui" {
   web_acl_id          = aws_wafv2_web_acl.rapid_acl.arn
 
   viewer_certificate {
-    # TODO Create this
-    acm_certificate_arn      = "arn:aws:acm:us-east-1:337606761318:certificate/caebb329-a93d-4c18-9db5-b5b7d82157f0"
+    acm_certificate_arn      = aws_acm_certificate.rapid-certificate[0].arn
     ssl_support_method       = "sni-only"
     minimum_protocol_version = "TLSv1.2_2021"
   }
@@ -107,5 +106,36 @@ resource "aws_route53_record" "route-to-cloudfront" {
     name                   = aws_cloudfront_distribution.rapid_ui.domain_name
     zone_id                = aws_cloudfront_distribution.rapid_ui.hosted_zone_id
     evaluate_target_health = false
+  }
+}
+
+locals {
+  domain_validation_options = var.certificate_validation_arn == "" ? aws_acm_certificate.rapid-certificate[0].domain_validation_options : []
+}
+
+resource "aws_route53_record" "rapid-validation_record" {
+  for_each = {
+    for dvo in local.domain_validation_options : dvo.domain_name => {
+      name   = dvo.resource_record_name
+      record = dvo.resource_record_value
+      type   = dvo.resource_record_type
+    }
+  }
+
+  zone_id = var.hosted_zone_id
+  name    = each.value.name
+  records = [each.value.record]
+  type    = each.value.type
+  ttl     = 60
+}
+
+resource "aws_acm_certificate" "rapid-certificate" {
+  provider          = aws.us_east
+  count             = var.certificate_validation_arn == "" ? 1 : 0
+  domain_name       = var.domain_name
+  validation_method = "DNS"
+
+  lifecycle {
+    create_before_destroy = true
   }
 }
