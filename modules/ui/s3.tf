@@ -44,24 +44,24 @@ locals {
   })
 }
 
-# resource "null_resource" "download_static_ui" {
-#   depends_on = [
-#     aws_s3_bucket.rapid_ui
-#   ]
+resource "null_resource" "download_static_ui" {
+  depends_on = [
+    aws_s3_bucket.rapid_ui
+  ]
 
-#   triggers = {
-#     ui_version = var.ui_version
-#   }
+  triggers = {
+    ui_version = var.ui_version
+  }
 
-#   provisioner "local-exec" {
-#     command = templatefile("./scripts/ui.sh.tpl", {
-#       REGISTRY_URL = local.ui_registry_url,
-#       VERSION      = var.ui_version,
-#       ENVS         = local.ui_envs,
-#       BUCKET_ID    = aws_s3_bucket.rapid_ui.id
-#     })
-#   }
-# }
+  provisioner "local-exec" {
+    command = templatefile("./scripts/ui.sh.tpl", {
+      REGISTRY_URL = local.ui_registry_url,
+      VERSION      = var.ui_version,
+      ENVS         = local.ui_envs,
+      BUCKET_ID    = aws_s3_bucket.rapid_ui.id
+    })
+  }
+}
 
 data "aws_iam_policy_document" "s3" {
   statement {
