@@ -32,6 +32,7 @@ module "auth" {
   tags                 = var.tags
   domain_name          = var.domain_name
   resource-name-prefix = var.resource-name-prefix
+  password_policy      = var.password_policy
 }
 
 module "data_workflow" {
@@ -107,4 +108,30 @@ resource "aws_s3_bucket_public_access_block" "logs" {
   block_public_acls       = true
   block_public_policy     = true
   restrict_public_buckets = true
+}
+
+resource "aws_s3_bucket_policy" "log_bucket_policy" {
+  bucket = aws_s3_bucket.this.id
+  policy = <<POLICY
+    {
+        "Version": "2012-10-17",
+        "Statement": [
+            {
+              "Sid": "AllowSSLRequestsOnly",
+              "Action": "s3:*",
+              "Effect": "Deny",
+              "Resource": [
+                "${aws_s3_bucket.this.arn}/*",
+                "${aws_s3_bucket.this.arn}"
+              ],
+              "Condition": {
+                "Bool": {
+                  "aws:SecureTransport": "false"
+                }
+             },
+              "Principal": "*"
+           }
+        ]
+    }
+POLICY
 }

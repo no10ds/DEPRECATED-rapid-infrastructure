@@ -250,6 +250,28 @@ resource "aws_iam_policy" "app_tags_access" {
   })
 }
 
+resource "aws_iam_policy" "app_glue_services_passrole" {
+  name        = "${var.resource-name-prefix}-app-glue-services-passrole"
+  description = "Allow application instance to passrole to glue access"
+  tags        = var.tags
+
+  policy = jsonencode({
+    "Version" : "2012-10-17",
+    "Statement" : [
+      {
+        Effect : "Allow",
+        Action : ["iam:PassRole"],
+        Resource : "arn:aws:iam::${var.aws_account}:role/${var.resource-name-prefix}-glue_services_access"
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "role_app_glue_services_passrole_policy_attachment" {
+  role       = aws_iam_role.ecsTaskExecutionRole.name
+  policy_arn = aws_iam_policy.app_glue_services_passrole.arn
+}
+
 resource "aws_iam_role_policy_attachment" "role_s3_access_policy_attachment" {
   role       = aws_iam_role.ecsTaskExecutionRole.name
   policy_arn = aws_iam_policy.app_s3_access.arn

@@ -37,6 +37,11 @@ resource "aws_iam_policy" "aws_access_key_self_service" {
 }
 
 resource "aws_iam_account_password_policy" "strict" {
+  # checkov:skip=CKV_AWS_11:Let users determine their own password policy
+  # checkov:skip=CKV_AWS_12:Let users determine their own password policy
+  # checkov:skip=CKV_AWS_13:Let users determine their own password policy
+  # checkov:skip=CKV_AWS_14:Let users determine their own password policy
+  # checkov:skip=CKV_AWS_15:Let users determine their own password policy
   minimum_password_length        = local.password_policy["minimum_password_length"]
   max_password_age               = local.password_policy["max_password_age"]
   password_reuse_prevention      = local.password_policy["password_reuse_prevention"]

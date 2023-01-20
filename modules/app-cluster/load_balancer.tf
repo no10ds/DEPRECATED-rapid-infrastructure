@@ -38,6 +38,21 @@ resource "aws_s3_bucket_policy" "allow_alb_logging" {
           "s3:x-amz-acl": "bucket-owner-full-control"
         }
       }
+    },
+    {
+      "Sid": "AllowSSLRequestsOnly",
+      "Action": "s3:*",
+      "Effect": "Deny",
+      "Resource": [
+        "arn:aws:s3:::${var.log_bucket_name}/*",
+        "arn:aws:s3:::${var.log_bucket_name}"
+      ],
+      "Condition": {
+        "Bool": {
+          "aws:SecureTransport": "false"
+        }
+     },
+      "Principal": "*"
     }
   ]
 }
@@ -98,6 +113,7 @@ resource "aws_lb_target_group" "target_group" {
 }
 
 resource "aws_lb_listener" "listener" {
+  # checkov:skip=CKV2_AWS_28:ALB access is limited to cloudfront which has WAF enabled
   load_balancer_arn = aws_alb.application_load_balancer.id
   port              = "443"
   protocol          = "HTTPS"
