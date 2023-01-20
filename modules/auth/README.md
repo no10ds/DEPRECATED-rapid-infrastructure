@@ -7,7 +7,7 @@ No requirements.
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | 4.50.0 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | 4.48.0 |
 
 ## Modules
 
@@ -40,6 +40,7 @@ No modules.
 | <a name="input_admin_permissions"></a> [admin\_permissions](#input\_admin\_permissions) | n/a | `map(map(any))` | <pre>{<br>  "DATA_ADMIN": {<br>    "type": "DATA_ADMIN"<br>  },<br>  "USER_ADMIN": {<br>    "type": "USER_ADMIN"<br>  }<br>}</pre> | no |
 | <a name="input_data_permissions"></a> [data\_permissions](#input\_data\_permissions) | n/a | `map(map(any))` | <pre>{<br>  "READ_ALL": {<br>    "sensitivity": "ALL",<br>    "type": "READ"<br>  },<br>  "READ_PRIVATE": {<br>    "sensitivity": "PRIVATE",<br>    "type": "READ"<br>  },<br>  "READ_PUBLIC": {<br>    "sensitivity": "PUBLIC",<br>    "type": "READ"<br>  },<br>  "READ_SENSITIVE": {<br>    "sensitivity": "SENSITIVE",<br>    "type": "READ"<br>  },<br>  "WRITE_ALL": {<br>    "sensitivity": "ALL",<br>    "type": "WRITE"<br>  },<br>  "WRITE_PRIVATE": {<br>    "sensitivity": "PRIVATE",<br>    "type": "WRITE"<br>  },<br>  "WRITE_PUBLIC": {<br>    "sensitivity": "PUBLIC",<br>    "type": "WRITE"<br>  },<br>  "WRITE_SENSITIVE": {<br>    "sensitivity": "SENSITIVE",<br>    "type": "WRITE"<br>  }<br>}</pre> | no |
 | <a name="input_domain_name"></a> [domain\_name](#input\_domain\_name) | Domain name for the rAPId instance | `string` | n/a | yes |
+| <a name="input_password_policy"></a> [password\_policy](#input\_password\_policy) | The Cognito pool password policy | <pre>object({<br>    minimum_length                   = number<br>    require_lowercase                = bool<br>    require_numbers                  = bool<br>    require_symbols                  = bool<br>    require_uppercase                = bool<br>    temporary_password_validity_days = number<br>  })</pre> | <pre>{<br>  "minimum_length": 8,<br>  "require_lowercase": true,<br>  "require_numbers": true,<br>  "require_symbols": true,<br>  "require_uppercase": true,<br>  "temporary_password_validity_days": 7<br>}</pre> | no |
 | <a name="input_permissions_table_name"></a> [permissions\_table\_name](#input\_permissions\_table\_name) | The name of the users permissions table in DynamoDb | `string` | `"users_permissions"` | no |
 | <a name="input_rapid_client_explicit_auth_flows"></a> [rapid\_client\_explicit\_auth\_flows](#input\_rapid\_client\_explicit\_auth\_flows) | The list of auth flows supported by the client app | `list(string)` | <pre>[<br>  "ALLOW_REFRESH_TOKEN_AUTH",<br>  "ALLOW_CUSTOM_AUTH",<br>  "ALLOW_USER_SRP_AUTH"<br>]</pre> | no |
 | <a name="input_rapid_user_login_client_explicit_auth_flows"></a> [rapid\_user\_login\_client\_explicit\_auth\_flows](#input\_rapid\_user\_login\_client\_explicit\_auth\_flows) | The list of auth flows supported by the user login app | `list(string)` | <pre>[<br>  "ALLOW_REFRESH_TOKEN_AUTH",<br>  "ALLOW_USER_SRP_AUTH"<br>]</pre> | no |

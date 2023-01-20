@@ -181,6 +181,21 @@ resource "aws_s3_bucket_policy" "access_logs_bucket_policy" {
                     "s3:x-amz-acl": "bucket-owner-full-control"
                 }
             }
+        },
+        {
+          "Sid": "AllowSSLRequestsOnly",
+          "Action": "s3:*",
+          "Effect": "Deny",
+          "Resource": [
+            "${aws_s3_bucket.access_logs[0].arn}/*",
+            "${aws_s3_bucket.access_logs[0].arn}"
+          ],
+          "Condition": {
+            "Bool": {
+              "aws:SecureTransport": "false"
+            }
+          },
+          "Principal": "*"
         }
     ]
 }

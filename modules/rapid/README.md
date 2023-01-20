@@ -11,7 +11,7 @@ No requirements.
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | 4.50.0 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | 4.48.0 |
 
 ## Modules
 
@@ -45,6 +45,7 @@ No requirements.
 | <a name="input_enable_cloudtrail"></a> [enable\_cloudtrail](#input\_enable\_cloudtrail) | Whether to enable the logging of db events to CloudTrail | `bool` | `true` | no |
 | <a name="input_hosted_zone_id"></a> [hosted\_zone\_id](#input\_hosted\_zone\_id) | Hosted Zone ID with the domain Name Servers, pass quotes to create a new one from scratch | `string` | `""` | no |
 | <a name="input_ip_whitelist"></a> [ip\_whitelist](#input\_ip\_whitelist) | A list of IPs to whitelist for access to the service | `list(string)` | n/a | yes |
+| <a name="input_password_policy"></a> [password\_policy](#input\_password\_policy) | The Cognito pool password policy | <pre>object({<br>    minimum_length                   = number<br>    require_lowercase                = bool<br>    require_numbers                  = bool<br>    require_symbols                  = bool<br>    require_uppercase                = bool<br>    temporary_password_validity_days = number<br>  })</pre> | <pre>{<br>  "minimum_length": 8,<br>  "require_lowercase": true,<br>  "require_numbers": true,<br>  "require_symbols": true,<br>  "require_uppercase": true,<br>  "temporary_password_validity_days": 7<br>}</pre> | no |
 | <a name="input_private_subnet_ids_list"></a> [private\_subnet\_ids\_list](#input\_private\_subnet\_ids\_list) | A list of private subnets from each organisation network config | `list(string)` | n/a | yes |
 | <a name="input_public_subnet_ids_list"></a> [public\_subnet\_ids\_list](#input\_public\_subnet\_ids\_list) | A list of public subnets from the VPC config | `list(string)` | n/a | yes |
 | <a name="input_rapid_ecr_url"></a> [rapid\_ecr\_url](#input\_rapid\_ecr\_url) | ECR Url for task definition | `string` | `"public.ecr.aws/no10-rapid/api"` | no |
