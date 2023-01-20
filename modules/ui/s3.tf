@@ -1,8 +1,11 @@
+resource "random_uuid" "bucket_id" {
+}
+
 resource "aws_s3_bucket" "rapid_ui" {
   #checkov:skip=CKV_AWS_144:No need for cross region replication
   #checkov:skip=CKV_AWS_145:No need for non default key
 
-  bucket        = var.ui_information.bucket_name
+  bucket        = "${var.resource-name-prefix}-static-ui-${random_uuid.bucket_id.result}"
   force_destroy = true
   tags          = var.tags
 
@@ -33,45 +36,34 @@ resource "aws_s3_bucket_website_configuration" "rapid_ui_website" {
   }
 }
 
-resource "null_resource" "upload_static_ui" {
-  depends_on = [
-    aws_s3_bucket.rapid_ui
-  ]
-
-  triggers = {
-    ui_version = var.ui_information.ui_version
-  }
-
-  provisioner "local-exec" {
-    command = <<EOF
-      url="${var.ui_information.ui_registry_url}/${var.ui_information.ui_version}.zip"
-      # curl -LO $url
-      unzip -o ${var.ui_information.ui_version}.zip
-      cd out/
-      sed -i '' 's/"REACT_APP_API_URL":"http:\/\/changeme.link\/api"/"REACT_APP_API_URL":"https:\/\/${var.domain_name}\/api"/g' __ENV.js
-      aws s3 cp . s3://${aws_s3_bucket.rapid_ui.id} --recursive
-    EOF
-  }
+locals {
+  ui_registry_url = "https://github.com/no10ds/rapid-ui/archive/ref/tags"
+  # ui_registry_url = "https://github.com/no10ds/rapid-ui/archive/refs/tags"
+  ui_envs = jsonencode({
+    "REACT_APP_API_URL" = "https://${var.domain_name}/api"
+  })
 }
 
-data "aws_iam_policy_document" "cloudfront" {
-  statement {
-    effect = "Allow"
+# resource "null_resource" "download_static_ui" {
+#   depends_on = [
+#     aws_s3_bucket.rapid_ui
+#   ]
 
-    actions = [
-      "s3:GetObject",
-    ]
+#   triggers = {
+#     ui_version = var.ui_version
+#   }
 
-    resources = [
-      "${aws_s3_bucket.rapid_ui.arn}/*",
-    ]
+#   provisioner "local-exec" {
+#     command = templatefile("./scripts/ui.sh.tpl", {
+#       REGISTRY_URL = local.ui_registry_url,
+#       VERSION      = var.ui_version,
+#       ENVS         = local.ui_envs,
+#       BUCKET_ID    = aws_s3_bucket.rapid_ui.id
+#     })
+#   }
+# }
 
-    principals {
-      type        = "*"
-      identifiers = ["*"]
-    }
-  }
-
+data "aws_iam_policy_document" "s3" {
   statement {
     effect = "Allow"
 
@@ -86,11 +78,10 @@ data "aws_iam_policy_document" "cloudfront" {
     ]
 
     condition {
-      test     = "StringLike"
-      variable = "aws:Referer"
+      test     = "StringEquals"
+      variable = "aws:UserAgent"
       values = [
-        "http://${var.domain_name}/*",
-        "https://${var.domain_name}/*"
+        "${random_string.random_cloudfront_header.result}",
       ]
     }
 
@@ -101,7 +92,7 @@ data "aws_iam_policy_document" "cloudfront" {
   }
 }
 
-resource "aws_s3_bucket_policy" "cloudfront" {
+resource "aws_s3_bucket_policy" "s3" {
   bucket = aws_s3_bucket.rapid_ui.id
-  policy = data.aws_iam_policy_document.cloudfront.json
+  policy = data.aws_iam_policy_document.s3.json
 }

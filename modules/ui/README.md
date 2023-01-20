@@ -7,9 +7,9 @@ No requirements.
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | 4.50.0 |
-| <a name="provider_aws.us_east"></a> [aws.us\_east](#provider\_aws.us\_east) | 4.50.0 |
-| <a name="provider_null"></a> [null](#provider\_null) | 3.2.1 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | n/a |
+| <a name="provider_aws.us_east"></a> [aws.us\_east](#provider\_aws.us\_east) | n/a |
+| <a name="provider_random"></a> [random](#provider\_random) | n/a |
 
 ## Modules
 
@@ -27,12 +27,14 @@ No modules.
 | [aws_route53_record.route-to-cloudfront](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route53_record) | resource |
 | [aws_s3_bucket.rapid_ui](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket) | resource |
 | [aws_s3_bucket_acl.rapid_ui_storage_acl](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_acl) | resource |
-| [aws_s3_bucket_policy.cloudfront](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_policy) | resource |
+| [aws_s3_bucket_policy.s3](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_policy) | resource |
 | [aws_s3_bucket_website_configuration.rapid_ui_website](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_website_configuration) | resource |
 | [aws_wafv2_ip_set.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/wafv2_ip_set) | resource |
 | [aws_wafv2_web_acl.rapid_acl](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/wafv2_web_acl) | resource |
-| [null_resource.upload_static_ui](https://registry.terraform.io/providers/hashicorp/null/latest/docs/resources/resource) | resource |
-| [aws_iam_policy_document.cloudfront](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
+| [random_string.random_cloudfront_header](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/string) | resource |
+| [random_uuid.bucket_id](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/uuid) | resource |
+| [aws_cloudfront_cache_policy.optimised](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/cloudfront_cache_policy) | data source |
+| [aws_iam_policy_document.s3](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
 
 ## Inputs
 
@@ -46,9 +48,8 @@ No modules.
 | <a name="input_load_balancer_dns"></a> [load\_balancer\_dns](#input\_load\_balancer\_dns) | The DNS name of the load balancer | `string` | n/a | yes |
 | <a name="input_log_bucket_name"></a> [log\_bucket\_name](#input\_log\_bucket\_name) | A bucket to send the Cloudfront logs | `string` | n/a | yes |
 | <a name="input_resource-name-prefix"></a> [resource-name-prefix](#input\_resource-name-prefix) | The prefix to add to resources for easier identification | `string` | n/a | yes |
-| <a name="input_state_bucket"></a> [state\_bucket](#input\_state\_bucket) | Bucket name for backend state | `string` | n/a | yes |
 | <a name="input_tags"></a> [tags](#input\_tags) | A common map of tags for all VPC resources that are created (for e.g. billing purposes) | `map(string)` | n/a | yes |
-| <a name="input_ui_information"></a> [ui\_information](#input\_ui\_information) | ui\_information = {<br>      ui\_registry\_url: "Url location for the built static ui"<br>      ui\_version: "Version number for the built ui static files (e.g.: v5.0)"<br>      bucket\_name: "The name of the S3 bucket that hosts the static ui files"<br>    } | <pre>object({<br>    ui_registry_url = string,<br>    ui_version      = string,<br>    bucket_name     = string<br>  })</pre> | n/a | yes |
+| <a name="input_ui_version"></a> [ui\_version](#input\_ui\_version) | Version number for the built ui static files (e.g. v5.0) | `string` | n/a | yes |
 
 ## Outputs
 

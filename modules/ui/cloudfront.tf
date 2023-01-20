@@ -1,5 +1,14 @@
 resource "aws_cloudfront_origin_access_identity" "rapid_ui" {}
 
+resource "random_string" "random_cloudfront_header" {
+  length           = 16
+  special          = true
+  override_special = "/@£$"
+}
+data "aws_cloudfront_cache_policy" "optimised" {
+  name = "Managed-CachingOptimized"
+}
+
 resource "aws_cloudfront_origin_request_policy" "rapid_ui_lb" {
   name = "${var.resource-name-prefix}-api-lb-request-policy"
 
@@ -27,6 +36,11 @@ resource "aws_cloudfront_distribution" "rapid_ui" {
   aliases             = ["${var.domain_name}"]
   web_acl_id          = aws_wafv2_web_acl.rapid_acl.arn
 
+  depends_on = [
+    random_uuid.bucket_id,
+    aws_s3_bucket.rapid_ui,
+  ]
+
   viewer_certificate {
     acm_certificate_arn      = aws_acm_certificate.rapid-certificate[0].arn
     ssl_support_method       = "sni-only"
@@ -42,6 +56,11 @@ resource "aws_cloudfront_distribution" "rapid_ui" {
       https_port             = "443"
       origin_protocol_policy = "http-only"
       origin_ssl_protocols   = ["TLSv1", "TLSv1.1", "TLSv1.2"]
+    }
+
+    custom_header {
+      name  = "User-Agent"
+      value = random_string.random_cloudfront_header.result
     }
   }
 
@@ -85,8 +104,7 @@ resource "aws_cloudfront_distribution" "rapid_ui" {
     viewer_protocol_policy = "redirect-to-https"
     path_pattern           = "/api/*"
 
-    # https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/using-managed-cache-policies.html
-    cache_policy_id          = "4135ea2d-6df8-44a3-9df3-4b5a84be39ad"
+    cache_policy_id          = data.aws_cloudfront_cache_policy.optimised.id
     origin_request_policy_id = aws_cloudfront_origin_request_policy.rapid_ui_lb.id
   }
 
