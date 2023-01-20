@@ -79,3 +79,83 @@ resource "aws_dynamodb_table_item" "test_client_permissions" {
   }
   ITEM
 }
+
+resource "aws_dynamodb_table_item" "test_client_write_all_permissions" {
+  table_name = aws_dynamodb_table.permissions_table.name
+  hash_key   = aws_dynamodb_table.permissions_table.hash_key
+  range_key  = aws_dynamodb_table.permissions_table.range_key
+
+  item = <<ITEM
+  {
+    "PK": {"S": "SUBJECT"},
+    "SK": {"S": "${aws_cognito_user_pool_client.e2e_test_client_write_all.id}"},
+    "Id": {"S": "${aws_cognito_user_pool_client.e2e_test_client_write_all.id}"},
+    "Type": {"S": "CLIENT"},
+    "Permissions": {"SS": ["WRITE_ALL"]}
+  }
+  ITEM
+}
+
+resource "aws_dynamodb_table_item" "test_client_read_and_write_permissions" {
+  table_name = aws_dynamodb_table.permissions_table.name
+  hash_key   = aws_dynamodb_table.permissions_table.hash_key
+  range_key  = aws_dynamodb_table.permissions_table.range_key
+
+  item = <<ITEM
+  {
+    "PK": {"S": "SUBJECT"},
+    "SK": {"S": "${aws_cognito_user_pool_client.e2e_test_client_read_and_write.id}"},
+    "Id": {"S": "${aws_cognito_user_pool_client.e2e_test_client_read_and_write.id}"},
+    "Type": {"S": "CLIENT"},
+    "Permissions": {"SS": ["READ_ALL","WRITE_ALL"]}
+  }
+  ITEM
+}
+
+resource "aws_dynamodb_table_item" "test_client_data_admin_permissions" {
+  table_name = aws_dynamodb_table.permissions_table.name
+  hash_key   = aws_dynamodb_table.permissions_table.hash_key
+  range_key  = aws_dynamodb_table.permissions_table.range_key
+
+  item = <<ITEM
+  {
+    "PK": {"S": "SUBJECT"},
+    "SK": {"S": "${aws_cognito_user_pool_client.e2e_test_client_data_admin.id}"},
+    "Id": {"S": "${aws_cognito_user_pool_client.e2e_test_client_data_admin.id}"},
+    "Type": {"S": "CLIENT"},
+    "Permissions": {"SS": ["DATA_ADMIN","USER_ADMIN"]}
+  }
+  ITEM
+}
+
+resource "aws_dynamodb_table_item" "test_client_user_admin_permissions" {
+  table_name = aws_dynamodb_table.permissions_table.name
+  hash_key   = aws_dynamodb_table.permissions_table.hash_key
+  range_key  = aws_dynamodb_table.permissions_table.range_key
+
+  item = <<ITEM
+  {
+    "PK": {"S": "SUBJECT"},
+    "SK": {"S": "${aws_cognito_user_pool_client.e2e_test_client_user_admin.id}"},
+    "Id": {"S": "${aws_cognito_user_pool_client.e2e_test_client_user_admin.id}"},
+    "Type": {"S": "CLIENT"},
+    "Permissions": {"SS": ["USER_ADMIN"]}
+  }
+  ITEM
+}
+
+resource "aws_dynamodb_table_item" "ui_test_user_permissions" {
+  table_name = aws_dynamodb_table.permissions_table.name
+  hash_key   = aws_dynamodb_table.permissions_table.hash_key
+  range_key  = aws_dynamodb_table.permissions_table.range_key
+
+  item = <<ITEM
+  {
+    "PK": {"S": "SUBJECT"},
+    "SK": {"S": "${aws_cognito_user.ui_test_user.sub}"},
+    "Id": {"S": "${aws_cognito_user.ui_test_user.sub}"},
+    "Type": {"S": "USER"},
+    "Permissions": {"SS": ["USER_ADMIN","READ_ALL","WRITE_ALL","DATA_ADMIN"]}
+  }
+  ITEM
+}
