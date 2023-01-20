@@ -6,7 +6,7 @@ resource "random_string" "random_cloudfront_header" {
   override_special = "/@£$"
 }
 data "aws_cloudfront_cache_policy" "optimised" {
-  name = "Managed-CachingOptimized"
+  name = "Managed-CachingDisabled"
 }
 
 resource "aws_cloudfront_origin_request_policy" "rapid_ui_lb" {
