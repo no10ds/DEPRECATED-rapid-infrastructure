@@ -113,6 +113,7 @@ resource "aws_lb_target_group" "target_group" {
 }
 
 resource "aws_lb_listener" "listener" {
+  # checkov:skip=CKV2_AWS_28:ALB access is limited to cloudfront which has WAF enabled
   load_balancer_arn = aws_alb.application_load_balancer.id
   port              = "443"
   protocol          = "HTTPS"
