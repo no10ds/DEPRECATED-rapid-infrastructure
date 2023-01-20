@@ -8,4 +8,4 @@ cd out/
 
 echo 'window.__ENV = ${ENVS}' | tee __ENV.js
 
-aws s3 cp . s3://$${BUCKET_ID} --recursive
+aws s3 cp . s3://${BUCKET_ID} --recursive
