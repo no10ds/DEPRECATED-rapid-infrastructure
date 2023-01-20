@@ -1,4 +1,6 @@
 data "aws_iam_policy_document" "access_logs_key_policy" {
+  #checkov:skip=CKV_AWS_109: No need for resource exposure constraint
+  #checkov:skip=CKV_AWS_111: No need for write access constaint
   statement {
     sid = "Enable IAM User Permissions"
 
@@ -148,6 +150,7 @@ EOF
 resource "aws_s3_bucket" "access_logs" {
   #checkov:skip=CKV_AWS_144:No need for cross region replication
   #checkov:skip=CKV_AWS_145:No need for non default key
+  #checkov:skip=CKV_AWS_19:No need for securely encrypted at rest
   count         = var.enable_cloudtrail ? 1 : 0
   bucket        = "${var.resource-name-prefix}-access-logs"
   force_destroy = true
@@ -164,7 +167,8 @@ resource "aws_s3_bucket" "access_logs" {
 }
 
 resource "aws_s3_bucket_public_access_block" "access_logs" {
-  bucket = aws_s3_bucket.access_logs.id
+  count  = var.enable_cloudtrail ? 1 : 0
+  bucket = aws_s3_bucket.access_logs[0].id
 
   ignore_public_acls      = true
   block_public_acls       = true

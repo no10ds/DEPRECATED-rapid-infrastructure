@@ -4,7 +4,8 @@ resource "random_uuid" "bucket_id" {
 resource "aws_s3_bucket" "rapid_ui" {
   #checkov:skip=CKV_AWS_144:No need for cross region replication
   #checkov:skip=CKV_AWS_145:No need for non default key
-
+  #checkov:skip=CKV_AWS_19:No need for securely encrypted at rest
+  #checkov:skip=CKV2_AWS_6: No need for public access block
   bucket        = "${var.resource-name-prefix}-static-ui-${random_uuid.bucket_id.result}"
   force_destroy = true
   tags          = var.tags

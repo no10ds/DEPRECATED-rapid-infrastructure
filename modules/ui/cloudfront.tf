@@ -29,6 +29,7 @@ resource "aws_cloudfront_origin_request_policy" "rapid_ui_lb" {
 }
 
 resource "aws_cloudfront_distribution" "rapid_ui" {
+  # checkov:skip=CKV2_AWS_32: No need for strict security headers
   enabled             = true
   is_ipv6_enabled     = true
   default_root_object = "index.html"

@@ -105,7 +105,8 @@ resource "aws_s3_bucket" "config_with_lifecycle" {
 }
 
 resource "aws_s3_bucket_public_access_block" "config_with_lifecycle" {
-  bucket                  = aws_s3_bucket.config_with_lifecycle.id
+  count                   = var.enable_lifecycle_management_for_s3 ? 1 : 0
+  bucket                  = aws_s3_bucket.config_with_lifecycle[0].id
   ignore_public_acls      = true
   block_public_acls       = true
   block_public_policy     = true
@@ -138,7 +139,7 @@ resource "aws_s3_bucket" "config_without_lifecycle" {
 }
 
 resource "aws_s3_bucket_public_access_block" "config_without_lifecycle" {
-  bucket                  = aws_s3_bucket.config_without_lifecycle.id
+  bucket                  = aws_s3_bucket.config_without_lifecycle[0].id
   ignore_public_acls      = true
   block_public_acls       = true
   block_public_policy     = true
