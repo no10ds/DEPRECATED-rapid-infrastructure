@@ -6,6 +6,7 @@ resource "aws_alb" "application_load_balancer" {
   subnets                    = var.public_subnet_ids_list
   security_groups            = [aws_security_group.load_balancer_security_group.id]
   drop_invalid_header_fields = true
+  enable_deletion_protection = true
 
   access_logs {
     bucket  = var.log_bucket_name
