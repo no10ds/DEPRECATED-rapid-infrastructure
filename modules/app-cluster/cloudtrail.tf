@@ -152,39 +152,6 @@ resource "aws_iam_policy_attachment" "aws_iam_policy_cloudtrail_cloudwatch_attac
   roles = [aws_iam_role.cloud_trail_role[0].id]
 }
 
-#resource "aws_iam_role_policy" "aws_iam_role_policy_cloudtrail_cloudwatch" {
-#  count = var.enable_cloudtrail ? 1 : 0
-#  name  = "${var.resource-name-prefix}-cloudtrail-cloudwatch-policy"
-#  role  = aws_iam_role.cloud_trail_role[0].id
-#
-#  policy = <<EOF
-#{
-#    "Version": "2012-10-17",
-#    "Statement": [
-#        {
-#            "Sid": "AWSCloudTrailCreateLogStream2014110",
-#            "Effect": "Allow",
-#            "Action": [
-#                "logs:CreateLogStream"
-#            ],
-#            "Resource": [
-#                "${aws_cloudwatch_log_group.access_logs_log_group[0].arn}:*"
-#            ]
-#        },
-#        {
-#            "Sid": "AWSCloudTrailPutLogEvents20141101",
-#            "Effect": "Allow",
-#            "Action": [
-#                "logs:PutLogEvents"
-#            ],
-#            "Resource": [
-#                "${aws_cloudwatch_log_group.access_logs_log_group[0].arn}:*"
-#            ]
-#        }
-#    ]
-#}
-#EOF
-#}
 
 resource "aws_s3_bucket" "access_logs" {
   count         = var.enable_cloudtrail ? 1 : 0
