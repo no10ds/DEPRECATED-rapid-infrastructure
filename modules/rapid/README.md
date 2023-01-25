@@ -20,6 +20,7 @@ No requirements.
 | <a name="module_app_cluster"></a> [app\_cluster](#module\_app\_cluster) | ../app-cluster | n/a |
 | <a name="module_auth"></a> [auth](#module\_auth) | ../auth | n/a |
 | <a name="module_data_workflow"></a> [data\_workflow](#module\_data\_workflow) | ../data-workflow | n/a |
+| <a name="module_ui"></a> [ui](#module\_ui) | ../ui | n/a |
 
 ## Resources
 
@@ -27,6 +28,7 @@ No requirements.
 |------|------|
 | [aws_s3_bucket.logs](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket) | resource |
 | [aws_s3_bucket.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket) | resource |
+| [aws_s3_bucket_policy.log_bucket_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_policy) | resource |
 | [aws_s3_bucket_public_access_block.logs](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_public_access_block) | resource |
 | [aws_s3_bucket_public_access_block.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_public_access_block) | resource |
 
@@ -52,6 +54,7 @@ No requirements.
 | <a name="input_resource-name-prefix"></a> [resource-name-prefix](#input\_resource-name-prefix) | organization prefix of for naming | `string` | n/a | yes |
 | <a name="input_support_emails_for_cloudwatch_alerts"></a> [support\_emails\_for\_cloudwatch\_alerts](#input\_support\_emails\_for\_cloudwatch\_alerts) | List of emails that will receive alerts from CloudWatch | `list(string)` | n/a | yes |
 | <a name="input_tags"></a> [tags](#input\_tags) | A common map of tags for all VPC resources that are created (for e.g. billing purposes) | `map(string)` | <pre>{<br>  "Resource": "data-f1-rapid"<br>}</pre> | no |
+| <a name="input_ui_version"></a> [ui\_version](#input\_ui\_version) | The version number for the static ui (e.g.: v5.0.0, etc.) | `string` | `"v5.0.0"` | no |
 | <a name="input_vpc_id"></a> [vpc\_id](#input\_vpc\_id) | The ID of the multihost VPC | `string` | n/a | yes |
 
 ## Outputs

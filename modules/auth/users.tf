@@ -120,7 +120,7 @@ resource "random_password" "password" {
 resource "aws_cognito_user" "ui_test_user" {
   user_pool_id = aws_cognito_user_pool.rapid_user_pool.id
   username     = "${var.resource-name-prefix}_ui_test_user"
-  password = random_password.password.result
+  password     = random_password.password.result
 }
 
 
@@ -136,8 +136,8 @@ resource "aws_secretsmanager_secret_version" "ui_test_user_secrets_version" {
   secret_id = aws_secretsmanager_secret.ui_test_user.id
   secret_string = jsonencode({
     username     = aws_cognito_user.ui_test_user.username
-    subject_name     = aws_cognito_user.ui_test_user.username
+    subject_name = aws_cognito_user.ui_test_user.username
     password     = aws_cognito_user.ui_test_user.password
-    subject_id     = aws_cognito_user.ui_test_user.sub
+    subject_id   = aws_cognito_user.ui_test_user.sub
   })
 }

@@ -16,6 +16,12 @@ variable "application_version" {
   default     = "v4.0.0"
 }
 
+variable "ui_version" {
+  type        = string
+  description = "The version number for the static ui (e.g.: v5.0.0, etc.)"
+  default     = "v5.0.0"
+}
+
 variable "aws_account" {
   type        = string
   description = "AWS Account number to host the rAPId service"

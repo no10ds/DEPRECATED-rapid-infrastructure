@@ -3,11 +3,6 @@ variable "tags" {
   description = "A common map of tags for all VPC resources that are created (for e.g. billing purposes)"
 }
 
-variable "state_bucket" {
-  type        = string
-  description = "Bucket name for backend state"
-}
-
 variable "log_bucket_name" {
   type        = string
   description = "A bucket to send the Cloudfront logs"
@@ -43,20 +38,9 @@ variable "aws_account" {
   description = "AWS Account number to host the rAPId service"
 }
 
-variable "ui_information" {
-  type = object({
-    ui_registry_url = string,
-    ui_version      = string,
-    bucket_name     = string
-  })
-
-  description = <<EOT
-    ui_information = {
-      ui_registry_url: "Url location for the built static ui"
-      ui_version: "Version number for the built ui static files (e.g.: v5.0)"
-      bucket_name: "The name of the S3 bucket that hosts the static ui files"
-    }
-  EOT
+variable "ui_version" {
+  type        = string
+  description = "Version number for the built ui static files (e.g. v5.0)"
 }
 
 variable "load_balancer_dns" {

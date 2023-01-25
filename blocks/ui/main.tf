@@ -11,24 +11,14 @@ module "ui" {
 
   load_balancer_dns = data.terraform_remote_state.app-cluster-state.outputs.load_balancer_dns
 
-  ui_information             = var.ui_information
+  ui_version                 = var.ui_version
   aws_account                = var.aws_account
-  state_bucket               = var.state_bucket
   log_bucket_name            = var.log_bucket_name
   certificate_validation_arn = var.certificate_validation_arn
   domain_name                = var.domain_name
   hosted_zone_id             = var.hosted_zone_id != "" ? var.hosted_zone_id : data.terraform_remote_state.app-cluster-state.outputs.hosted_zone_id
   ip_whitelist               = var.ip_whitelist
   tags                       = var.tags
-}
-
-data "terraform_remote_state" "s3-state" {
-  backend = "s3"
-
-  config = {
-    key    = "s3/terraform.tfstate"
-    bucket = var.state_bucket
-  }
 }
 
 data "terraform_remote_state" "app-cluster-state" {
