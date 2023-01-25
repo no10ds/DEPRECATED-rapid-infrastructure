@@ -1,16 +1,12 @@
 # VPC
 resource "aws_vpc" "core" {
   #checkov:skip=CKV2_AWS_12: No need for default traffic restriction
+  #checkov:skip=CKV2_AWS_11: No need for vpc flow logging in all vpc's
   cidr_block           = var.vpc_cidr_range
   enable_dns_support   = var.enable_dns_support
   enable_dns_hostnames = var.enable_dns_hostnames
 
   tags = merge({ Name = var.vpc_name }, var.tags)
-}
-
-resource "aws_flow_log" "core_log" {
-  traffic_type = "ALL"
-  vpc_id       = aws_vpc.core.id
 }
 
 # Public subnets
