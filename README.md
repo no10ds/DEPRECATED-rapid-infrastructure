@@ -2,8 +2,6 @@
 
 <img src="https://github.com/no10ds/rapid-api/blob/main/logo.png?raw=true" display=block margin-left= auto margin-right=auto width=80%;/>
 
-⚠️ This is an MVP, feedback is welcome!
-
 The rAPId service allows users to ingest, validate and query data via an API. This repo provides a self-service
 mechanism to deploy the rAPId service either on top of your existing infrastructure or from scratch.
 
@@ -76,6 +74,7 @@ Provide the required inputs as described:
 
 There are also these optional inputs:
 - `application_version` - The service's image [version](https://github.com/no10ds/rapid-api/blob/master/changelog.md)
+- `ui_version` - The static UI [version](https://github.com/no10ds/rapid-ui/blob/master/CHANGELOG.md)
 - `hosted_zone_id` - If provided, will add an alias for the application load balancer to use the provided domain using that HZ. Otherwise, it will create a HZ and the alias
 - `certificate_validation_arn` - If provided, will link the certificate to the load-balancer https-listener. Otherwise, will create a new certificate and link it. ([managing certificates](#managing-certificates))
 - `app-replica-count-desired` - if provided, will set the number of desired running instances for a service. Otherwise,
@@ -125,6 +124,7 @@ log_bucket_name = ""
 iam_account_alias = ""
 
 application_version = ""
+ui_version = ""
 domain_name = ""
 aws_account = ""
 aws_region = ""
@@ -225,6 +225,7 @@ Required:
 - `iam_account_alias` - account alias required by AWS, it needs to be a unique name
 - `application_version` - service's docker
   image [version](https://github.com/no10ds/rapid-api/blob/master/changelog.md)
+- `ui_version` - Static UI [version](https://github.com/no10ds/rapid-ui/blob/master/CHANGELOG.md)
 - `domain_name` - application hostname ([can be a domain or a subdomain](#managing-domainssubdomains))
 - `aws_account` - aws account id where the application will be hosted
 - `aws_region` - aws region where the application will be hosted
@@ -259,6 +260,7 @@ delete any previous config ⚠️
 4. auth
 5. data-workflow
 6. app-cluster
+7. ui
 
 ### Applying changes
 
@@ -316,6 +318,10 @@ After the backend has been created the building blocks are:
 - [vpc](blocks/vpc):
     - vpc setup
     - public/private subnets setup
+- [ui](blocks/ui):
+  - public S3 bucket
+  - download & upload static html files
+  - create cloudfront cdn
 
 More formally the infrastructure blocks have been organised bearing in mind the cadence of change. They are organised in
 separate folders so that they each have their own remote Terraform state file:
@@ -326,10 +332,11 @@ separate folders so that they each have their own remote Terraform state file:
 │   ├── app-cluster
 │   ├── data-workflow
 │   ├── ecr
-|   ├── iam-config
+│   ├── iam-config
 │   ├── pipeline
 │   ├── s3
-│   └── vpc
+│   ├── vpc
+│   └── ui
 ```
 
 ## Managing domains/subdomains
