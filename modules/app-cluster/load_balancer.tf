@@ -59,23 +59,26 @@ resource "aws_s3_bucket_policy" "allow_alb_logging" {
 POLICY
 }
 
+data "aws_ec2_managed_prefix_list" "cloudwatch" {
+  name = "com.amazonaws.global.cloudfront.origin-facing"
+}
 resource "aws_security_group" "load_balancer_security_group" {
   vpc_id      = var.vpc_id
   description = "ALB Security Group"
   ingress {
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = var.ip_whitelist
-    description = "Allow HTTP ingress"
+    from_port       = 80
+    to_port         = 80
+    protocol        = "tcp"
+    prefix_list_ids = [data.aws_ec2_managed_prefix_list.cloudwatch.id]
+    description     = "Allow HTTP ingress"
   }
 
   ingress {
-    from_port   = 443
-    to_port     = 443
-    protocol    = "tcp"
-    cidr_blocks = var.ip_whitelist
-    description = "Allow HTTPS ingress"
+    from_port       = 443
+    to_port         = 443
+    protocol        = "tcp"
+    prefix_list_ids = [data.aws_ec2_managed_prefix_list.cloudwatch.id]
+    description     = "Allow HTTPS ingress"
   }
 
   egress {
@@ -102,7 +105,7 @@ resource "aws_lb_target_group" "target_group" {
     protocol            = "HTTP"
     matcher             = "200"
     timeout             = 3
-    path                = "/status"
+    path                = "/api/status"
     unhealthy_threshold = 2
   }
 
@@ -138,202 +141,4 @@ resource "aws_lb_listener" "http-listener" {
       status_code = "HTTP_301"
     }
   }
-}
-
-resource "aws_wafv2_web_acl" "rapid_acl" {
-  #checkov:skip=CKV2_AWS_31:Already have a logging configuration
-  name  = "${var.resource-name-prefix}-acl"
-  scope = "REGIONAL"
-  tags  = var.tags
-
-  default_action {
-    block {}
-  }
-
-  rule {
-    name     = "validate-request"
-    priority = 0
-
-    action {
-      allow {}
-    }
-
-    statement {
-      and_statement {
-        statement {
-          byte_match_statement {
-            positional_constraint = "EXACTLY"
-
-            search_string = var.domain_name
-            field_to_match {
-              single_header {
-                name = "host"
-              }
-            }
-            text_transformation {
-              priority = 0
-              type     = "NONE"
-            }
-          }
-        }
-        statement {
-          not_statement {
-            statement {
-              sqli_match_statement {
-                field_to_match {
-                  body {}
-                }
-                text_transformation {
-                  priority = 0
-                  type     = "NONE"
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-
-    visibility_config {
-      cloudwatch_metrics_enabled = true
-      metric_name                = "validate-request"
-      sampled_requests_enabled   = true
-    }
-  }
-
-  rule {
-    name     = "validate-query"
-    priority = 1
-
-    action {
-      block {}
-    }
-
-    statement {
-      and_statement {
-        statement {
-          byte_match_statement {
-            positional_constraint = "ENDS_WITH"
-
-            search_string = "/query"
-            field_to_match {
-              uri_path {}
-            }
-            text_transformation {
-              priority = 0
-              type     = "NONE"
-            }
-          }
-        }
-        statement {
-          not_statement {
-            statement {
-              size_constraint_statement {
-                comparison_operator = "GT"
-                size                = "8192"
-                field_to_match {
-                  body {}
-                }
-                text_transformation {
-                  priority = 0
-                  type     = "NONE"
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-
-    visibility_config {
-      cloudwatch_metrics_enabled = true
-      metric_name                = "validate-request"
-      sampled_requests_enabled   = true
-    }
-  }
-
-  rule {
-    name     = "validate-large-query"
-    priority = 2
-
-    action {
-      block {}
-    }
-
-    statement {
-      and_statement {
-        statement {
-          byte_match_statement {
-            positional_constraint = "ENDS_WITH"
-
-            search_string = "/query/large"
-            field_to_match {
-              uri_path {}
-            }
-            text_transformation {
-              priority = 0
-              type     = "NONE"
-            }
-          }
-        }
-        statement {
-          not_statement {
-            statement {
-              size_constraint_statement {
-                comparison_operator = "GT"
-                size                = "8192"
-                field_to_match {
-                  body {}
-                }
-                text_transformation {
-                  priority = 0
-                  type     = "NONE"
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-
-    visibility_config {
-      cloudwatch_metrics_enabled = true
-      metric_name                = "validate-request"
-      sampled_requests_enabled   = true
-    }
-  }
-
-  rule {
-    name     = "AWS-AWSManagedRulesKnownBadInputsRuleSet"
-    priority = 3
-
-    override_action {
-      none {}
-    }
-
-    statement {
-      managed_rule_group_statement {
-        name        = "AWSManagedRulesKnownBadInputsRuleSet"
-        vendor_name = "AWS"
-      }
-    }
-
-    visibility_config {
-      cloudwatch_metrics_enabled = true
-      metric_name                = "aws-known-bad-input"
-      sampled_requests_enabled   = true
-    }
-  }
-
-
-  visibility_config {
-    cloudwatch_metrics_enabled = true
-    metric_name                = "${var.resource-name-prefix}-acl"
-    sampled_requests_enabled   = true
-  }
-}
-
-resource "aws_wafv2_web_acl_association" "alb-acl-association" {
-  resource_arn = aws_alb.application_load_balancer.arn
-  web_acl_arn  = aws_wafv2_web_acl.rapid_acl.arn
 }

@@ -18,6 +18,10 @@ output "hosted_zone_name_servers" {
   description = "Name servers of the primary hosted zone linked to the domain"
 }
 
+output "hosted_zone_id" {
+  value = var.hosted_zone_id == "" ? aws_route53_zone.primary-hosted-zone[0].zone_id : ""
+}
+
 output "ecs_task_execution_role_arn" {
   value       = aws_iam_role.ecsTaskExecutionRole.arn
   description = "The ECS task execution role ARN"

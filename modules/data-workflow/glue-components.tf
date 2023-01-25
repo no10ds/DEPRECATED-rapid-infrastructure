@@ -2,6 +2,41 @@ resource "aws_glue_catalog_database" "catalogue_db" {
   name = "${var.resource-name-prefix}_catalogue_db"
 }
 
+resource "aws_glue_catalog_table" "metadata" {
+  name          = "${var.resource-name-prefix}_metadata_table"
+  database_name = aws_glue_catalog_database.catalogue_db.name
+
+  table_type = "EXTERNAL_TABLE"
+
+  storage_descriptor {
+    location = "s3://${var.data_s3_bucket_name}/data/schemas"
+    # input_format  = "org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat"
+    # output_format = "org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat"
+
+    # ser_de_info {
+    #   name                  = "my-stream"
+    #   serialization_library = "org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe"
+
+    #   parameters = {
+    #     "serialization.format" = 1
+    #   }
+    # }
+
+    columns {
+      name    = "columns"
+      type    = "array<structname:string,partition_index:int,data_type:string,allow_null:boolean,`format`:string>"
+      comment = ""
+    }
+
+    columns {
+      name = "metadata"
+      type = "struct<dataset:string,domain:string,sensitivity:string,version:string,description:string,key_value_tags:string,key_only_tags:string,owners:array<structname:string,email:string>,update_behaviour:string>"
+      # comment = ""
+    }
+  }
+}
+
+
 resource "aws_glue_connection" "glue_connection" {
   name            = "${var.resource-name-prefix}-s3-network-connection"
   connection_type = "NETWORK"
