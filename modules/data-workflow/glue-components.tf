@@ -13,6 +13,38 @@ resource "aws_glue_connection" "glue_connection" {
   }
 }
 
+resource "aws_glue_catalog_table" "metadata" {
+  name          = "${var.resource-name-prefix}_metadata_table"
+  database_name = aws_glue_catalog_database.catalogue_db.name
+
+  table_type = "EXTERNAL_TABLE"
+
+  parameters = {
+    "EXTERNAL" = "TRUE"
+  }
+
+  storage_descriptor {
+    location      = "s3://${var.data_s3_bucket_name}/data/schemas"
+    input_format  = "org.apache.hadoop.mapred.TextInputFormat"
+    output_format = "org.apache.hadoop.hive.ql.io.IgnoreKeyTextOutputFormat"
+
+    columns {
+      name = "metadata"
+      type = "struct<dataset:string,domain:string,sensitivity:string,version:string,description:string,key_value_tags:string,key_only_tags:string,owners:array<struct<name:string,email:string>>,update_behaviour:string>"
+    }
+
+    columns {
+      name    = "columns"
+      type    = "array<struct<name:string,partition_index:int,data_type:string,allow_null:boolean,format:string>>"
+      comment = ""
+    }
+
+    ser_de_info {
+      serialization_library = "org.openx.data.jsonserde.JsonSerDe"
+    }
+  }
+}
+
 resource "aws_iam_role" "glue_service_role" {
   name        = "${var.resource-name-prefix}-glue_services_access"
   description = "Allow AWS Glue service to access S3 via crawler"
