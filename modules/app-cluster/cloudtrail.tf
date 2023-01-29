@@ -113,10 +113,10 @@ EOF
   tags = var.tags
 }
 
-resource "aws_iam_role_policy" "aws_iam_role_policy_cloudtrail_cloudwatch" {
-  count = var.enable_cloudtrail ? 1 : 0
-  name  = "${var.resource-name-prefix}-cloudtrail-cloudwatch-policy"
-  role  = aws_iam_role.cloud_trail_role[0].id
+resource "aws_iam_policy" "aws_iam_policy_cloudtrail_cloudwatch" {
+#  count = var.enable_cloudtrail ? 1 : 0
+  name  = "${var.resource-name-prefix}-iam-policy-cloudtrail-cloudwatch"
+#  role  = aws_iam_role.cloud_trail_role[0].id
 
   policy = <<EOF
 {
@@ -146,6 +146,14 @@ resource "aws_iam_role_policy" "aws_iam_role_policy_cloudtrail_cloudwatch" {
 }
 EOF
 }
+
+resource "aws_iam_policy_attachment" "aws_iam_policy_cloudtrail_cloudwatch_attachment" {
+  count = var.enable_cloudtrail ? 1 : 0
+  name       = "${var.resource-name-prefix}-iam-policy-cloudtrail-cloudwatch-attachment"
+  policy_arn = aws_iam_policy.aws_iam_policy_cloudtrail_cloudwatch.arn
+  roles = [aws_iam_role.cloud_trail_role[0].id]
+}
+
 
 resource "aws_s3_bucket" "access_logs" {
   #checkov:skip=CKV_AWS_144:No need for cross region replication
