@@ -1,7 +1,7 @@
 #!/bin/bash -xe
 
 url="${REGISTRY_URL}/${VERSION}.zip"
-curl -LO $url
+wget $url
 
 unzip -o "${VERSION}.zip"
 cd out/ || { echo "./out folder does not exist"; exit 1; }

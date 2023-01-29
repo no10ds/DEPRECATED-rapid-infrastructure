@@ -38,7 +38,7 @@ resource "aws_s3_bucket_website_configuration" "rapid_ui_website" {
 }
 
 locals {
-  ui_registry_url = "https://github.com/no10ds/rapid-ui/releases/tag/${var.ui_version}"
+  ui_registry_url = "https://github.com/no10ds/rapid-ui/releases/download/${var.ui_version}"
   ui_envs = jsonencode({
     "REACT_APP_API_URL" = "https://${var.domain_name}/api"
   })
