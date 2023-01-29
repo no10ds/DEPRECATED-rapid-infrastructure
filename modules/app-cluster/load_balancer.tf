@@ -6,6 +6,7 @@ resource "aws_alb" "application_load_balancer" {
   subnets                    = var.public_subnet_ids_list
   security_groups            = [aws_security_group.load_balancer_security_group.id]
   drop_invalid_header_fields = true
+  enable_deletion_protection = true
 
   access_logs {
     bucket  = var.log_bucket_name
@@ -63,14 +64,6 @@ resource "aws_security_group" "load_balancer_security_group" {
   vpc_id      = var.vpc_id
   description = "ALB Security Group"
   ingress {
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = var.ip_whitelist
-    description = "Allow HTTP ingress"
-  }
-
-  ingress {
     from_port   = 443
     to_port     = 443
     protocol    = "tcp"
@@ -120,23 +113,6 @@ resource "aws_lb_listener" "listener" {
   default_action {
     type             = "forward"
     target_group_arn = aws_lb_target_group.target_group.id
-  }
-}
-
-resource "aws_lb_listener" "http-listener" {
-  load_balancer_arn = aws_alb.application_load_balancer.id
-  port              = "80"
-  protocol          = "HTTP"
-  tags              = var.tags
-
-  default_action {
-    type = "redirect"
-
-    redirect {
-      port        = "443"
-      protocol    = "HTTPS"
-      status_code = "HTTP_301"
-    }
   }
 }
 
