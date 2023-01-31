@@ -5,7 +5,7 @@ resource "aws_s3_bucket" "rapid_ui" {
   #checkov:skip=CKV_AWS_144:No need for cross region replication
   #checkov:skip=CKV_AWS_145:No need for non default key
   #checkov:skip=CKV_AWS_19:No need for securely encrypted at rest
-  #checkov:skip=CKV2_AWS_6: No need for public access block
+  #checkov:skip=CKV2_AWS_6:No need for public access block
   bucket        = "${var.resource-name-prefix}-static-ui-${random_uuid.bucket_id.result}"
   force_destroy = true
   tags          = var.tags
@@ -54,7 +54,7 @@ resource "null_resource" "download_static_ui" {
   }
 
   provisioner "local-exec" {
-    command = templatefile("./scripts/ui.sh.tpl", {
+    command = templatefile("${path.module}/scripts/ui.sh.tpl", {
       REGISTRY_URL = local.ui_registry_url,
       VERSION      = var.ui_version,
       ENVS         = local.ui_envs,
@@ -74,20 +74,31 @@ data "aws_iam_policy_document" "s3" {
 
     resources = [
       "${aws_s3_bucket.rapid_ui.arn}",
-      "${aws_s3_bucket.rapid_ui.arn}/*",
+      "${aws_s3_bucket.rapid_ui.arn}/*"
     ]
 
-    condition {
-      test     = "StringEquals"
-      variable = "aws:UserAgent"
-      values = [
-        "${random_string.random_cloudfront_header.result}",
+    principals {
+      type = "AWS"
+      identifiers = [
+        aws_cloudfront_origin_access_identity.rapid_ui.iam_arn
       ]
     }
+  }
+
+  statement {
+    actions = [
+      "s3:ListBucket"
+    ]
+
+    resources = [
+      aws_s3_bucket.rapid_ui.arn
+    ]
 
     principals {
-      type        = "*"
-      identifiers = ["*"]
+      type = "AWS"
+      identifiers = [
+        aws_cloudfront_origin_access_identity.rapid_ui.iam_arn
+      ]
     }
   }
 }

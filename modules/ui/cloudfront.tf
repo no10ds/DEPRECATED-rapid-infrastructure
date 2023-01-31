@@ -49,19 +49,11 @@ resource "aws_cloudfront_distribution" "rapid_ui" {
   }
 
   origin {
-    domain_name = aws_s3_bucket.rapid_ui.website_endpoint
+    domain_name = aws_s3_bucket.rapid_ui.bucket_regional_domain_name
     origin_id   = "${var.resource-name-prefix}-ui-origin"
 
-    custom_origin_config {
-      http_port              = "80"
-      https_port             = "443"
-      origin_protocol_policy = "http-only"
-      origin_ssl_protocols   = ["TLSv1", "TLSv1.1", "TLSv1.2"]
-    }
-
-    custom_header {
-      name  = "User-Agent"
-      value = random_string.random_cloudfront_header.result
+    s3_origin_config {
+      origin_access_identity = aws_cloudfront_origin_access_identity.rapid_ui.cloudfront_access_identity_path
     }
   }
 
@@ -95,6 +87,12 @@ resource "aws_cloudfront_distribution" "rapid_ui" {
       cookies {
         forward = "none"
       }
+    }
+
+    lambda_function_association {
+      event_type   = "origin-request"
+      lambda_arn   = aws_lambda_function.this.qualified_arn
+      include_body = false
     }
   }
 
