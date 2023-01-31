@@ -11,14 +11,14 @@ module "ui" {
 
   load_balancer_dns = data.terraform_remote_state.app-cluster-state.outputs.load_balancer_dns
 
-  ui_version                 = var.ui_version
-  aws_account                = var.aws_account
-  log_bucket_name            = var.log_bucket_name
-  certificate_validation_arn = var.certificate_validation_arn
-  domain_name                = var.domain_name
-  hosted_zone_id             = var.hosted_zone_id != "" ? var.hosted_zone_id : data.terraform_remote_state.app-cluster-state.outputs.hosted_zone_id
-  ip_whitelist               = var.ip_whitelist
-  tags                       = var.tags
+  ui_version                         = var.ui_version
+  aws_account                        = var.aws_account
+  log_bucket_name                    = var.log_bucket_name
+  us_east_certificate_validation_arn = var.us_east_certificate_validation_arn
+  domain_name                        = var.domain_name
+  hosted_zone_id                     = var.hosted_zone_id != "" ? var.hosted_zone_id : data.terraform_remote_state.app-cluster-state.outputs.hosted_zone_id
+  ip_whitelist                       = var.ip_whitelist
+  tags                               = var.tags
 }
 
 data "terraform_remote_state" "app-cluster-state" {

@@ -47,17 +47,17 @@ module "data_workflow" {
 }
 
 module "ui" {
-  source                     = "../ui"
-  tags                       = var.tags
-  log_bucket_name            = aws_s3_bucket.logs.id
-  certificate_validation_arn = var.certificate_validation_arn
-  domain_name                = var.domain_name
-  hosted_zone_id             = var.hosted_zone_id != "" ? var.hosted_zone_id : module.app_cluster.hosted_zone_id
-  ip_whitelist               = var.ip_whitelist
-  resource-name-prefix       = var.resource-name-prefix
-  aws_account                = var.aws_account
-  ui_version                 = var.ui_version
-  load_balancer_dns          = module.app_cluster.load_balancer_dns
+  source                             = "../ui"
+  tags                               = var.tags
+  log_bucket_name                    = aws_s3_bucket.logs.id
+  us_east_certificate_validation_arn = var.us_east_certificate_validation_arn
+  domain_name                        = var.domain_name
+  hosted_zone_id                     = var.hosted_zone_id != "" ? var.hosted_zone_id : module.app_cluster.hosted_zone_id
+  ip_whitelist                       = var.ip_whitelist
+  resource-name-prefix               = var.resource-name-prefix
+  aws_account                        = var.aws_account
+  ui_version                         = var.ui_version
+  load_balancer_dns                  = module.app_cluster.load_balancer_dns
 }
 
 resource "aws_s3_bucket" "this" {

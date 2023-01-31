@@ -8,9 +8,9 @@ variable "log_bucket_name" {
   description = "A bucket to send the Cloudfront logs"
 }
 
-variable "certificate_validation_arn" {
+variable "us_east_certificate_validation_arn" {
   type        = string
-  description = "Arn of the certificate used by the domain"
+  description = "Arn of the certificate used by Cloudfront. Please note this has to live in us-east-1."
 }
 
 variable "domain_name" {

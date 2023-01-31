@@ -38,6 +38,12 @@ variable "certificate_validation_arn" {
   default     = ""
 }
 
+variable "us_east_certificate_validation_arn" {
+  type        = string
+  description = "Arn of the certificate used by Cloudfront. Please note this has to live in us-east-1."
+  default     = ""
+}
+
 variable "domain_name" {
   type        = string
   description = "Domain name for the rAPId instance"

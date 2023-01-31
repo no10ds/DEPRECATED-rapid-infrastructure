@@ -42,7 +42,7 @@ resource "aws_lambda_function" "this" {
   provider                       = aws.us_east
   function_name                  = "${var.resource-name-prefix}-cloudfront-router"
   role                           = aws_iam_role.this.arn
-  filename                       = "${var.ui_version}-router-lambda.zip"
+  filename                       = "${path.root}/${var.ui_version}-router-lambda.zip"
   reserved_concurrent_executions = 25
   tracing_config {
     mode = "Active"

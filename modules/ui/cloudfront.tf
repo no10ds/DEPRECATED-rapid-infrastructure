@@ -127,7 +127,7 @@ resource "aws_route53_record" "route-to-cloudfront" {
 }
 
 locals {
-  domain_validation_options = var.certificate_validation_arn == "" ? aws_acm_certificate.rapid-certificate[0].domain_validation_options : []
+  domain_validation_options = var.us_east_certificate_validation_arn == "" ? aws_acm_certificate.rapid-certificate[0].domain_validation_options : []
 }
 
 resource "aws_route53_record" "rapid-validation_record" {
@@ -148,7 +148,7 @@ resource "aws_route53_record" "rapid-validation_record" {
 
 resource "aws_acm_certificate" "rapid-certificate" {
   provider          = aws.us_east
-  count             = var.certificate_validation_arn == "" ? 1 : 0
+  count             = var.us_east_certificate_validation_arn == "" ? 1 : 0
   domain_name       = var.domain_name
   validation_method = "DNS"
 
