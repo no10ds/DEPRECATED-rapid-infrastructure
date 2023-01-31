@@ -39,6 +39,12 @@ variable "user_access_role_name" {
   default     = "resource-user"
 }
 
+variable "admin_max_session_duration" {
+  type        = string
+  description = "The maximum session duration for the admin role"
+  default     = "3600"
+}
+
 data "aws_caller_identity" "current" {}
 
 locals {

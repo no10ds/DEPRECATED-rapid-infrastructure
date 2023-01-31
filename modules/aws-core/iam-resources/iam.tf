@@ -35,9 +35,9 @@ data "aws_iam_policy_document" "admin_access_role_policy" {
 }
 
 resource "aws_iam_role" "admin_access_role" {
-  name = var.admin_access_role_name
-
-  assume_role_policy = data.aws_iam_policy_document.admin_access_role_policy.json
+  name                 = var.admin_access_role_name
+  max_session_duration = var.admin_max_session_duration
+  assume_role_policy   = data.aws_iam_policy_document.admin_access_role_policy.json
 }
 
 data "aws_iam_policy_document" "user_access_role_policy" {
