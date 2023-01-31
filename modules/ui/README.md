@@ -47,7 +47,6 @@ No modules.
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_aws_account"></a> [aws\_account](#input\_aws\_account) | AWS Account number to host the rAPId service | `string` | n/a | yes |
-| <a name="input_certificate_validation_arn"></a> [certificate\_validation\_arn](#input\_certificate\_validation\_arn) | Arn of the certificate used by the domain | `string` | n/a | yes |
 | <a name="input_domain_name"></a> [domain\_name](#input\_domain\_name) | Domain name for the rAPId instance | `string` | n/a | yes |
 | <a name="input_hosted_zone_id"></a> [hosted\_zone\_id](#input\_hosted\_zone\_id) | Hosted Zone ID with the domain Name Servers, pass quotes to create a new one from scratch | `string` | n/a | yes |
 | <a name="input_ip_whitelist"></a> [ip\_whitelist](#input\_ip\_whitelist) | A list of IPs to whitelist for access to the service | `list(string)` | n/a | yes |
@@ -56,6 +55,7 @@ No modules.
 | <a name="input_resource-name-prefix"></a> [resource-name-prefix](#input\_resource-name-prefix) | The prefix to add to resources for easier identification | `string` | n/a | yes |
 | <a name="input_tags"></a> [tags](#input\_tags) | A common map of tags for all VPC resources that are created (for e.g. billing purposes) | `map(string)` | n/a | yes |
 | <a name="input_ui_version"></a> [ui\_version](#input\_ui\_version) | Version number for the built ui static files (e.g. v5.0) | `string` | n/a | yes |
+| <a name="input_us_east_certificate_validation_arn"></a> [us\_east\_certificate\_validation\_arn](#input\_us\_east\_certificate\_validation\_arn) | Arn of the certificate used by Cloudfront. Please note this has to live in us-east-1. | `string` | n/a | yes |
 
 ## Outputs
 
