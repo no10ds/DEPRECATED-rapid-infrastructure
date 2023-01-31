@@ -11,6 +11,13 @@ See [v5.0.0] changes
   - New S3 bucket to host static html files
   - Cloudfront hosting the API in ECS and the S3 static html files
   - Lambda edge function required for the html page routing
+- Test clients are now created directly within the infrastructure
+
+### Fixed
+- Prevents ECS load balancer from getting deleted
+- Removed inline policies in use
+- Glue is allowed the PassRole access to allow for schema uploading
+- S3 buckets now have SSL restrictions
 
 ## v4.2.0 - _2022-12-22_
 See [v4.2.0] changes
