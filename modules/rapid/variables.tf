@@ -13,7 +13,7 @@ variable "app-replica-count-max" {
 variable "application_version" {
   type        = string
   description = "The version number for the application image (e.g.: v1.0.4, v1.0.x-latest, etc.)"
-  default     = "v4.0.0"
+  default     = "v5.0.0"
 }
 
 variable "ui_version" {
