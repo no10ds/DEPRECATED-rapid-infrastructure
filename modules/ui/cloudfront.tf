@@ -9,6 +9,31 @@ data "aws_cloudfront_cache_policy" "optimised" {
   name = "Managed-CachingDisabled"
 }
 
+resource "aws_cloudfront_cache_policy" "rapid_ui_lb" {
+  name        = "${var.resource-name-prefix}-api-lb-cache-policy"
+  min_ttl     = 1
+  max_ttl     = 1
+  default_ttl = 1
+
+  parameters_in_cache_key_and_forwarded_to_origin {
+    cookies_config {
+      cookie_behavior = "none"
+    }
+
+    headers_config {
+      header_behavior = "whitelist"
+      headers {
+        items = ["Authorization"]
+      }
+    }
+
+    query_strings_config {
+      query_string_behavior = "none"
+    }
+  }
+
+}
+
 resource "aws_cloudfront_origin_request_policy" "rapid_ui_lb" {
   name = "${var.resource-name-prefix}-api-lb-request-policy"
 
@@ -103,7 +128,7 @@ resource "aws_cloudfront_distribution" "rapid_ui" {
     viewer_protocol_policy = "redirect-to-https"
     path_pattern           = "/api/*"
 
-    cache_policy_id          = data.aws_cloudfront_cache_policy.optimised.id
+    cache_policy_id          = aws_cloudfront_cache_policy.rapid_ui_lb.id
     origin_request_policy_id = aws_cloudfront_origin_request_policy.rapid_ui_lb.id
   }
 
