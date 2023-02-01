@@ -133,3 +133,7 @@ dmypy.json
 
 # swap files
 *.swp
+
+# Ignore static ui folder
+*.zip
+out/

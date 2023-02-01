@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file. This project adheres
 to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v5.0.0 - _2023-02-01_
+See [v5.0.0] changes
+
+### Added
+- Infrastructure required to deploy new UI. It introduces two new variables. `ui_version=v5.0.0` the version of the static UI to download and `us_east_certificate_validation_arn` a new arn required to be created in `us-east-1` for Cloudfront. The following get's created
+  - New S3 bucket to host static html files
+  - Cloudfront hosting the API in ECS and the S3 static html files
+  - Lambda edge function required for the html page routing
+- Test clients are now created directly within the infrastructure
+
+### Fixed
+- Prevents ECS load balancer from getting deleted
+- Removed inline policies in use
+- Glue is allowed the PassRole access to allow for schema uploading
+- S3 buckets now have SSL restrictions
+
 ## v4.2.0 - _2022-12-22_
 See [v4.2.0] changes
 
@@ -82,7 +98,9 @@ See [v1.0.0] changes
 - Features:
   - Build rapid infrastructure
 
-[Unreleased changes]: https://github.com/no10ds/rapid-infrastructure/compare/v4.1.0...HEAD
+
+[v5.0.0]: https://github.com/no10ds/rapid-infrastructure/compare/v4.2.0...HEAD
+[v4.2.0]: https://github.com/no10ds/rapid-infrastructure/compare/v4.1.0...v4.2.0
 [v4.1.1]: https://github.com/no10ds/rapid-infrastructure/compare/v4.1.0...v4.1.1
 [v4.1.0]: https://github.com/no10ds/rapid-infrastructure/compare/v4.0.0...v4.1.0
 [v4.0.0]: https://github.com/no10ds/rapid-infrastructure/compare/v3.0.0...v4.0.0

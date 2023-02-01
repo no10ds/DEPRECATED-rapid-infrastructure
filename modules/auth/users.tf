@@ -14,7 +14,8 @@ resource "aws_cognito_user_pool_client" "e2e_test_client_user_admin" {
 
 resource "aws_secretsmanager_secret" "e2e_test_client_user_admin" {
   # checkov:skip=CKV_AWS_149:AWS Managed Key is sufficient
-  name = "${var.resource-name-prefix}_E2E_TEST_CLIENT_USER_ADMIN"
+  name                    = "${var.resource-name-prefix}_E2E_TEST_CLIENT_USER_ADMIN"
+  recovery_window_in_days = 0
 }
 
 resource "aws_secretsmanager_secret_version" "e2e_test_client_user_admin_secrets_version" {
@@ -42,7 +43,8 @@ resource "aws_cognito_user_pool_client" "e2e_test_client_data_admin" {
 
 resource "aws_secretsmanager_secret" "e2e_test_client_data_admin" {
   # checkov:skip=CKV_AWS_149:AWS Managed Key is sufficient
-  name = "${var.resource-name-prefix}_E2E_TEST_CLIENT_DATA_ADMIN"
+  name                    = "${var.resource-name-prefix}_E2E_TEST_CLIENT_DATA_ADMIN"
+  recovery_window_in_days = 0
 }
 
 resource "aws_secretsmanager_secret_version" "e2e_test_client_data_admin_secrets_version" {
@@ -70,7 +72,8 @@ resource "aws_cognito_user_pool_client" "e2e_test_client_read_and_write" {
 
 resource "aws_secretsmanager_secret" "e2e_test_client_read_and_write" {
   # checkov:skip=CKV_AWS_149:AWS Managed Key is sufficient
-  name = "${var.resource-name-prefix}_E2E_TEST_CLIENT_READ_ALL_WRITE_ALL"
+  name                    = "${var.resource-name-prefix}_E2E_TEST_CLIENT_READ_ALL_WRITE_ALL"
+  recovery_window_in_days = 0
 }
 
 resource "aws_secretsmanager_secret_version" "e2e_test_client_read_and_write_secrets_version" {
@@ -98,7 +101,8 @@ resource "aws_cognito_user_pool_client" "e2e_test_client_write_all" {
 
 resource "aws_secretsmanager_secret" "e2e_test_client_write_all" {
   # checkov:skip=CKV_AWS_149:AWS Managed Key is sufficient
-  name = "${var.resource-name-prefix}_E2E_TEST_CLIENT_WRITE_ALL"
+  name                    = "${var.resource-name-prefix}_E2E_TEST_CLIENT_WRITE_ALL"
+  recovery_window_in_days = 0
 }
 
 resource "aws_secretsmanager_secret_version" "e2e_test_client_write_all_secrets_version" {
@@ -120,7 +124,7 @@ resource "random_password" "password" {
 resource "aws_cognito_user" "ui_test_user" {
   user_pool_id = aws_cognito_user_pool.rapid_user_pool.id
   username     = "${var.resource-name-prefix}_ui_test_user"
-  password = random_password.password.result
+  password     = random_password.password.result
 }
 
 
@@ -128,7 +132,8 @@ resource "aws_cognito_user" "ui_test_user" {
 
 resource "aws_secretsmanager_secret" "ui_test_user" {
   # checkov:skip=CKV_AWS_149:AWS Managed Key is sufficient
-  name = "${var.resource-name-prefix}_UI_TEST_USER"
+  name                    = "${var.resource-name-prefix}_UI_TEST_USER"
+  recovery_window_in_days = 0
 }
 
 #
@@ -136,8 +141,8 @@ resource "aws_secretsmanager_secret_version" "ui_test_user_secrets_version" {
   secret_id = aws_secretsmanager_secret.ui_test_user.id
   secret_string = jsonencode({
     username     = aws_cognito_user.ui_test_user.username
-    subject_name     = aws_cognito_user.ui_test_user.username
+    subject_name = aws_cognito_user.ui_test_user.username
     password     = aws_cognito_user.ui_test_user.password
-    subject_id     = aws_cognito_user.ui_test_user.sub
+    subject_id   = aws_cognito_user.ui_test_user.sub
   })
 }

@@ -1,4 +1,6 @@
 data "aws_iam_policy_document" "access_logs_key_policy" {
+  #checkov:skip=CKV_AWS_109: No need for resource exposure constraint
+  #checkov:skip=CKV_AWS_111: No need for write access constaint
   statement {
     sid = "Enable IAM User Permissions"
 
@@ -12,7 +14,6 @@ data "aws_iam_policy_document" "access_logs_key_policy" {
     actions = [
       "kms:*",
     ]
-
     resources = [
       "*",
     ]
@@ -74,10 +75,11 @@ data "aws_iam_policy_document" "access_logs_key_policy" {
 }
 
 resource "aws_kms_key" "access_logs_key" {
-  count       = var.enable_cloudtrail ? 1 : 0
-  description = "This key is used to encrypt the access log objects"
-  policy      = data.aws_iam_policy_document.access_logs_key_policy.json
-  tags        = var.tags
+  count               = var.enable_cloudtrail ? 1 : 0
+  description         = "This key is used to encrypt the access log objects"
+  policy              = data.aws_iam_policy_document.access_logs_key_policy.json
+  tags                = var.tags
+  enable_key_rotation = true
 }
 
 resource "aws_cloudwatch_log_group" "access_logs_log_group" {
@@ -154,10 +156,33 @@ resource "aws_iam_policy_attachment" "aws_iam_policy_cloudtrail_cloudwatch_attac
 
 
 resource "aws_s3_bucket" "access_logs" {
+  #checkov:skip=CKV_AWS_144:No need for cross region replication
+  #checkov:skip=CKV_AWS_145:No need for non default key
+  #checkov:skip=CKV_AWS_19:No need for securely encrypted at rest
   count         = var.enable_cloudtrail ? 1 : 0
   bucket        = "${var.resource-name-prefix}-access-logs"
   force_destroy = true
   tags          = var.tags
+
+  versioning {
+    enabled = true
+  }
+
+  logging {
+    target_bucket = var.log_bucket_name
+    target_prefix = "log/${var.resource-name-prefix}-cloudtrail-access-logs"
+  }
+}
+
+resource "aws_s3_bucket_public_access_block" "access_logs" {
+  count  = var.enable_cloudtrail ? 1 : 0
+  bucket = aws_s3_bucket.access_logs[0].id
+
+  ignore_public_acls      = true
+  block_public_acls       = true
+  block_public_policy     = true
+  restrict_public_buckets = true
+
 }
 
 resource "aws_s3_bucket_policy" "access_logs_bucket_policy" {
@@ -238,6 +263,7 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "access_logs_s3_en
 }
 
 resource "aws_cloudtrail" "access_logs_trail" {
+  # checkov:skip=CKV_AWS_252:No need for an SNS topic
   count = var.enable_cloudtrail ? 1 : 0
   depends_on = [
     aws_s3_bucket_policy.access_logs_bucket_policy, # Policy for S3 that cloudtrail dumps too

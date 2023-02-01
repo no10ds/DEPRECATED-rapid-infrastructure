@@ -25,7 +25,7 @@ data "terraform_remote_state" "ecr-state" {
 resource "aws_instance" "pipeline" {
   #checkov:skip=CKV_AWS_135:EBS Optimised not available for instance type
   ami                         = "ami-00826bd51e68b1487"
-  instance_type               = "t2.micro"
+  instance_type               = "t3.medium"
   associate_public_ip_address = false
   iam_instance_profile        = aws_iam_instance_profile.pipeline_instance_profile.name
   subnet_id                   = data.terraform_remote_state.vpc-state.outputs.private_subnets_ids[0]
@@ -39,7 +39,7 @@ resource "aws_instance" "pipeline" {
 
   root_block_device {
     encrypted   = true
-    volume_size = 24
+    volume_size = 64
   }
 
   tags = merge(

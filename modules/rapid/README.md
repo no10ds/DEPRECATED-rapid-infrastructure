@@ -11,7 +11,7 @@ No requirements.
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | 4.48.0 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | 4.50.0 |
 
 ## Modules
 
@@ -20,6 +20,7 @@ No requirements.
 | <a name="module_app_cluster"></a> [app\_cluster](#module\_app\_cluster) | ../app-cluster | n/a |
 | <a name="module_auth"></a> [auth](#module\_auth) | ../auth | n/a |
 | <a name="module_data_workflow"></a> [data\_workflow](#module\_data\_workflow) | ../data-workflow | n/a |
+| <a name="module_ui"></a> [ui](#module\_ui) | ../ui | n/a |
 
 ## Resources
 
@@ -27,6 +28,7 @@ No requirements.
 |------|------|
 | [aws_s3_bucket.logs](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket) | resource |
 | [aws_s3_bucket.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket) | resource |
+| [aws_s3_bucket_policy.log_bucket_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_policy) | resource |
 | [aws_s3_bucket_public_access_block.logs](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_public_access_block) | resource |
 | [aws_s3_bucket_public_access_block.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_public_access_block) | resource |
 
@@ -37,7 +39,7 @@ No requirements.
 | <a name="input_allowed_email_domains"></a> [allowed\_email\_domains](#input\_allowed\_email\_domains) | List of allowed emails domains that can be associated with users | `string` | n/a | yes |
 | <a name="input_app-replica-count-desired"></a> [app-replica-count-desired](#input\_app-replica-count-desired) | The desired number of replicas of the app | `number` | `1` | no |
 | <a name="input_app-replica-count-max"></a> [app-replica-count-max](#input\_app-replica-count-max) | The maximum desired number of replicas of the app | `number` | `2` | no |
-| <a name="input_application_version"></a> [application\_version](#input\_application\_version) | The version number for the application image (e.g.: v1.0.4, v1.0.x-latest, etc.) | `string` | `"v4.0.0"` | no |
+| <a name="input_application_version"></a> [application\_version](#input\_application\_version) | The version number for the application image (e.g.: v1.0.4, v1.0.x-latest, etc.) | `string` | `"v5.0.0"` | no |
 | <a name="input_aws_account"></a> [aws\_account](#input\_aws\_account) | AWS Account number to host the rAPId service | `string` | n/a | yes |
 | <a name="input_aws_region"></a> [aws\_region](#input\_aws\_region) | The region of the AWS Account for the rAPId service | `string` | n/a | yes |
 | <a name="input_certificate_validation_arn"></a> [certificate\_validation\_arn](#input\_certificate\_validation\_arn) | Arn of the certificate used by the domain | `string` | `""` | no |
@@ -52,6 +54,8 @@ No requirements.
 | <a name="input_resource-name-prefix"></a> [resource-name-prefix](#input\_resource-name-prefix) | organization prefix of for naming | `string` | n/a | yes |
 | <a name="input_support_emails_for_cloudwatch_alerts"></a> [support\_emails\_for\_cloudwatch\_alerts](#input\_support\_emails\_for\_cloudwatch\_alerts) | List of emails that will receive alerts from CloudWatch | `list(string)` | n/a | yes |
 | <a name="input_tags"></a> [tags](#input\_tags) | A common map of tags for all VPC resources that are created (for e.g. billing purposes) | `map(string)` | <pre>{<br>  "Resource": "data-f1-rapid"<br>}</pre> | no |
+| <a name="input_ui_version"></a> [ui\_version](#input\_ui\_version) | The version number for the static ui (e.g.: v5.0.0, etc.) | `string` | `"v5.0.0"` | no |
+| <a name="input_us_east_certificate_validation_arn"></a> [us\_east\_certificate\_validation\_arn](#input\_us\_east\_certificate\_validation\_arn) | Arn of the certificate used by Cloudfront. Please note this has to live in us-east-1. | `string` | `""` | no |
 | <a name="input_vpc_id"></a> [vpc\_id](#input\_vpc\_id) | The ID of the multihost VPC | `string` | n/a | yes |
 
 ## Outputs

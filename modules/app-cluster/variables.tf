@@ -103,7 +103,7 @@ variable "ip_whitelist" {
 variable "enable_cloudtrail" {
   type        = bool
   description = "Whether to enable the logging of db events to CloudTrail"
-  default      = true
+  default     = true
 }
 
 variable "athena_query_output_bucket_arn" {
@@ -117,7 +117,7 @@ variable "permissions_table" {
 }
 
 variable "permissions_table_arn" {
-  type = string
+  type        = string
   description = "Users permissions table arn in dynamoDB"
 }
 
