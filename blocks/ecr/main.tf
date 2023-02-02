@@ -4,15 +4,6 @@ terraform {
   }
 }
 
-data "terraform_remote_state" "s3-state" {
-  backend = "s3"
-
-  config = {
-    key    = "s3/terraform.tfstate"
-    bucket = var.state_bucket
-  }
-}
-
 resource "aws_ecr_repository" "private" {
   #checkov:skip=CKV_AWS_51:No need for immutable tags
   name                 = "data-f1-registry"

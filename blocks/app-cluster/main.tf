@@ -49,7 +49,7 @@ data "terraform_remote_state" "vpc-state" {
 
 data "terraform_remote_state" "s3-state" {
   backend = "s3"
-
+  workspace = terraform.workspace
   config = {
     key    = "s3/terraform.tfstate"
     bucket = var.state_bucket
@@ -58,7 +58,7 @@ data "terraform_remote_state" "s3-state" {
 
 data "terraform_remote_state" "data-workflow-state" {
   backend = "s3"
-
+  workspace = terraform.workspace
   config = {
     key    = "data-workflow/terraform.tfstate"
     bucket = var.state_bucket
@@ -67,7 +67,7 @@ data "terraform_remote_state" "data-workflow-state" {
 
 data "terraform_remote_state" "auth-state" {
   backend = "s3"
-
+  workspace = terraform.workspace
   config = {
     key    = "auth/terraform.tfstate"
     bucket = var.state_bucket

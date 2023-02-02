@@ -28,7 +28,7 @@ data "terraform_remote_state" "vpc-state" {
 
 data "terraform_remote_state" "s3-state" {
   backend = "s3"
-
+  workspace = terraform.workspace
   config = {
     key    = "s3/terraform.tfstate"
     bucket = var.state_bucket

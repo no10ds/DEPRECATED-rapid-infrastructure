@@ -35,16 +35,16 @@ precommit-modules: 	## .... for all the infra blocks
 	@printf "updating docs rapid: " && $(MAKE) precommit-module "module=rapid"
 
 plan: 		## plan - view infra changes: make plan block=<infra-block>
-	@./scripts/infra_make_helper.sh run_tf plan "${block}"
+	@./scripts/infra_make_helper.sh run_tf plan "${block}" "${env}"
 
 apply: 		## apply infra changes: make apply block=<infra-block>
-	@./scripts/infra_make_helper.sh run_tf apply "${block}"
+	@./scripts/infra_make_helper.sh run_tf apply "${block}" "${env}"
 
 destroy: 		## destroy infra: make destroy block=<infra-block>
-	@./scripts/infra_make_helper.sh run_tf destroy "${block}"
+	@./scripts/infra_make_helper.sh run_tf destroy "${block}" "${env}"
 
 output: 		## prints infra output: make output block=<infra-block>
-	@./scripts/infra_make_helper.sh run_tf output "${block}"
+	@./scripts/infra_make_helper.sh run_tf output "${block}" "${env}"
 
 detect-secrets: 		## Check source code for possible secrets
 	@./batect detect-secrets
