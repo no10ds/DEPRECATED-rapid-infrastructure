@@ -65,6 +65,9 @@ resource "aws_iam_role_policy_attachment" "allow_s3_access_for_aws_config_attach
 
 # S3 buckets
 resource "aws_s3_bucket" "config_with_lifecycle" {
+  # checkov:skip=CKV_AWS_144:No need for cross region replication
+  # checkov:skip=CKV_AWS_18:No need for logging
+
   count         = var.enable_lifecycle_management_for_s3 ? 1 : 0
   bucket_prefix = var.bucket_prefix
   acl           = "private"
@@ -101,12 +104,29 @@ resource "aws_s3_bucket" "config_with_lifecycle" {
   }
 }
 
+resource "aws_s3_bucket_public_access_block" "config_with_lifecycle" {
+  count                   = var.enable_lifecycle_management_for_s3 ? 1 : 0
+  bucket                  = aws_s3_bucket.config_with_lifecycle[0].id
+  ignore_public_acls      = true
+  block_public_acls       = true
+  block_public_policy     = true
+  restrict_public_buckets = true
+}
+
+
 resource "aws_s3_bucket" "config_without_lifecycle" {
+  # checkov:skip=CKV_AWS_144:No need for cross region replication
+  # checkov:skip=CKV_AWS_18:No need for logging
+
   count         = var.enable_lifecycle_management_for_s3 ? 0 : 1
   bucket_prefix = var.bucket_prefix
   acl           = "private"
 
   force_destroy = true
+
+  versioning {
+    enabled = true
+  }
 
   server_side_encryption_configuration {
     rule {
@@ -116,6 +136,15 @@ resource "aws_s3_bucket" "config_without_lifecycle" {
       }
     }
   }
+}
+
+resource "aws_s3_bucket_public_access_block" "config_without_lifecycle" {
+  count                   = var.enable_lifecycle_management_for_s3 ? 0 : 1
+  bucket                  = aws_s3_bucket.config_without_lifecycle[0].id
+  ignore_public_acls      = true
+  block_public_acls       = true
+  block_public_policy     = true
+  restrict_public_buckets = true
 }
 
 resource "aws_config_configuration_recorder" "config" {

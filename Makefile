@@ -24,6 +24,7 @@ precommit-blocks: 	## .... for all the infra blocks
 	@printf "infra validation ecr: " && $(MAKE) precommit-block "block=ecr"
 	@printf "infra validation pipeline: " && $(MAKE) precommit-block "block=pipeline"
 	@printf "infra validation vpc: " && $(MAKE) precommit-block "block=vpc"
+	@printf "infra validation ui:" && $(MAKE) precommit-block "block=ui"
 
 precommit-module: 	## tf docs: make precommit-module module=<infra-module>
 	terraform-docs markdown table modules/"${module}" --output-file README.md
@@ -33,6 +34,7 @@ precommit-modules: 	## .... for all the infra blocks
 	@printf "updating docs auth: " && $(MAKE) precommit-module "module=auth"
 	@printf "updating docs data-workflow: " && $(MAKE) precommit-module "module=data-workflow"
 	@printf "updating docs rapid: " && $(MAKE) precommit-module "module=rapid"
+	@printf "updating docs ui:" && $(MAKE) precommit-module "module=ui"
 
 plan: 		## plan - view infra changes: make plan block=<infra-block>
 	@./scripts/infra_make_helper.sh run_tf plan "${block}" "${env}"

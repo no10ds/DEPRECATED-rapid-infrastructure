@@ -23,6 +23,11 @@ output "hosted_zone_name_servers" {
   description = "Name servers of the primary hosted zone linked to the domain"
 }
 
+output "hosted_zone_id" {
+  value       = module.app_cluster.hosted_zone_id
+  description = "id of the primary hosted zone linked to the domain"
+}
+
 output "ecs_task_execution_role_arn" {
   value       = module.app_cluster.ecs_task_execution_role_arn
   description = "The ECS task execution role ARN"

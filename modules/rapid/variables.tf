@@ -13,7 +13,13 @@ variable "app-replica-count-max" {
 variable "application_version" {
   type        = string
   description = "The version number for the application image (e.g.: v1.0.4, v1.0.x-latest, etc.)"
-  default     = "v4.0.0"
+  default     = "v5.0.1"
+}
+
+variable "ui_version" {
+  type        = string
+  description = "The version number for the static ui (e.g.: v5.0.0, etc.)"
+  default     = "v5.0.1"
 }
 
 variable "aws_account" {
@@ -29,6 +35,12 @@ variable "aws_region" {
 variable "certificate_validation_arn" {
   type        = string
   description = "Arn of the certificate used by the domain"
+  default     = ""
+}
+
+variable "us_east_certificate_validation_arn" {
+  type        = string
+  description = "Arn of the certificate used by Cloudfront. Please note this has to live in us-east-1."
   default     = ""
 }
 

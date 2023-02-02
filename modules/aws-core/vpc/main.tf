@@ -1,6 +1,7 @@
 # VPC
-
 resource "aws_vpc" "core" {
+  #checkov:skip=CKV2_AWS_12: No need for default traffic restriction
+  #checkov:skip=CKV2_AWS_11: No need for vpc flow logging in all vpc's
   cidr_block           = var.vpc_cidr_range
   enable_dns_support   = var.enable_dns_support
   enable_dns_hostnames = var.enable_dns_hostnames
@@ -10,6 +11,7 @@ resource "aws_vpc" "core" {
 
 # Public subnets
 resource "aws_subnet" "public_subnet" {
+  #checkov:skip=CKV_AWS_130: No need to not allow public ip assignment
   count                   = length(data.aws_availability_zones.available.names)
   vpc_id                  = aws_vpc.core.id
   cidr_block              = length(var.public_subnet_cidrs) > 0 ? var.public_subnet_cidrs[count.index] : cidrsubnet(var.vpc_cidr_range, var.public_subnet_size, count.index)
