@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file. This project adheres
 to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v5.0.0.1 - _2023-02-01_
+See [v5.0.1] changes
+
+### Fixed
+- Removed the requirement to inject a API into the URL
+
 ## v5.0.0 - _2023-02-01_
 See [v5.0.0] changes
 
@@ -99,7 +105,8 @@ See [v1.0.0] changes
   - Build rapid infrastructure
 
 
-[v5.0.0]: https://github.com/no10ds/rapid-infrastructure/compare/v4.2.0...HEAD
+[v5.0.1]: https://github.com/no10ds/rapid-infrastructure/compare/v5.0.0...HEAD
+[v5.0.0]: https://github.com/no10ds/rapid-infrastructure/compare/v4.2.0...v5.0.0
 [v4.2.0]: https://github.com/no10ds/rapid-infrastructure/compare/v4.1.0...v4.2.0
 [v4.1.1]: https://github.com/no10ds/rapid-infrastructure/compare/v4.1.0...v4.1.1
 [v4.1.0]: https://github.com/no10ds/rapid-infrastructure/compare/v4.0.0...v4.1.0
