@@ -22,8 +22,8 @@ module "ui" {
 }
 
 data "terraform_remote_state" "app-cluster-state" {
-  backend = "s3"
-
+  backend   = "s3"
+  workspace = terraform.workspace
   config = {
     key    = "app-cluster/terraform.tfstate"
     bucket = var.state_bucket
