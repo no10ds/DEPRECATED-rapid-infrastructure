@@ -68,7 +68,7 @@ resource "aws_cloudfront_distribution" "rapid_ui" {
   ]
 
   viewer_certificate {
-    acm_certificate_arn      = aws_acm_certificate.rapid-certificate[0].arn
+    acm_certificate_arn      = local.domain_certificate_arn
     ssl_support_method       = "sni-only"
     minimum_protocol_version = "TLSv1.2_2021"
   }
@@ -153,6 +153,7 @@ resource "aws_route53_record" "route-to-cloudfront" {
 
 locals {
   domain_validation_options = var.us_east_certificate_validation_arn == "" ? aws_acm_certificate.rapid-certificate[0].domain_validation_options : []
+  domain_certificate_arn    = var.us_east_certificate_validation_arn == "" ? aws_acm_certificate.rapid-certificate[0].arn : var.us_east_certificate_validation_arn
 }
 
 resource "aws_route53_record" "rapid-validation_record" {

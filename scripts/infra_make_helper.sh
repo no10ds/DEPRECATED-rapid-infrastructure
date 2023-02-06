@@ -37,18 +37,27 @@ function _go_to_block() {
 function run_tf() {
   local cmd="$1"
   local block="$2"
+  local env="$3"
+  local var_file="$env-input-params.tfvars"
   if [ "$cmd" == "" ]
   then
     echo "$0: "
     echo -e '\tExpecting tf command as parameter (i.e. validate)'
     exit 3
   fi
+  if [ -z $env ]
+  then
+    env="default"
+    var_file="input-params.tfvars"
+  fi
   _go_to_block "$block"
   _set_aws_vars
   if [ "$cmd" == "plan" ] || [ "$cmd" == "apply" ] || [ "$cmd" == "destroy" ]
   then
-    $TERRAFORM "$cmd" -var-file="${CONFIG_DIR}/input-params.tfvars" -compact-warnings
+    $TERRAFORM workspace select $env
+    $TERRAFORM "$cmd" -var-file="${CONFIG_DIR}/$var_file" -compact-warnings
   else
+     $TERRAFORM workspace select $env
     $TERRAFORM "$cmd"
   fi
   _unset_aws_vars
