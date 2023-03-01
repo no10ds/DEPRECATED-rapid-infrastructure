@@ -152,24 +152,7 @@ resource "aws_route53_record" "route-to-cloudfront" {
 }
 
 locals {
-  domain_validation_options = var.us_east_certificate_validation_arn == "" ? aws_acm_certificate.rapid-certificate[0].domain_validation_options : []
   domain_certificate_arn    = var.us_east_certificate_validation_arn == "" ? aws_acm_certificate.rapid-certificate[0].arn : var.us_east_certificate_validation_arn
-}
-
-resource "aws_route53_record" "rapid-validation_record" {
-  for_each = {
-    for dvo in local.domain_validation_options : dvo.domain_name => {
-      name   = dvo.resource_record_name
-      record = dvo.resource_record_value
-      type   = dvo.resource_record_type
-    }
-  }
-
-  zone_id = var.hosted_zone_id
-  name    = each.value.name
-  records = [each.value.record]
-  type    = each.value.type
-  ttl     = 60
 }
 
 resource "aws_acm_certificate" "rapid-certificate" {
