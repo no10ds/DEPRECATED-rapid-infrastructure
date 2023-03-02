@@ -152,10 +152,29 @@ resource "aws_route53_record" "route-to-cloudfront" {
 }
 
 locals {
-  domain_certificate_arn    = var.us_east_certificate_validation_arn == "" ? aws_acm_certificate.rapid-certificate[0].arn : var.us_east_certificate_validation_arn
+  domain_certificate_arn    = var.us_east_certificate_validation_arn == "" ? aws_acm_certificate.rapid_certificate[0].arn : var.us_east_certificate_validation_arn
+  domain_validation_options = var.us_east_certificate_validation_arn == "" ? aws_acm_certificate.rapid_certificate[0].domain_validation_options : []
 }
 
-resource "aws_acm_certificate" "rapid-certificate" {
+resource "aws_route53_record" "rapid_validation_record" {
+  for_each = {
+    for dvo in local.domain_validation_options : dvo.domain_name => {
+      name   = dvo.resource_record_name
+      record = dvo.resource_record_value
+      type   = dvo.resource_record_type
+    }
+    if var.route_53_validation_record_fqdns != null
+  }
+
+  zone_id = var.hosted_zone_id
+  name    = each.value.name
+  records = [each.value.record]
+  type    = each.value.type
+  ttl     = 60
+}
+
+
+resource "aws_acm_certificate" "rapid_certificate" {
   provider          = aws.us_east
   count             = var.us_east_certificate_validation_arn == "" ? 1 : 0
   domain_name       = var.domain_name
@@ -164,4 +183,11 @@ resource "aws_acm_certificate" "rapid-certificate" {
   lifecycle {
     create_before_destroy = true
   }
+}
+
+resource "aws_acm_certificate_validation" "rapid_certificate" {
+  provider                = aws.us_east
+  count                   = var.us_east_certificate_validation_arn == "" ? 1 : 0
+  certificate_arn         = aws_acm_certificate.rapid_certificate[0].arn
+  validation_record_fqdns = coalesce(var.route_53_validation_record_fqdns, [for record in aws_route53_record.rapid_validation_record : record.fqdn])
 }

@@ -47,3 +47,9 @@ variable "load_balancer_dns" {
   type        = string
   description = "The DNS name of the load balancer"
 }
+
+variable "route_53_validation_record_fqdns" {
+  type        = list(string)
+  default     = null
+  description = "The fqdns of the route53 validation records for the load balancer certificate"
+}
