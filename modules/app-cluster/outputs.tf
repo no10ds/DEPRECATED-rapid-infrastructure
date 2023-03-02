@@ -38,7 +38,7 @@ output "rapid_metric_log_error_alarm_arn" {
 }
 
 output "route_53_validation_record_fqdns" {
-  value       = try([for record in aws_route53_record.rapid_validation_record : record.fqdn], null)
+  value       = [for record in aws_route53_record.rapid_validation_record : record.fqdn]
   description = "The fqdns of the route53 validation records for the certificate"
 }
 
