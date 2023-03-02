@@ -163,7 +163,7 @@ resource "aws_route53_record" "rapid_validation_record" {
       record = dvo.resource_record_value
       type   = dvo.resource_record_type
     }
-    if var.route_53_validation_record_fqdns != null
+    if length(var.route_53_validation_record_fqdns) == 0
   }
 
   zone_id = var.hosted_zone_id
@@ -189,5 +189,5 @@ resource "aws_acm_certificate_validation" "rapid_certificate" {
   provider                = aws.us_east
   count                   = var.us_east_certificate_validation_arn == "" ? 1 : 0
   certificate_arn         = aws_acm_certificate.rapid_certificate[0].arn
-  validation_record_fqdns = coalesce(var.route_53_validation_record_fqdns, [for record in aws_route53_record.rapid_validation_record : record.fqdn])
+  validation_record_fqdns = length(var.route_53_validation_record_fqdns) == 0 ? [for record in aws_route53_record.rapid_validation_record : record.fqdn] :  var.route_53_validation_record_fqdns
 }
