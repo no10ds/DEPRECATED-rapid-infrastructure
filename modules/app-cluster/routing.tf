@@ -17,10 +17,10 @@ resource "aws_acm_certificate" "rapid-certificate" {
   }
 }
 
-
 locals {
   domain_validation_options = var.certificate_validation_arn == "" ? aws_acm_certificate.rapid-certificate[0].domain_validation_options : []
 }
+
 # Add the Route53 validation record
 resource "aws_route53_record" "rapid_validation_record" {
   for_each = {
