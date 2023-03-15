@@ -86,6 +86,7 @@ No modules.
 | <a name="input_athena_query_output_bucket_arn"></a> [athena\_query\_output\_bucket\_arn](#input\_athena\_query\_output\_bucket\_arn) | The S3 bucket ARN where Athena stores its query results. This bucket is created dynamically with a unique name in the data-workflow module. Reference it by remote state, module output or ARN string directly | `string` | n/a | yes |
 | <a name="input_aws_account"></a> [aws\_account](#input\_aws\_account) | AWS Account number to host the rAPId service | `string` | n/a | yes |
 | <a name="input_aws_region"></a> [aws\_region](#input\_aws\_region) | The region of the AWS Account for the rAPId service | `string` | n/a | yes |
+| <a name="input_catalog_disabled"></a> [catalog\_disabled](#input\_catalog\_disabled) | Optional value on whether to disable the internal rAPId data catalog | `bool` | `false` | no |
 | <a name="input_certificate_validation_arn"></a> [certificate\_validation\_arn](#input\_certificate\_validation\_arn) | Arn of the certificate used by the domain | `string` | n/a | yes |
 | <a name="input_cognito_user_login_app_credentials_secrets_name"></a> [cognito\_user\_login\_app\_credentials\_secrets\_name](#input\_cognito\_user\_login\_app\_credentials\_secrets\_name) | Secret name for Cognito user login app credentials | `string` | n/a | yes |
 | <a name="input_cognito_user_pool_id"></a> [cognito\_user\_pool\_id](#input\_cognito\_user\_pool\_id) | User pool id for cognito | `string` | n/a | yes |
@@ -121,5 +122,6 @@ No modules.
 | <a name="output_load_balancer_dns"></a> [load\_balancer\_dns](#output\_load\_balancer\_dns) | The DNS name of the load balancer |
 | <a name="output_log_error_alarm_notification_arn"></a> [log\_error\_alarm\_notification\_arn](#output\_log\_error\_alarm\_notification\_arn) | The arn of the sns topic that receives notifications on log error alerts |
 | <a name="output_rapid_metric_log_error_alarm_arn"></a> [rapid\_metric\_log\_error\_alarm\_arn](#output\_rapid\_metric\_log\_error\_alarm\_arn) | The arn of the log error alarm metric |
+| <a name="output_route_53_validation_record_fqdns"></a> [route\_53\_validation\_record\_fqdns](#output\_route\_53\_validation\_record\_fqdns) | The fqdns of the route53 validation records for the certificate |
 | <a name="output_service_table_arn"></a> [service\_table\_arn](#output\_service\_table\_arn) | The arn of the dynamoDB table that stores the user service |
 <!-- END_TF_DOCS -->

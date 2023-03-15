@@ -74,8 +74,8 @@ function run_init() {
 }
 
 function precommit() {
-  run_tf "fmt" "$1"
-  run_tf "validate" "$1"
+  run_tf "fmt" "$1" "$2"
+  run_tf "validate" "$1" "$2"
 }
 
 function _set_backend_config_vars(){
