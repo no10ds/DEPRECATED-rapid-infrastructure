@@ -20,6 +20,12 @@ variable "app-replica-count-max" {
   default     = 2
 }
 
+variable "catalog_disabled" {
+  type        = bool
+  description = "Optional value on whether to disable the internal rAPId data catalog"
+  default     = false
+}
+
 variable "rapid_ecr_url" {
   type        = string
   description = "ECR Url for task definition"
