@@ -3,7 +3,7 @@ locals {
     "AWS_ACCOUNT" : var.aws_account,
     "DATA_BUCKET" : var.data_s3_bucket_name,
     "DOMAIN_NAME" : var.domain_name,
-    "CATALOG_DISABLED" : var.catalog_disabled,
+    "CATALOG_DISABLED" : tostring(var.catalog_disabled),
     "ALLOWED_EMAIL_DOMAINS" : var.allowed_email_domains,
     "COGNITO_USER_POOL_ID" : var.cognito_user_pool_id,
     "RESOURCE_PREFIX" : var.resource-name-prefix,
@@ -95,9 +95,11 @@ resource "aws_iam_policy" "app_athena_query_access" {
         "Effect" : "Allow",
         "Action" : [
           "glue:GetTable",
+          "glue:GetTables",
           "glue:GetPartitions",
           "glue:GetDatabase",
-          "glue:UpdateTable"
+          "glue:UpdateTable",
+          "glue:BatchDeleteTable"
         ],
         "Resource" : [
           "arn:aws:glue:${var.aws_region}:${var.aws_account}:catalog",
