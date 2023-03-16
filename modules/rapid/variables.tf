@@ -22,6 +22,12 @@ variable "ui_version" {
   default     = "v5.0.1"
 }
 
+variable "catalog_disabled" {
+  type        = bool
+  description = "Optional value on whether to disable the internal rAPId data catalog"
+  default     = false
+}
+
 variable "aws_account" {
   type        = string
   description = "AWS Account number to host the rAPId service"

@@ -33,6 +33,6 @@ variable "manual_users" {
 }
 
 variable "password_policy" {
-  type        = map
+  type        = map(any)
   description = "The password policy for the IAM users"
 }

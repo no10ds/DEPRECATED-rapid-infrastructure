@@ -19,6 +19,7 @@ module "app_cluster" {
   data_s3_bucket_arn                              = aws_s3_bucket.this.arn
   data_s3_bucket_name                             = aws_s3_bucket.this.id
   log_bucket_name                                 = aws_s3_bucket.logs.id
+  catalog_disabled                                = var.catalog_disabled
   vpc_id                                          = var.vpc_id
   public_subnet_ids_list                          = var.public_subnet_ids_list
   private_subnet_ids_list                         = var.private_subnet_ids_list

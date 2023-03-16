@@ -20,6 +20,7 @@ module "app_cluster" {
   domain_name                          = var.domain_name
   allowed_email_domains                = var.allowed_email_domains
   aws_account                          = var.aws_account
+  catalog_disabled                     = var.catalog_disabled
   aws_region                           = var.aws_region
   rapid_ecr_url                        = var.rapid_ecr_url
   hosted_zone_id                       = var.hosted_zone_id
@@ -48,7 +49,7 @@ data "terraform_remote_state" "vpc-state" {
 }
 
 data "terraform_remote_state" "s3-state" {
-  backend = "s3"
+  backend   = "s3"
   workspace = terraform.workspace
   config = {
     key    = "s3/terraform.tfstate"
@@ -57,7 +58,7 @@ data "terraform_remote_state" "s3-state" {
 }
 
 data "terraform_remote_state" "data-workflow-state" {
-  backend = "s3"
+  backend   = "s3"
   workspace = terraform.workspace
   config = {
     key    = "data-workflow/terraform.tfstate"
@@ -66,7 +67,7 @@ data "terraform_remote_state" "data-workflow-state" {
 }
 
 data "terraform_remote_state" "auth-state" {
-  backend = "s3"
+  backend   = "s3"
   workspace = terraform.workspace
   config = {
     key    = "auth/terraform.tfstate"
