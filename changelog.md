@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file. This project adheres
 to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v6.0.0 - _2023-03-17_
+
+See [v6.0.0] changes
+
+### Changed
+- All terraform providers have been updated and are now consistent across the infrastructure.
+
+### Added
+- New variable to be passed into the `app-cluster` if you want to disable the internal API data catalog. Defaults to false but can be set as true.
+
 ## v5.0.2 - _2023-03-07_
 See [v5.0.2] changes
 
