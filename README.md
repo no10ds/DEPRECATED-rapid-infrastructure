@@ -15,8 +15,8 @@ mechanism to deploy the rAPId service either on top of your existing infrastruct
 If you are looking to develop in this repository also take a look at the [contributing readme](docs/guides/contributing.md)
 
 - Deploy rAPId service
-    - [Deploy the rAPId module (On top of your existing Terraform infrastructure)](#deploy-service-modules)
-    - [Deploy the full stack (If you don't have existing Terraform infrastructure)](#deploy-full-stack)
+  - [Deploy the rAPId module (On top of your existing Terraform infrastructure)](#deploy-service-modules)
+  - [Deploy the full stack (If you don't have existing Terraform infrastructure)](#deploy-full-stack)
 
 ## Infrastructure diagrams
 
@@ -24,7 +24,6 @@ If you are looking to develop in this repository also take a look at the [contri
 [diagram](./docs/diagrams/infrastructure/infrastructure_bootstrapping.svg)
 - For all the infrastructure
 diagrams [see files here](./docs/diagrams/)
-
 
 ## Contact us
 
@@ -35,6 +34,7 @@ Please reach out to us on [slack](https://ukgovernmentdigital.slack.com/archives
 For departments that already have an existing infrastructure, we have extracted the top level infrastructure into a single Terraform [module](./modules/rapid/).
 
 Usage:
+
 ```
 module "rapid" {
   source  = "git@github.com:no10ds/rapid-infrastructure.git//modules/rapid"
@@ -73,6 +73,7 @@ Provide the required inputs as described:
 - `support_emails_for_cloudwatch_alerts` - List of engineer emails that should receive alert notifications
 
 There are also these optional inputs:
+
 - `application_version` - The service's image [version](https://github.com/no10ds/rapid-api/blob/master/changelog.md)
 - `ui_version` - The static UI [version](https://github.com/no10ds/rapid-ui/blob/master/CHANGELOG.md)
 - `hosted_zone_id` - If provided, will add an alias for the application load balancer to use the provided domain using that HZ. Otherwise, it will create a HZ and the alias
@@ -83,7 +84,6 @@ There are also these optional inputs:
   will default the count to 2
 - `tags` - if provided, it will tag the resources with the defined value. Otherwise, it will default to "Resource = '
   data-f1-rapid'"
-
 
 Once you apply the Terraform, a new instance of the application should be created.
 
@@ -117,6 +117,7 @@ please [Install jq](https://stedolan.github.io/jq/download/) before running any 
 There are two config files needed to instantiate the rAPId service, they are `input-params.tfvars` and `backend.hcl`. Please create these with the templates provided, we will add the content shortly.
 
 `input-params.tfvars` template:
+
 ```
 state_bucket = ""
 data_bucket_name = ""
@@ -143,6 +144,7 @@ tags = {}
 ```
 
 `backend.hcl` template:
+
 ```
 bucket="REPLACE_WITH_STATE_BUCKET"
 region="REPLACE_WITH_REGION"
@@ -151,6 +153,7 @@ encrypt=true
 ```
 
 By default, the files are expected to be inside a folder called `rapid-infrastructure-config` and positioned on your local machine relative to rapid-infrastructure as shown below:
+
 ```
 ├── rapid-infrastructure
 │   ├── blocks
@@ -160,6 +163,7 @@ By default, the files are expected to be inside a folder called `rapid-infrastru
 │   ├── input-params.tfvars
 │   └── backend.hcl
 ```
+
 If you wish to use a different location, then please run:
 
 ```
@@ -253,6 +257,7 @@ Then, run the following command on each block:
 - ```make apply block=<block-name>``` to apply changes, when prompted type ```yes```
 
 Run the blocks in this order:
+
 1. [iam-config](#iam-user-setup-optional) (optional) ⚠️ All the users' roles/policies will be handled here and will
 delete any previous config ⚠️
 2. vpc
@@ -277,7 +282,7 @@ precommit:         tf format and validate: make precommit block=<infra-block>
 precommit-all:     .... for all the infrastructure blocks
 plan:              plan - view infrastructure changes: make plan block=<infra-block>
 apply:             apply infrastructure changes: make apply block=<infra-block>
-output: 	       prints infrastructure output: make output block=<infra-block>
+output:         prints infrastructure output: make output block=<infra-block>
 
 (...)
 ```
@@ -294,30 +299,30 @@ If you need to run manual Terraform commands for debugging or destroying you can
 After the backend has been created the building blocks are:
 
 - [app-cluster](blocks/app-cluster):
-    - LB resources setup
-    - domain/routing setup
-    - ecs setup
-    - firewall rules setup
-    - access setup/management for the app to aws resources
-    - DynamoDB setup
+  - LB resources setup
+  - domain/routing setup
+  - ecs setup
+  - firewall rules setup
+  - access setup/management for the app to aws resources
+  - DynamoDB setup
 - [auth](blocks/auth):
-    - cognito user pool setup
-    - resource server setup
-    - client app setup
-    - DynamoDB setup
+  - cognito user pool setup
+  - resource server setup
+  - client app setup
+  - DynamoDB setup
 - [data-workflow](blocks/data-workflow):
-    - athena setup
-    - crawlers setup
-    - glue resources setup
+  - athena setup
+  - crawlers setup
+  - glue resources setup
 - [iam-config](blocks/iam-config):
-    - iam users setup
-    - iam roles/resources setup
-    - config and infrastructure checks (avoid common pitfalls)
+  - iam users setup
+  - iam roles/resources setup
+  - config and infrastructure checks (avoid common pitfalls)
 - [s3](blocks/s3):
-    - data storage setup
+  - data storage setup
 - [vpc](blocks/vpc):
-    - vpc setup
-    - public/private subnets setup
+  - vpc setup
+  - public/private subnets setup
 - [ui](blocks/ui):
   - public S3 bucket
   - download & upload static html files
@@ -374,7 +379,6 @@ certificate information empty in the `input-params.tfvars`)
 . [AWS can not use the certificate from a different account](https://aws.amazon.com/premiumsupport/knowledge-center/acm-export-certificate/#:~:text=You%20can't%20export%20an,AWS%20Region%20and%20AWS%20account.)
 , and therefore you will be required to create a new one (this will be handled automatically).
 
-
 ## Providing outputs
 
 If you are planning to use a subdomain, and the domain is being handled in a different place you will need the name
@@ -410,7 +414,7 @@ module "app_cluster" {
 If you are running the M1 laptop you may have an issue with running Terraform init with providers and dependencies not
 being found.
 
-#### To install the AWS provider (v3.65.0) from source, run:
+#### To install the AWS provider (v3.65.0) from source, run
 
 Please note a prerequisite to setting up the AWS provider is installing go. You can use the following command:
 `brew install go`
@@ -431,7 +435,7 @@ Then copy the built binary (`terraform-provider-aws`) from `$GOPATH/bin/` to:
 `~/.terraform.d/plugins/registry.terraform.io/hashicorp/aws/3.65.0/darwin_arm64/`
 If for some reason your go path is not set it is most likely in `~/go`
 
-#### To install the AWS provider template (v2.2.0) from source, run:
+#### To install the AWS provider template (v2.2.0) from source, run
 
 ```
 git clone git@github.com:hashicorp/terraform-provider-template.git
