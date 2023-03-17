@@ -10,6 +10,7 @@ module "config" {
   bucket_prefix                      = var.bucket_prefix
   bucket_key_prefix                  = var.bucket_prefix
   enable_lifecycle_management_for_s3 = var.enable_lifecycle_management_for_s3
+  password_policy                    = var.password_policy
 }
 
 module "iam_users" {

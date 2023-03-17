@@ -31,3 +31,8 @@ variable "manual_users" {
   type        = map(map(list(string)))
   description = "A list of users that were created manually into the account"
 }
+
+variable "password_policy" {
+  type        = map(any)
+  description = "The password policy for the IAM users"
+}

@@ -14,7 +14,7 @@ init:		## terraform init: make init block=<infra-block>
 	@./scripts/infra_make_helper.sh run_init "${block}"
 
 precommit-block: 	## tf format and validate: make precommit-blocks block=<infra-block>
-	@./scripts/infra_make_helper.sh precommit "${block}"
+	@./scripts/infra_make_helper.sh precommit "${block}" "${env}"
 
 precommit-blocks: 	## .... for all the infra blocks
 	@printf "infra validation auth: " && $(MAKE) precommit-block "block=auth"

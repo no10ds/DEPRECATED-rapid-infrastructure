@@ -19,6 +19,7 @@ module "app_cluster" {
   data_s3_bucket_arn                              = aws_s3_bucket.this.arn
   data_s3_bucket_name                             = aws_s3_bucket.this.id
   log_bucket_name                                 = aws_s3_bucket.logs.id
+  catalog_disabled                                = var.catalog_disabled
   vpc_id                                          = var.vpc_id
   public_subnet_ids_list                          = var.public_subnet_ids_list
   private_subnet_ids_list                         = var.private_subnet_ids_list
@@ -58,6 +59,7 @@ module "ui" {
   aws_account                        = var.aws_account
   ui_version                         = var.ui_version
   load_balancer_dns                  = module.app_cluster.load_balancer_dns
+  route_53_validation_record_fqdns   = module.app_cluster.route_53_validation_record_fqdns
 }
 
 resource "aws_s3_bucket" "this" {
