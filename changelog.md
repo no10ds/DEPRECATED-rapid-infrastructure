@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file. This project adheres
 to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v6.0.1 - _2023-03-21_
+
+See [v6.0.1] changes
+
+### Changed
+- Updated the default values for ui_version and application_version to v6.0.1
+
 ## v6.0.0 - _2023-03-17_
 
 See [v6.0.0] changes
