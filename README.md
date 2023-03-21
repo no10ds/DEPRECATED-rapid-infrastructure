@@ -82,6 +82,7 @@ There are also these optional inputs:
   it will default the count to 1
 - `app-replica-count-max` - if provided, will set the number of maximum running instances for a service. Otherwise, it
   will default the count to 2
+- `catalog_disabled` - if set to `true` it will disable the rAPId internal data catalogue
 - `tags` - if provided, it will tag the resources with the defined value. Otherwise, it will default to "Resource = '
   data-f1-rapid'"
 
