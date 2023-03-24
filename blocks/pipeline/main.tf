@@ -5,7 +5,8 @@ terraform {
 }
 
 data "terraform_remote_state" "s3-state" {
-  backend = "s3"
+  backend   = "s3"
+  workspace = "prod"
 
   config = {
     key    = "s3/terraform.tfstate"
