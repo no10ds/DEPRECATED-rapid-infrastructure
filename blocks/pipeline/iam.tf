@@ -43,7 +43,10 @@ resource "aws_iam_policy" "pipeline_ecr_access" {
           "ecr:InitiateLayerUpload",
           "ecr:BatchCheckLayerAvailability",
         ],
-        Resource : data.terraform_remote_state.ecr-state.outputs.ecr_private_repo_arn
+        Resource : [
+          data.terraform_remote_state.ecr-state.outputs.ecr_private_repo_arn,
+          data.terraform_remote_state.ecr-state.outputs.ecr_private_ckan_repo_arn
+        ]
       }
     ]
   })
