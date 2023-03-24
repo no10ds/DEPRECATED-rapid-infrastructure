@@ -17,3 +17,8 @@ output "ecr_public_repo_arn" {
   value       = aws_ecrpublic_repository.public.arn
   description = "The arn of the public ecr repo"
 }
+
+output "ecr_public_ckan_repo_arn" {
+  value       = aws_ecrpublic_repository.public_ckan.arn
+  description = "The arn of the public ckan ecr repo"
+}
