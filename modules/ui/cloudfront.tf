@@ -63,7 +63,7 @@ resource "aws_cloudfront_distribution" "rapid_ui" {
   web_acl_id          = aws_wafv2_web_acl.rapid_acl.arn
 
   depends_on = [
-    random_uuid.bucket_id,
+    random_string.bucket_id,
     aws_s3_bucket.rapid_ui,
   ]
 
@@ -189,5 +189,5 @@ resource "aws_acm_certificate_validation" "rapid_certificate" {
   provider                = aws.us_east
   count                   = var.us_east_certificate_validation_arn == "" ? 1 : 0
   certificate_arn         = aws_acm_certificate.rapid_certificate[0].arn
-  validation_record_fqdns = length(var.route_53_validation_record_fqdns) == 0 ? [for record in aws_route53_record.rapid_validation_record : record.fqdn] :  var.route_53_validation_record_fqdns
+  validation_record_fqdns = length(var.route_53_validation_record_fqdns) == 0 ? [for record in aws_route53_record.rapid_validation_record : record.fqdn] : var.route_53_validation_record_fqdns
 }
