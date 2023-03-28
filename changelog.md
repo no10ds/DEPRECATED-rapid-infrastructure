@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file. This project adheres
 to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+
+## v6.0.2 - _2023-03-28_
+
+See [v6.0.2] changes
+
+### Changed
+- Limit the size of the random string added to the S3 bucket, due to the 63 character bucket name limit.
+
 ## v6.0.1 - _2023-03-21_
 
 See [v6.0.1] changes
