@@ -35,6 +35,12 @@ variable "host_port" {
   default     = 8000
 }
 
+variable "protocol" {
+  type  = string
+  description = "The protocol for the running ECS container"
+  default = "tcp"
+}
+
 variable "catalog_disabled" {
   type        = bool
   description = "Optional value on whether to disable the internal rAPId data catalog"
@@ -160,5 +166,10 @@ variable "project_information" {
     project_organisation = optional(string)
   })
 
-  default = {}
+  default = {
+    project_name         = "",
+    project_description  = "",
+    project_contact      = "",
+    project_organisation = ""
+  }
 }
