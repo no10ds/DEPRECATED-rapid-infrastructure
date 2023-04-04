@@ -11,12 +11,12 @@ resource "aws_cloudwatch_log_metric_filter" "rapid-service-log-error-count" {
 }
 
 resource "aws_sns_topic" "log-error-alarm-notification" {
-  name              = "log-error-alarm-notification"
+  name              = "${var.resource-name-prefix}-log-error-alarm-notification"
   kms_master_key_id = "alias/aws/sns"
 }
 
 resource "aws_cloudwatch_metric_alarm" "log-error-alarm" {
-  alarm_name          = "log-error-alarm"
+  alarm_name          = "${var.resource-name-prefix}-log-error-alarm"
   comparison_operator = "GreaterThanOrEqualToThreshold"
   evaluation_periods  = "1"
   metric_name         = "rapid-log-count-errors"
