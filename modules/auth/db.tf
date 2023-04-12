@@ -144,7 +144,7 @@ resource "aws_dynamodb_table_item" "test_client_user_admin_permissions" {
   }
   ITEM
 }
-
+/*
 resource "aws_dynamodb_table_item" "ui_test_user_permissions" {
   table_name = aws_dynamodb_table.permissions_table.name
   hash_key   = aws_dynamodb_table.permissions_table.hash_key
@@ -160,3 +160,4 @@ resource "aws_dynamodb_table_item" "ui_test_user_permissions" {
   }
   ITEM
 }
+*/

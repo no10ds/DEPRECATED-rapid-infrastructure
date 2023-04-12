@@ -18,6 +18,11 @@ output "cognito_user_pool_id" {
   description = "The Cognito rapid user pool id"
 }
 
+output "cognito_user_pool_arn" {
+  value       = aws_cognito_user_pool.rapid_user_pool.arn
+  description = "The Cognito rapid user pool id"
+}
+
 output "cognito_client_app_secret_manager_name" {
   value       = aws_secretsmanager_secret.client_secrets_cognito.name
   description = "Secret manager name where client app info is stored"
