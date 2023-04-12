@@ -7,7 +7,7 @@ locals {
     "ALLOWED_EMAIL_DOMAINS" : var.allowed_email_domains,
     "COGNITO_USER_POOL_ID" : var.cognito_user_pool_id,
     "RESOURCE_PREFIX" : var.resource-name-prefix,
-    "COGNITO_USER_LOGIN_APP_CREDENTIALS_SECRETS_NAME" : var.cognito_user_login_app_credentials_secrets_name,
+    "COGNITO_USER_LOGIN_APP_CREDENTIALS_SECRETS_NAME" : var.cognito_user_login_app_credentials_secrets_name
   }, var.project_information)
 }
 
@@ -330,6 +330,8 @@ resource "aws_ecs_task_definition" "aws-ecs-task" {
   [
     {
       "name": "${var.resource-name-prefix}-container",
+      "volumesFrom": [],
+      "mountPoints": [],
       "image": "${var.rapid_ecr_url}:${var.application_version}",
       "entryPoint": [],
       "essential": true,
@@ -351,7 +353,8 @@ resource "aws_ecs_task_definition" "aws-ecs-task" {
       "portMappings": [
         {
           "containerPort": ${var.container_port},
-          "hostPort": ${var.host_port}
+          "hostPort": ${var.host_port},
+          "protocol": "${var.protocol}"
         }
       ],
       "cpu": 256,
