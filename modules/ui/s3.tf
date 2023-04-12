@@ -51,6 +51,7 @@ resource "null_resource" "download_static_ui" {
 
   triggers = {
     ui_version = var.ui_version
+    bucket = aws_s3_bucket.rapid_ui.id
   }
 
   provisioner "local-exec" {

@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file. This projec
 to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## v6.0.3 - _2023-04-12_
+
+See [v6.0.3] changes
+
+### Fixed
+- Add Glue:GetDatabases permission to ECS task role.
+- Make the UI rebuild trigger if the S3 bucket changes.
+
 ## v6.0.2 - _2023-03-28_
 
 See [v6.0.2] changes
@@ -136,7 +144,12 @@ See [v1.0.0] changes
   - Build rapid infrastructure
 
 
-[v5.0.1]: https://github.com/no10ds/rapid-infrastructure/compare/v5.0.0...HEAD
+[v6.0.3]: https://github.com/no10ds/rapid-infrastructure/compare/v6.0.2...HEAD
+[v6.0.2]: https://github.com/no10ds/rapid-infrastructure/compare/v6.0.1...v6.0.2
+[v6.0.1]: https://github.com/no10ds/rapid-infrastructure/compare/v6.0.0...v6.0.1
+[v6.0.0]: https://github.com/no10ds/rapid-infrastructure/compare/v5.0.2...v6.0.0
+[v5.0.2]: https://github.com/no10ds/rapid-infrastructure/compare/v5.0.1...v5.0.2
+[v5.0.1]: https://github.com/no10ds/rapid-infrastructure/compare/v5.0.0...v5.0.1
 [v5.0.0]: https://github.com/no10ds/rapid-infrastructure/compare/v4.2.0...v5.0.0
 [v4.2.0]: https://github.com/no10ds/rapid-infrastructure/compare/v4.1.0...v4.2.0
 [v4.1.1]: https://github.com/no10ds/rapid-infrastructure/compare/v4.1.0...v4.1.1

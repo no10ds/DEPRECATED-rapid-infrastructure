@@ -98,6 +98,7 @@ resource "aws_iam_policy" "app_athena_query_access" {
           "glue:GetTables",
           "glue:GetPartitions",
           "glue:GetDatabase",
+          "glue:GetDatabases",
           "glue:UpdateTable",
           "glue:BatchDeleteTable"
         ],
