@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file. This project adheres
 to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v6.1.0 - _2023-05-03_
+
+See [v6.1.0] changes
+
+### Fixed
+
+- We now apply a WAF oversize handling rule directly through the infrastructure as per https://github.com/hashicorp/terraform-provider-aws/issues/25545.
+- When deploying multiple instances of rAPId on a same account but to different environments e.g. dev or prod, some of the infrastructure had conflicting names and therefore would fail to deploy.
+- Limit access policy further for the access logs iam policy to pass Checkov scanning.
+
 
 ## v6.0.3 - _2023-04-12_
 
@@ -144,7 +154,8 @@ See [v1.0.0] changes
   - Build rapid infrastructure
 
 
-[v6.0.3]: https://github.com/no10ds/rapid-infrastructure/compare/v6.0.2...HEAD
+[v6.1.0]: https://github.com/no10ds/rapid-infrastructure/compare/v6.0.3...HEAD
+[v6.0.3]: https://github.com/no10ds/rapid-infrastructure/compare/v6.0.2...v6.0.3
 [v6.0.2]: https://github.com/no10ds/rapid-infrastructure/compare/v6.0.1...v6.0.2
 [v6.0.1]: https://github.com/no10ds/rapid-infrastructure/compare/v6.0.0...v6.0.1
 [v6.0.0]: https://github.com/no10ds/rapid-infrastructure/compare/v5.0.2...v6.0.0

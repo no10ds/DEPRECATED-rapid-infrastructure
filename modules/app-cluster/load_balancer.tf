@@ -93,7 +93,7 @@ resource "aws_security_group" "load_balancer_security_group" {
 }
 
 resource "aws_lb_target_group" "target_group" {
-  name        = "${var.resource-name-prefix}-target-group"
+  name        = "${var.resource-name-prefix}-tg"
   port        = 80
   protocol    = "HTTP"
   target_type = "ip"

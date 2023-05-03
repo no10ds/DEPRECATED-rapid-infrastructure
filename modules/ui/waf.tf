@@ -54,7 +54,9 @@ resource "aws_wafv2_web_acl" "rapid_acl" {
             statement {
               sqli_match_statement {
                 field_to_match {
-                  body {}
+                  body {
+                    oversize_handling = "CONTINUE"
+                  }
                 }
                 text_transformation {
                   priority = 0
@@ -105,7 +107,9 @@ resource "aws_wafv2_web_acl" "rapid_acl" {
                 comparison_operator = "GT"
                 size                = "8192"
                 field_to_match {
-                  body {}
+                  body {
+                    oversize_handling = "CONTINUE"
+                  }
                 }
                 text_transformation {
                   priority = 0
@@ -156,7 +160,9 @@ resource "aws_wafv2_web_acl" "rapid_acl" {
                 comparison_operator = "GT"
                 size                = "8192"
                 field_to_match {
-                  body {}
+                  body {
+                    oversize_handling = "CONTINUE"
+                  }
                 }
                 text_transformation {
                   priority = 0
