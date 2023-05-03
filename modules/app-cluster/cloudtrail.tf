@@ -1,6 +1,5 @@
 data "aws_iam_policy_document" "access_logs_key_policy" {
-  #checkov:skip=CKV_AWS_109: No need for resource exposure constraint
-  #checkov:skip=CKV_AWS_111: No need for write access constaint
+
   statement {
     sid = "Enable IAM User Permissions"
 
@@ -12,10 +11,18 @@ data "aws_iam_policy_document" "access_logs_key_policy" {
     }
 
     actions = [
-      "kms:*",
+      "kms:Describe*",
+      "kms:List*",
+      "kms:Get*",
+      "kms:Put*",
+      "kms:GenerateDataKey*",
+      "kms:Encrypt",
+      "kms:Decrypt",
+      "kms:ReEncrypt*",
     ]
+
     resources = [
-      "*",
+      "arn:aws:kms:${data.aws_region.region.name}:${data.aws_caller_identity.current.account_id}:key/*",
     ]
   }
 
@@ -38,7 +45,7 @@ data "aws_iam_policy_document" "access_logs_key_policy" {
     ]
 
     resources = [
-      "*",
+      "arn:aws:kms:${data.aws_region.region.name}:${data.aws_caller_identity.current.account_id}:key/*",
     ]
 
     condition {
@@ -69,7 +76,7 @@ data "aws_iam_policy_document" "access_logs_key_policy" {
     ]
 
     resources = [
-      "*",
+      "arn:aws:kms:${data.aws_region.region.name}:${data.aws_caller_identity.current.account_id}:key/*",
     ]
   }
 }
