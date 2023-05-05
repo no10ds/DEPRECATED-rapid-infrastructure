@@ -86,13 +86,13 @@ locals {
   config_policy_arn = "arn:aws:iam::aws:policy/service-role/AWSConfigRole"
   bucket_account_id = length(var.bucket_account_id) > 0 ? var.bucket_account_id : data.aws_caller_identity.current.account_id
   password_policy = merge({
-    require_uppercase_chars   = "true"
-    require_lowercase_chars   = "true"
-    require_symbols           = "true"
-    require_numbers           = "true"
-    minimum_password_length   = "32"
-    password_reuse_prevention = "5"
-    max_password_age          = "90"
+    require_uppercase_characters = true
+    require_lowercase_characters = true
+    require_symbols              = true
+    require_numbers              = true
+    minimum_password_length      = 32
+    password_reuse_prevention    = 5
+    max_password_age             = 90
   }, var.password_policy)
 }
 

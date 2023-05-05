@@ -281,8 +281,8 @@ resource "aws_config_config_rule" "iam_password_policy" {
 
   input_parameters = jsonencode(
     {
-      RequireUppercaseCharacters = local.password_policy["require_uppercase_chars"]
-      RequireLowercaseCharacters = local.password_policy["require_lowercase_chars"]
+      RequireUppercaseCharacters = local.password_policy["require_uppercase_characters"]
+      RequireLowercaseCharacters = local.password_policy["require_lowercase_characters"]
       RequireSymbols             = local.password_policy["require_symbols"]
       RequireNumbers             = local.password_policy["require_numbers"]
       MinimumPasswordLength      = local.password_policy["minimum_password_length"]

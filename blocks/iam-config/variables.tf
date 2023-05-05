@@ -33,6 +33,15 @@ variable "manual_users" {
 }
 
 variable "password_policy" {
-  type        = map(any)
+  type = object({
+    require_uppercase_characters   = bool
+    require_lowercase_characters   = bool
+    require_symbols                = bool
+    require_numbers                = bool
+    minimum_password_length        = number
+    password_reuse_prevention      = number
+    max_password_age               = number
+    allow_users_to_change_password = bool
+  })
   description = "The password policy for the IAM users"
 }

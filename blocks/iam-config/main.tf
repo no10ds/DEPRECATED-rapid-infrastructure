@@ -19,6 +19,7 @@ module "iam_users" {
   # This includes some random bits here purely for demonstrational purposes. Please use a distinct unique identifier otherwise!
   iam_account_alias = var.iam_account_alias
   iam_users         = var.iam_users
+  password_policy   = var.password_policy
 }
 
 module "iam_resources" {
