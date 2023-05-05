@@ -74,14 +74,14 @@ data "aws_caller_identity" "current" {}
 locals {
   resources_account_id = length(var.resources_account_id) > 0 ? var.resources_account_id : data.aws_caller_identity.current.account_id
   password_policy = merge({
-    require_uppercase_characters   = "true"
-    require_lowercase_characters   = "true"
-    require_symbols                = "true"
-    require_numbers                = "true"
-    minimum_password_length        = "32"
-    password_reuse_prevention      = "5"
-    max_password_age               = "90"
-    allow_users_to_change_password = "true" # pragma: allowlist secret
+    require_uppercase_characters   = true
+    require_lowercase_characters   = true
+    require_symbols                = true
+    require_numbers                = true
+    minimum_password_length        = 32
+    password_reuse_prevention      = 5
+    max_password_age               = 90
+    allow_users_to_change_password = true # pragma: allowlist secret
   }, var.password_policy)
   admin_groups = compact(concat([var.admin_group_name], var.additional_admin_groups))
   user_groups  = compact(concat([var.user_group_name], var.additional_user_groups))
