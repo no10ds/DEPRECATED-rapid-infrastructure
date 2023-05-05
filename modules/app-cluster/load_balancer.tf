@@ -109,6 +109,10 @@ resource "aws_lb_target_group" "target_group" {
     unhealthy_threshold = 2
   }
 
+  lifecycle {
+    create_before_destroy = true
+  }
+
   tags = var.tags
 }
 
