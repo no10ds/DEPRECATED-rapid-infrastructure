@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file. This project adheres
 to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v6.2.0 - _2023-05-10_
+
+See [v6.2.0] changes
+
+### Fixed
+
+- Password policy rules can now be passed through to all modules in the iam-config block.
+
 ## v6.1.0 - _2023-05-03_
 
 See [v6.1.0] changes
