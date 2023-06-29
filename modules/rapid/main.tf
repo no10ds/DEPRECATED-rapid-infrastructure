@@ -118,12 +118,21 @@ resource "aws_s3_bucket" "logs" {
   }
 }
 
+# Resource to avoid error "AccessControlListNotSupported: The bucket does not allow ACLs"
+resource "aws_s3_bucket_ownership_controls" "logs" {
+  bucket = aws_s3_bucket.logs.id
+  rule {
+    object_ownership = "BucketOwnerPreferred"
+  }
+}
+
 resource "aws_s3_bucket_public_access_block" "logs" {
   bucket                  = aws_s3_bucket.logs.id
   ignore_public_acls      = true
   block_public_acls       = true
   block_public_policy     = true
   restrict_public_buckets = true
+  depends_on              = [aws_s3_bucket_ownership_controls.logs]
 }
 
 resource "aws_s3_bucket_policy" "log_bucket_policy" {

@@ -23,9 +23,18 @@ resource "aws_s3_bucket" "rapid_ui" {
   }
 }
 
-resource "aws_s3_bucket_acl" "rapid_ui_storage_acl" {
+# Resource to avoid error "AccessControlListNotSupported: The bucket does not allow ACLs"
+resource "aws_s3_bucket_ownership_controls" "rapid_ui" {
   bucket = aws_s3_bucket.rapid_ui.id
-  acl    = "private"
+  rule {
+    object_ownership = "BucketOwnerPreferred"
+  }
+}
+
+resource "aws_s3_bucket_acl" "rapid_ui_storage_acl" {
+  bucket     = aws_s3_bucket.rapid_ui.id
+  acl        = "private"
+  depends_on = [aws_s3_bucket_ownership_controls.rapid_ui]
 }
 
 resource "aws_s3_bucket_website_configuration" "rapid_ui_website" {
@@ -51,7 +60,7 @@ resource "null_resource" "download_static_ui" {
 
   triggers = {
     ui_version = var.ui_version
-    bucket = aws_s3_bucket.rapid_ui.id
+    bucket     = aws_s3_bucket.rapid_ui.id
   }
 
   provisioner "local-exec" {
