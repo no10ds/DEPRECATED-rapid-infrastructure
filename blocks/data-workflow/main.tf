@@ -18,8 +18,8 @@ module "data_workflow" {
 }
 
 data "terraform_remote_state" "vpc-state" {
-  backend = "s3"
-
+  backend   = "s3"
+  workspace = terraform.workspace
   config = {
     key    = "vpc/terraform.tfstate"
     bucket = var.state_bucket
