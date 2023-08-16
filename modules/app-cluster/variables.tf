@@ -36,9 +36,9 @@ variable "host_port" {
 }
 
 variable "protocol" {
-  type  = string
+  type        = string
   description = "The protocol for the running ECS container"
-  default = "tcp"
+  default     = "tcp"
 }
 
 variable "catalog_disabled" {
@@ -123,14 +123,14 @@ variable "athena_query_output_bucket_arn" {
   description = "The S3 bucket ARN where Athena stores its query results. This bucket is created dynamically with a unique name in the data-workflow module. Reference it by remote state, module output or ARN string directly"
 }
 
-variable "permissions_table" {
-  type        = string
-  description = "Users permissions table in dynamoDB"
-}
-
 variable "permissions_table_arn" {
   type        = string
   description = "Users permissions table arn in dynamoDB"
+}
+
+variable "schema_table_arn" {
+  type        = string
+  description = "The ARN of the schema table in dynamoDB"
 }
 
 variable "cognito_user_pool_id" {

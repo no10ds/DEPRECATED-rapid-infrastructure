@@ -295,7 +295,8 @@ resource "aws_cloudtrail" "access_logs_trail" {
 
       values = [
         aws_dynamodb_table.service_table.arn,
-        var.permissions_table_arn
+        var.permissions_table_arn,
+        var.schema_table_arn,
       ]
     }
   }

@@ -313,7 +313,6 @@ After the backend has been created the building blocks are:
   - DynamoDB setup
 - [data-workflow](blocks/data-workflow):
   - athena setup
-  - crawlers setup
   - glue resources setup
 - [iam-config](blocks/iam-config):
   - iam users setup
