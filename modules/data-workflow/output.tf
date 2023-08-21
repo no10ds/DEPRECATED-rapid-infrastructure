@@ -12,8 +12,3 @@ output "athena_query_result_output_bucket_arn" {
   value       = aws_s3_bucket.rapid_athena_query_results_bucket.arn
   description = "Output S3 bucket ARN for Athena query results"
 }
-
-output "glue_catalog_arn" {
-  value       = aws_glue_catalog_database.catalogue_db.arn
-  description = "Catalog database arn"
-}

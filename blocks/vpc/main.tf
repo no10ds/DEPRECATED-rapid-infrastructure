@@ -18,6 +18,6 @@ module "core_vpc" {
   private_subnet_prefix = "${var.resource-name-prefix}_private_"
 
   public_subnet_size   = 3
-  public_subnet_cidrs  = ["10.1.1.0/28", "10.1.2.0/28", "10.1.3.0/28"]
+  public_subnet_cidrs  = ["10.1.1.0/24", "10.1.2.0/24", "10.1.3.0/24"]
   public_subnet_prefix = "${var.resource-name-prefix}_public_"
 }
