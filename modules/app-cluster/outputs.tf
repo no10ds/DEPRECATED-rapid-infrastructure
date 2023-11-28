@@ -13,6 +13,11 @@ output "load_balancer_dns" {
   description = "The DNS name of the load balancer"
 }
 
+output "load_balancer_security_group_id" {
+  value       = aws_security_group.load_balancer_security_group.id
+  description = "The security group ID of the load balancer"
+}
+
 output "hosted_zone_id" {
   value = var.hosted_zone_id == "" ? aws_route53_zone.primary-hosted-zone[0].zone_id : ""
 }
@@ -36,6 +41,8 @@ output "rapid_metric_log_error_alarm_arn" {
   value       = aws_cloudwatch_metric_alarm.log-error-alarm.arn
   description = "The arn of the log error alarm metric"
 }
+
+
 
 output "route_53_validation_record_fqdns" {
   value       = [for record in aws_route53_record.rapid_validation_record : record.fqdn]
